@@ -12,7 +12,7 @@ export default {
         BottomBar
     },
     mounted() {
-		if(!localStorage.dirvertoken){
+		if(!localStorage.drivertoken){
 			this.$router.push('/login')
 		}
     }

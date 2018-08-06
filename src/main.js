@@ -5,7 +5,9 @@ import store from './store'
 import './registerServiceWorker'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
+import imgUrl from './assets/js/imgUrl'
 
+Vue.filter('imgurl',imgUrl)
 Vue.use(VueMaterial)
 
 Vue.config.productionTip = false

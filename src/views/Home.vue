@@ -47,6 +47,15 @@
 
                 <div class="card-text">
                     <div class="card-text-left">
+                        <span>PostCode: </span>
+                    </div>
+                    <div class="card-text-right">
+                        <span>{{x.clientbpostcode}}</span>
+                    </div>
+                </div>
+
+                <div class="card-text">
+                    <div class="card-text-left">
                         <span>Progress: </span>
                     </div>
                     <div class="card-text-right">
@@ -101,15 +110,15 @@
                 <img :src="updateImagePreview" alt="newimg" v-else>
             </div>
             <div class="photoarea" v-else>
-                <img :src="missionImage|imgurl" alt="newimg">
+                <img :src="missionImage | imgurl" alt="newimg">
             </div>
         </div>
 
-        <div style="text-align:center;padding-top:30px">
+        <div class="namearea">
             <span style="font-size:20px">{{dialogClientName}}</span>
         </div>
 
-        <input type="file" style="display:none" id="upload_file" @change="fileChange($event)">
+        <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
 
         <div class="bottombutton" v-if="!missionImage">
             <div class="bottombutton-left" @click="cancel">
@@ -134,6 +143,8 @@
 <script>
 import axios from 'axios'
 import config from '../assets/js/config'
+import lrz from 'lrz'
+import _ from 'lodash'
 
 export default {
     name: 'homepage',
@@ -150,11 +161,12 @@ export default {
             updateImage: '',
             _id: '',
             missionImage: '',
-            drivername:''
+            drivername: ''
         }
     },
     methods: {
         confirm() {
+            
             if (!this.updateImagePreview) {
                 let arrow = document.querySelector('.photoarea')
                 arrow.style = 'border: 3px dashed red'
@@ -164,30 +176,39 @@ export default {
                     arrow.style.transition = '1s'
                 }, 2000)
             } else {
-                console.log('upload img now')
-                var payload = new FormData('test2', 'test2');
-
+                var payload = new FormData();
                 let date = new Date()
-                payload.append("image", this.updateImage)
-                payload.append("_id", this._id)
-                payload.append("dialogClientName", this.dialogClientName)
-                console.log(this._id)
-                axios({
-                        method: 'post',
-                        url: config.server+'/client-driver/update',
-                        data: payload,
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
+                let maxSize = 200 * 1024 //200KB
+                lrz(this.updateImage, {
+                        quality: 0.5
                     })
-                    .then(doc => {
-                        console.log(doc.data.msg)
-                        if (doc.data.code == 0) {
-                            this.uploadDialog = false
-                            this.refresh()
+                    .then(res => {
+                        if(this.updateImage.size>maxSize){
+                            this.updateImage = res.file
                         }
+                        payload.append("image", this.updateImage)
+                        payload.append("_id", this._id)
+                        payload.append("dialogClientName", this.dialogClientName)
+                        axios({
+                                method: 'post',
+                                url: config.server + '/client-driver/update',
+                                data: payload,
+                                headers: {
+                                    'Content-Type': 'multipart/form-data'
+                                }
+                            })
+                            .then(doc => {
+                                if (doc.data.code == 0) {
+                                    this.uploadDialog = false
+                                    this.refresh()
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
                     })
                     .catch(err => {
+                        console.log('lrz err')
                         console.log(err)
                     })
             }
@@ -197,10 +218,14 @@ export default {
             this.updateImagePreview = null
         },
         fileChange(el) {
+            if (typeof FileReader === 'undefined') {
+                return alert('浏览器不支持上传图片')
+            }
             console.log('###')
             if (!el.target.files[0].size) return; //判断是否有文件数量
             this.updateImagePreview = window.URL.createObjectURL(el.target.files[0])
             this.updateImage = el.target.files[0]
+            console.log(this.updateImage)
             el.target.value = ''
         },
         uploadFile() {
@@ -222,6 +247,7 @@ export default {
                 .then(doc => {
                     console.log(doc)
                     this.allMission = doc.data.doc
+                    this.allMission = _.orderBy(this.allMission, ['finishdate'], ['desc'])
                     console.log(this.allMission.length)
                 })
                 .catch(err => {
@@ -303,18 +329,18 @@ export default {
 }
 
 .card-text-left {
-    flex-basis: 36%;
+    flex-basis: 40%;
 }
 
 .card-text-right {
     flex-basis: 60%;
-    min-width: 180px;
+    min-width: 160px;
 }
 
 .card-camera {
     text-align: right;
     position: absolute;
-    top: 123px;
+    top: 150px;
     right: 13px
 }
 
@@ -425,5 +451,17 @@ export default {
     font-size: 25px;
     color: #fff;
     font-weight: 600;
+}
+
+.namearea {
+    text-align:center;
+    padding-top:30px; 
+    height: 90px;
+    line-height: 58px;
+    font-weight: bold;
+    background-image: url(../../public/img/wood.jpg);
+    background-repeat:no-repeat;
+    background-position:bottom;
+    background-size: 250px 74px;
 }
 </style>
