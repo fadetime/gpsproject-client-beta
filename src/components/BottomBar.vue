@@ -7,8 +7,9 @@
                 <span class="md-bottom-bar-label">主页</span>
                 <i class="badge" v-if="newPosts">{{ newPosts }}</i>
             </md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-posts" md-label="历史" md-icon="search" @click="gomission"></md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-favorites" md-label="设置" md-icon="settings"></md-bottom-bar-item>
+            <md-bottom-bar-item id="bottom-bar-item-finish" md-label="完成" md-icon="assignment_turned_in" @click="goFinish"></md-bottom-bar-item>
+            <md-bottom-bar-item id="bottom-bar-item-posts" md-label="查找" md-icon="search" @click="gomission"></md-bottom-bar-item>
+            <md-bottom-bar-item id="bottom-bar-item-favorites" md-label="设置" md-icon="settings" @click="gosetup"></md-bottom-bar-item>
         </md-bottom-bar>
     </div>
 </div>
@@ -28,6 +29,12 @@ export default {
         },
         gomission() {
             this.$router.push('/history')
+        },
+        gosetup() {
+            this.$router.push('/setup')
+        },
+        goFinish() {
+            this.$router.push('/finish')
         }
     }
 }

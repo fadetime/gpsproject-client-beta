@@ -1,7 +1,10 @@
 <template>
 <div id="app">
-    <router-view/>
-    <!-- <bottom-bar style="position:fixed;bottom:0;width: 100%;"></bottom-bar> -->
+    <transition name="custom-classes-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+        <router-view class="child-view"/>
+    </transition>
+    
+    <bottom-bar style="position:fixed;bottom:0;width: 100%;"></bottom-bar>
 </div>
 </template>
 
@@ -28,6 +31,11 @@ export default {
     color: #2c3e50;
 }
 
+.child-view{
+    position: absolute;
+    width: 100%;
+    
+}
 @import "~vue-material/dist/theme/engine"; // Import the theme engine
 @include md-register-theme("default", ( primary: #d74342, // The primary color of your application
 accent: #d74342 // The accent or secondary color
