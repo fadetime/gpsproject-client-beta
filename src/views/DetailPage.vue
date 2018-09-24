@@ -17,7 +17,7 @@
 
         <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(x,no) in tempArr.missionclient" :key="no" v-if="!x.finishdate">
             <md-ripple>
-                <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;">
+                <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
                     <span style="font-size:20px;color:#fff;font-weight: 800;line-height: 40px;">{{no+1}}</span>
                 </div>
                 <div class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;" @click="openImage(x)">
@@ -26,7 +26,7 @@
                     </div>
                 </div>
 
-                <div style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:4px;top:2px;border-radius: 100%;overflow: hidden;" @click="openImage(x)">
+                <div style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;" @click="openImage(x)">
                     <img :src="x.image | imgurl" alt="clientPic" style="width: 100%;height: 100%;object-fit: contain;">
                 </div>
                 <div @click="upload(x)">

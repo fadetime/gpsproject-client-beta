@@ -5,7 +5,7 @@
                 <router-view class="child-view" />
             </transition>
         </keep-alive>
-        <bottom-bar style="position:fixed;bottom:0;width: 100%;"></bottom-bar>
+        <bottom-bar v-if="token" style="position:fixed;bottom:0;width: 100%;"></bottom-bar>
     </div>
 </template>
 
@@ -30,6 +30,14 @@ export default {
     mounted() {
         if (!localStorage.drivertoken) {
             this.$router.push("/login");
+        }else{
+            let item = localStorage.drivertoken
+            this.$store.dispatch('setToken', item)
+        }
+    },
+    computed:{
+        token() {
+            return this.$store.state.haveToken
         }
     }
 };

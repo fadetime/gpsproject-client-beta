@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 	state: {
 		tempArr:{},
-		allMission:[]
+		allMission:[],
+		haveToken:''
 	},
 	mutations: {
 		setTempArr:(state , item) => {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
 		},
 		setAllMission:(state , item) => {
 			state.allMission = item
+		},
+		setToken:(state , item) => {
+			state.haveToken = item
 		}
 	},
 	actions: {
@@ -22,6 +26,9 @@ export default new Vuex.Store({
 		},
 		setAllMission: ({ commit }, item) => {
 			commit('setAllMission', item)
+		},
+		setToken: ({ commit }, item) => {
+			commit('setToken', item)
 		}
 	}
 })

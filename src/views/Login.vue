@@ -39,9 +39,6 @@ export default {
     },
     methods: {
         login() {
-            console.log("this is login");
-            console.log(this.username);
-            console.log(this.password);
             axios
                 .post(config.server + "/clerks/userlogin", {
                     username: this.username,
@@ -56,6 +53,8 @@ export default {
                         localStorage.image = doc.data.image;
                         localStorage._id = doc.data._id;
                         localStorage.drivertoken = doc.data.token;
+                        let item = doc.data.token;
+                        this.$store.dispatch("setToken", item);
                         this.$router.push("/");
                     } else {
                         this.errmsg = doc.data.msg;

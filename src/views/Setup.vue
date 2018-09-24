@@ -1,106 +1,120 @@
 <template>
-	<div id="setup">
-		<div class="top">
-			<div class="top-pic" v-if="!driverimage">
-				<img src="../../public/img/ebuyLogo.png" alt="Avatar" />
-			</div>
-			<div class="top-pic" v-else>
-				<img :src="driverimage | imgurl" alt="Avatar">
-			</div>
-			<div class="top-title">
-				<span>{{drivername}}</span>
-			</div>
-		</div>
-        
-        
-		<div class="center">
-			<md-card style="width:80%;margin:10px auto;">
-				<div class="card-item">
-					<div class="card-item-title">
-						<span>驾照类型</span>
-					</div>
-					<div class="card-item-body">
-						<md-icon style="color:#d74342">commute</md-icon>
-						<span>{{drivercard}}</span>
-					</div>
-				</div>
+    <div id="setup">
+        <div class="top">
+            <div class="top-pic" v-if="!driverimage">
+                <img src="../../public/img/ebuyLogo.png" alt="Avatar" />
+            </div>
+            <div class="top-pic" v-else>
+                <img :src="driverimage | imgurl" alt="Avatar">
+            </div>
+            <div class="top-title">
+                <span>{{drivername}}</span>
+            </div>
+        </div>
 
-				<div class="card-item">
-					<div class="card-item-title">
-						<span>联系方式</span>
-					</div>
-					<div class="card-item-body">
-						<md-icon style="color:#d74342">phone</md-icon>
-						<span>{{driverphone}}</span>
-					</div>
-				</div>
+        <div>
+            <button @click="testMeth">test button</button>
+        </div>
 
-				<div class="card-item">
-					<div class="card-item-title">
-						<span>准证号码</span>
-					</div>
-					<div class="card-item-body">
-						<md-icon style="color:#d74342">assignment_ind</md-icon>
-						<span>{{driverid}}</span>
-					</div>
-				</div>
-			</md-card>
-		</div>
+        <div class="center">
+            <md-card style="width:80%;margin:10px auto;">
+                <div class="card-item">
+                    <div class="card-item-title">
+                        <span>驾照类型</span>
+                    </div>
+                    <div class="card-item-body">
+                        <md-icon style="color:#d74342">commute</md-icon>
+                        <span>{{drivercard}}</span>
+                    </div>
+                </div>
 
-		<div class="bottom">
-			<md-button class="md-raised md-primary" style="width:80%" @click="showDialog = true">修改密码</md-button>
-		</div>
-		<!-- 遮罩层 -->
-		<transition name="custom-classes-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-			<div v-if="showDialog" class="dialog" @click.self="showDialog = false">
-				<div class="dialog-body">
-					<div style="width:100%;background-color:#d74342;box-shadow: 1px 1px 5px;">
-						<span style="font-size:20px;color:#fff;line-height: 32px;">修改密码</span>
-					</div>
-					<div class="dialog-body-center">
-						<div style="width:250px;margin:10px auto;box-shadow:1px 1px 5px">
-							<div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
-								<div class="dialog-body-center-item-left">
-									<label for="oldpsw">原始密码</label>
-								</div>
-								<div class="dialog-body-center-item-right">
-									<input type="password" id="oldpsw" placeholder="请输入原始密码" v-model="oldpassword">
-								</div>
-							</div>
-							<div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
-								<div class="dialog-body-center-item-left">
-									<label for="newpsw">新密码</label>
-								</div>
-								<div class="dialog-body-center-item-right">
-									<input type="password" id="newpsw" placeholder="请输入新密码" v-model="newpassword">
-								</div>
-							</div>
-							<div class="dialog-body-center-item">
-								<div class="dialog-body-center-item-left">
-									<label for="confirmpsw">确认密码</label>
-								</div>
-								<div class="dialog-body-center-item-right">
-									<input id="confirmpsw" type="password" placeholder="请确认新密码" v-model="conpassword">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="dialog-body-bottom">
-						<md-button class="md-raised" @click="showDialog = false">取消</md-button>
-						<md-button class="md-raised md-primary" @click="confirmChangePsw">确认</md-button>
-					</div>
-				</div>
-			</div>
-		</transition>
-		<!-- 遮罩层 -->
-		<!-- 操作提示 -->
-		<transition name="custom-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
-			<div class="errinfo" v-if="showError">
-				<span>{{errorInfo}}</span>
-			</div>
-		</transition>
-		<!-- 操作提示 -->
-	</div>
+                <div class="card-item">
+                    <div class="card-item-title">
+                        <span>联系方式</span>
+                    </div>
+                    <div class="card-item-body">
+                        <md-icon style="color:#d74342">phone</md-icon>
+                        <span>{{driverphone}}</span>
+                    </div>
+                </div>
+
+                <div class="card-item">
+                    <div class="card-item-title">
+                        <span>准证号码</span>
+                    </div>
+                    <div class="card-item-body">
+                        <md-icon style="color:#d74342">assignment_ind</md-icon>
+                        <span>{{driverid}}</span>
+                    </div>
+                </div>
+            </md-card>
+        </div>
+
+        <div class="bottom">
+            <md-button class="md-raised md-primary" style="width:80%" @click="isChangePSW = true,showDialog = true">修改密码</md-button>
+        </div>
+        <div class="bottom">
+            <md-button class="md-raised " style="width:80%;background-color: yellow;" @click="isChangePSW = false,showDialog = true">退出登录</md-button>
+        </div>
+        <div style="height:60px">
+            <!-- 底部占位符 -->
+        </div>
+        <!-- 遮罩层 -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div v-if="showDialog" class="dialog" @click.self="showDialog = false">
+                <div class="dialog-body">
+                    <div style="width:100%;background-color:#d74342;box-shadow: 1px 1px 5px;">
+                        <span v-if="isChangePSW" style="font-size:20px;color:#fff;line-height: 32px;">修改密码</span>
+                        <span v-else style="font-size:20px;color:#fff;line-height: 32px;">退出登录</span>
+                    </div>
+                    <div class="dialog-body-center">
+                        <div v-if="isChangePSW" style="width:250px;margin:10px auto;box-shadow:1px 1px 5px">
+                            <div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
+                                <div class="dialog-body-center-item-left">
+                                    <label for="oldpsw">原始密码</label>
+                                </div>
+                                <div class="dialog-body-center-item-right">
+                                    <input type="password" id="oldpsw" placeholder="请输入原始密码" v-model="oldpassword">
+                                </div>
+                            </div>
+                            <div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
+                                <div class="dialog-body-center-item-left">
+                                    <label for="newpsw">新密码</label>
+                                </div>
+                                <div class="dialog-body-center-item-right">
+                                    <input type="password" id="newpsw" placeholder="请输入新密码" v-model="newpassword">
+                                </div>
+                            </div>
+                            <div class="dialog-body-center-item">
+                                <div class="dialog-body-center-item-left">
+                                    <label for="confirmpsw">确认密码</label>
+                                </div>
+                                <div class="dialog-body-center-item-right">
+                                    <input id="confirmpsw" type="password" placeholder="请确认新密码" v-model="conpassword">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div v-else style="width:250px;margin:10px auto;box-shadow:1px 1px 5px;height:152px;line-height:142px">
+                            <span>是否确认退出？</span>
+                        </div>
+                    </div>
+                    <div class="dialog-body-bottom">
+                        <md-button class="md-raised" @click="showDialog = false">取消</md-button>
+                        <md-button class="md-raised md-primary" @click="confirmChangePsw">确认</md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 遮罩层 -->
+        <!-- 操作提示 -->
+        <transition name="custom-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
+            <div class="errinfo" v-if="showError">
+                <span>{{errorInfo}}</span>
+            </div>
+        </transition>
+        <!-- 操作提示 -->
+    </div>
 </template>
 
 <script>
@@ -121,7 +135,8 @@ export default {
             newpassword: "",
             conpassword: "",
             showError: false,
-            _id: ""
+            _id: "",
+            isChangePSW: true
         };
     },
     mounted() {
@@ -132,44 +147,55 @@ export default {
         this.driverimage = localStorage.getItem("image");
     },
     methods: {
+        testMeth() {
+            console.log("done");
+        },
         confirmChangePsw() {
-            if (!this.oldpassword) {
-                this.errorInfo = "请填写旧密码";
-                this.showError = true;
-            } else if (!this.newpassword) {
-                this.errorInfo = "请填写新密码";
-                this.showError = true;
-            } else if (!this.conpassword) {
-                this.errorInfo = "请确认新密码";
-                this.showError = true;
-            } else if (this.newpassword != this.conpassword) {
-                this.errorInfo = "两次输入密码不一致";
-                this.showError = true;
-            } else {
-                console.log("comit mission");
-                this._id = localStorage.getItem("_id");
-                axios
-                    .post(config.server + "/client-driver/change", {
-                        oldpassword: this.oldpassword,
-                        newpassword: this.newpassword,
-                        conpassword: this.conpassword,
-                        _id: this._id
-                    })
-                    .then(doc => {
-						this.oldpassword = "";
+            if (this.isChangePSW) {
+                if (!this.oldpassword) {
+                    this.errorInfo = "请填写旧密码";
+                    this.showError = true;
+                } else if (!this.newpassword) {
+                    this.errorInfo = "请填写新密码";
+                    this.showError = true;
+                } else if (!this.conpassword) {
+                    this.errorInfo = "请确认新密码";
+                    this.showError = true;
+                } else if (this.newpassword != this.conpassword) {
+                    this.errorInfo = "两次输入密码不一致";
+                    this.showError = true;
+                } else {
+                    console.log("comit mission");
+                    this._id = localStorage.getItem("_id");
+                    axios
+                        .post(config.server + "/client-driver/change", {
+                            oldpassword: this.oldpassword,
+                            newpassword: this.newpassword,
+                            conpassword: this.conpassword,
+                            _id: this._id
+                        })
+                        .then(doc => {
+                            this.oldpassword = "";
                             this.errorInfo = doc.data.msg;
                             this.showError = true;
-                        if (doc.data.code === 0) {
-                            this.showDialog=false
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                            if (doc.data.code === 0) {
+                                this.showDialog = false;
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+                setTimeout(() => {
+                    this.showError = false;
+                }, 2000);
+            } else {
+                localStorage.removeItem("drivertoken");
+                let item = null
+                this.$store.dispatch("setToken", item);
+                this.$router.push("/login");
+                
             }
-            setTimeout(() => {
-                this.showError = false;
-            }, 2000);
         }
     }
 };
@@ -297,6 +323,4 @@ export default {
     font-size: 16px;
     line-height: 32px;
 }
-
-
 </style>

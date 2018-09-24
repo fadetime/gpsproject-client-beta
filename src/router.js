@@ -7,6 +7,7 @@ import Setup from './views/Setup.vue'
 import DetailPage from './views/DetailPage.vue'
 import Finish from './views/Finish.vue'
 import HistoryDetail from './views/HistoryDetail.vue'
+import AuthGuard from './auth-guard'
 
 Vue.use(Router)
 
@@ -15,12 +16,14 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: HomePage
+      component: HomePage,
+      beforeEnter: AuthGuard
     },
     {
       path: '/history',
       name: 'history',
-      component: HistoryPage
+      component: HistoryPage,
+      beforeEnter: AuthGuard
     },
     {
       path: '/login',
@@ -30,22 +33,26 @@ export default new Router({
     {
       path: '/setup',
       name: 'setup',
-      component: Setup
+      component: Setup,
+      beforeEnter: AuthGuard
     },
     {
       path: '/detailpage',
       name: 'DetailPage',
-      component: DetailPage
+      component: DetailPage,
+      beforeEnter: AuthGuard
     },
     {
       path: '/finish',
       name: 'Finish',
-      component: Finish
+      component: Finish,
+      beforeEnter: AuthGuard
     },
     {
       path: '/historydetail',
       name: 'HistoryDetail',
-      component: HistoryDetail
+      component: HistoryDetail,
+      beforeEnter: AuthGuard
     },
   ]
 })
