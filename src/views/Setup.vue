@@ -11,7 +11,8 @@
 				<span>{{drivername}}</span>
 			</div>
 		</div>
-
+        
+        
 		<div class="center">
 			<md-card style="width:80%;margin:10px auto;">
 				<div class="card-item">
@@ -296,4 +297,6 @@ export default {
     font-size: 16px;
     line-height: 32px;
 }
+
+
 </style>

@@ -1,6 +1,5 @@
 <template>
     <div id="finish">
-        <!-- test area -->
         <div class="swiper-container">
             <div class="swiper-wrapper" style="font-size:20px;color:#fff;line-height:50px">
                 <div class="swiper-slide" v-for="(item,index) in allMission" :key="index">
@@ -28,16 +27,18 @@
                 </div>
             </div>
 
-            <!-- 如果需要导航按钮 -->
+            
 
         </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination" style="position: fixed;bottom: 80px;left: 50%;right:auto"></div>
+        <!-- 如果需要导航按钮 -->
         <div class="button-left"></div>
         <div class="button-right"></div>
 
         <div class="emptyarea-bottom-huge">
             <!-- 顶部占位符 -->
         </div>
-        <!-- test area -->
 
         <!-- upload dialog start -->
         <md-dialog :md-active.sync="uploadDialog">
@@ -96,22 +97,35 @@
 <script>
 import Swiper from "swiper";
 import "swiper/dist/css/swiper.min.css";
-export default {
-    mounted() {
-        // 滑块部分
-        const mySwiper = new Swiper(".swiper-container", {
-            autoplay: false,
-            // centeredSlides:true,
-            direction: "horizontal",
-            loop: true,
+import axios from "axios";
+import config from "../assets/js/config";
 
-            // 如果需要前进后退按钮
-            navigation: {
-                nextEl: ".button-right",
-                prevEl: ".button-left"
-            }
-        });
-        // 滑块部分
+export default {
+    created() {
+        this.drivername = localStorage.getItem("drivername");
+        this.getDriverMission();
+    },
+    mounted() {
+        setTimeout(() => {
+            // 滑块部分
+            const mySwiper = new Swiper(".swiper-container", {
+                autoplay: false,
+                // centeredSlides:true,
+                direction: "horizontal",
+                loop: true,
+
+                pagination: {
+                    el: ".swiper-pagination"
+                },
+
+                // 如果需要前进后退按钮
+                navigation: {
+                    nextEl: ".button-right",
+                    prevEl: ".button-left"
+                }
+            });
+            // 滑块部分
+        }, 200);
     },
     computed: {
         allMission: function() {
@@ -124,7 +138,9 @@ export default {
             uploadDialog: false,
             dialogClientName: "",
             missionImage: "",
-            dialogDate: ""
+            dialogDate: "",
+            drivername: ""
+            // allMission: []
         };
     },
     methods: {
@@ -133,6 +149,20 @@ export default {
             this.dialogClientName = item.clientbname;
             this.missionImage = item.finishphoto;
             this.dialogDate = item.finishdate;
+        },
+        getDriverMission() {
+            axios
+                .post(config.server + "/client-driver/", {
+                    startdate: new Date().toLocaleDateString(),
+                    drivername: this.drivername
+                })
+                .then(doc => {
+                    let tempMission = doc.data.doc;
+                    this.$store.dispatch("setAllMission", tempMission);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     }
 };
