@@ -15,7 +15,16 @@
             <!-- 顶部占位符 -->
         </div>
 
-        <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(x,no) in tempArr.missionclient" :key="no" v-if="!x.finishdate">
+        <div v-if="isClear" style="padding-top: 20px;">
+            <div>
+                <img src="../../public/img/ebuyLogo.png" alt="logo" style="width:200px;">
+            </div>
+            <div style="padding-top:20px">
+                <span>~~所有客户已送达~~</span>
+            </div>
+        </div>
+        <div v-else>
+            <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(x,no) in tempArr.missionclient" :key="no" v-if="!x.finishdate">
             <md-ripple>
                 <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
                     <span style="font-size:20px;color:#fff;font-weight: 800;line-height: 40px;">{{no+1}}</span>
@@ -74,9 +83,11 @@
 
             </md-ripple>
         </md-card>
+        </div>
+        
 
         <div class="emptyarea-top">
-            <!-- 顶部占位符 -->
+            <!-- 底部占位符 -->
         </div>
 
         <!-- upload dialog start -->
@@ -150,6 +161,12 @@ import lrz from "lrz";
 import _ from "lodash";
 
 export default {
+    created() {
+        this.drivername = localStorage.getItem("drivername");
+    },
+    mounted() {
+        this.missionGetOne()
+    },
     data() {
         return {
             uploadDialog: false,
@@ -160,7 +177,9 @@ export default {
             dialogClientName: "",
             finishDate: "",
             imageDialog: false,
-            imageSrc: ""
+            imageSrc: "",
+            needDoNum: 0,
+            isClear:false
         };
     },
     computed: {
@@ -179,12 +198,43 @@ export default {
                     _id: this.tempArr._id
                 })
                 .then(doc => {
+                    let tempNum = 0
+                    doc.data.missionclient.forEach(element => {
+                        if (!element.finishdate) {
+                                tempNum += 1;
+                            }
+                    });
+                    if(tempNum === 0) {
+                        this.isClear = true
+                    }else{
+                        this.isClear = false
+                    }
                     doc.data.missionclient = _.orderBy(
                         doc.data.missionclient,
                         ["finishdate"],
                         ["desc"]
                     );
                     this.$store.dispatch("setTempArr", doc.data);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
+            axios
+                .post(config.server + "/client-driver/", {
+                    startdate: new Date().toLocaleDateString(),
+                    drivername: this.drivername
+                })
+                .then(doc => {
+                    this.allMission = doc.data.doc;
+                    doc.data.doc.forEach(elementX => {
+                        elementX.missionclient.forEach(elementY => {
+                            if (!elementY.finishdate) {
+                                this.needDoNum += 1;
+                            }
+                        });
+                    });
+                    this.$store.dispatch("setDoNum", this.needDoNum);
                 })
                 .catch(err => {
                     console.log(err);
@@ -197,13 +247,11 @@ export default {
             if (typeof FileReader === "undefined") {
                 return alert("浏览器不支持上传图片");
             }
-            console.log("###");
             if (!el.target.files[0].size) return; //判断是否有文件数量
             this.updateImagePreview = window.URL.createObjectURL(
                 el.target.files[0]
             );
             this.updateImage = el.target.files[0];
-            console.log(this.updateImage);
             el.target.value = "";
         },
         uploadFile() {

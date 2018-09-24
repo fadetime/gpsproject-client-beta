@@ -119,7 +119,8 @@ export default {
             uploadDialog: false,
             drivername: "",
             dialogName: "",
-            finishNumber: []
+            finishNumber: [],
+            needDoNum:0
         };
     },
     methods: {
@@ -150,11 +151,14 @@ export default {
                         elementX.missionclient.forEach(elementY => {
                             if (elementY.finishdate) {
                                 countNum += 1;
+                            }else{
+                                this.needDoNum +=1
                             }
                         });
                         this.finishNumber[startNum] = countNum;
                         countNum = 0;
                     });
+                    this.$store.dispatch("setDoNum", this.needDoNum);
                 })
                 .catch(err => {
                     console.log(err);

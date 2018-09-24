@@ -135,7 +135,8 @@ export default {
             missionImage: "",
             dialogDate: "",
             drivername: "",
-            allMission:[]
+            allMission:[],
+            needDoNum:0
         };
     },
     methods: {
@@ -153,6 +154,14 @@ export default {
                 })
                 .then(doc => {
                     this.allMission = doc.data.doc;
+                    doc.data.doc.forEach(elementX => {
+                        elementX.missionclient.forEach(elementY => {
+                            if (!elementY.finishdate) {
+                                this.needDoNum +=1
+                            }
+                        });
+                    });
+                    this.$store.dispatch("setDoNum", this.needDoNum);
                 })
                 .catch(err => {
                     console.log(err);

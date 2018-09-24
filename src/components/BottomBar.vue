@@ -18,9 +18,9 @@
 <script>
 export default {
     name: 'Shift',
-    data() {
-        return {
-            newPosts: 2
+    computed:{
+        newPosts: function() {
+            return this.$store.state.needDoNum;
         }
     },
     methods: {
