@@ -30,14 +30,14 @@
             
 
         </div>
-        <!-- 如果需要分页器 -->
+        <!-- 分页器 -->
         <div class="swiper-pagination" style="position: fixed;bottom: 80px;left: 50%;right:auto"></div>
-        <!-- 如果需要导航按钮 -->
+        <!-- 导航按钮 -->
         <div class="button-left"></div>
         <div class="button-right"></div>
 
         <div class="emptyarea-bottom-huge">
-            <!-- 顶部占位符 -->
+            <!-- 底部部占位符 -->
         </div>
 
         <!-- upload dialog start -->
@@ -127,11 +127,6 @@ export default {
             // 滑块部分
         }, 200);
     },
-    computed: {
-        allMission: function() {
-            return this.$store.state.allMission;
-        }
-    },
     data() {
         return {
             swiperNumber: 0,
@@ -139,8 +134,8 @@ export default {
             dialogClientName: "",
             missionImage: "",
             dialogDate: "",
-            drivername: ""
-            // allMission: []
+            drivername: "",
+            allMission:[]
         };
     },
     methods: {
@@ -157,8 +152,7 @@ export default {
                     drivername: this.drivername
                 })
                 .then(doc => {
-                    let tempMission = doc.data.doc;
-                    this.$store.dispatch("setAllMission", tempMission);
+                    this.allMission = doc.data.doc;
                 })
                 .catch(err => {
                     console.log(err);

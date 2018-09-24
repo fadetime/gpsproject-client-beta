@@ -141,8 +141,6 @@ export default {
                 })
                 .then(doc => {
                     this.allMission = doc.data.doc;
-                    this.$store.dispatch("setAllMission", this.allMission);
-
                     // 计算完成
                     let startNum = -1;
                     let countNum = 0;
