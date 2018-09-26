@@ -12,10 +12,6 @@
             </div>
         </div>
 
-        <div>
-            <button @click="testMeth">test button</button>
-        </div>
-
         <div class="center">
             <md-card style="width:80%;margin:10px auto;">
                 <div class="card-item">
@@ -147,9 +143,6 @@ export default {
         this.driverimage = localStorage.getItem("image");
     },
     methods: {
-        testMeth() {
-            console.log("done");
-        },
         confirmChangePsw() {
             if (this.isChangePSW) {
                 if (!this.oldpassword) {

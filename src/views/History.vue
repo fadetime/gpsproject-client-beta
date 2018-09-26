@@ -1,13 +1,5 @@
 <template>
     <div id="history">
-        <!-- <div class="topusername" style="box-shadow: 0px 1px 5px;">
-        <div class="topusername-left"></div>
-        <div class="topusername-center">
-            <span>潇洒强</span>
-        </div>
-        <div class="topusername-right">
-        </div>
-        </div> -->
 
         <div>
             <md-card style="width:320px;margin:10px auto;padding-bottom:5px">
@@ -169,7 +161,7 @@ export default {
 }
 
 .center-body img {
-    width: 300px;
+    width: 200px;
     padding-top: 50px;
 }
 
