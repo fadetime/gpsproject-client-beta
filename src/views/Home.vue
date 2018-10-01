@@ -37,7 +37,7 @@
 
                                 <div class="card-text" style="padding:5px 20px 5px 40px">
                                     <div class="card-text-left">
-                                        <md-icon style="color: rgb(215, 67, 66)">assignment_late</md-icon>
+                                        <div class="allclientnumicon"></div>
                                     </div>
                                     <div class="card-text-right" style="padding-left:50px">
                                         <span style="font-size:16px">共 {{item.missionclient.length}} 个</span>
@@ -52,7 +52,7 @@
 
                                 <div class="card-text" style="padding:5px 20px 5px 40px">
                                     <div class="card-text-left">
-                                        <md-icon style="color: rgb(215, 67, 66)">assignment_turned_in</md-icon>
+                                        <div class="assignmenticon"></div>
                                     </div>
                                     <div class="card-text-right" style="padding-left:50px">
                                         <span style="font-size:16px">共 {{finishNumber[index]}} 个</span>
@@ -67,7 +67,7 @@
 
                                 <div class="card-text" style="padding:5px 20px 20px 40px">
                                     <div class="card-text-left">
-                                        <md-icon style="color: rgb(215, 67, 66)">date_range</md-icon>
+                                        <div class="date_rangeicon"></div>
                                     </div>
                                     <div class="card-text-right" style="padding-left:50px">
                                         <span style="font-size:16px">{{item.missiondate | dateFilter}}</span>
@@ -252,5 +252,29 @@ export default {
     position: absolute;
     top: 150px;
     right: 13px;
+}
+
+.allclientnumicon {
+    background: #d74342;
+    mask-image: url(../../public/icons/baseline-assignment_late-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-assignment_late-24px.svg);
+    width: 24px;
+    height: 24px;
+}
+
+.assignmenticon {
+    background: #d74342;
+    mask-image: url(../../public/icons/baseline-assignment_turned_in-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-assignment_turned_in-24px.svg);
+    width: 24px;
+    height: 24px;
+}
+
+.date_rangeicon {
+    background: #d74342;
+    mask-image: url(../../public/icons/baseline-date_range-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-date_range-24px.svg);
+    width: 24px;
+    height: 24px;
 }
 </style>

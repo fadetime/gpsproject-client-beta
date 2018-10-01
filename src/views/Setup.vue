@@ -19,8 +19,11 @@
                         <span>驾照类型</span>
                     </div>
                     <div class="card-item-body">
-                        <md-icon style="color:#d74342">commute</md-icon>
-                        <span>{{drivercard}}</span>
+                        <div class="drivercardicon" style="width: 24px;height:24px"></div>
+                        <div>
+                            <span>{{drivercard}}</span>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -29,7 +32,7 @@
                         <span>联系方式</span>
                     </div>
                     <div class="card-item-body">
-                        <md-icon style="color:#d74342">phone</md-icon>
+                        <div class="phoneicon" style="width: 24px;height:24px"></div>
                         <span>{{driverphone}}</span>
                     </div>
                 </div>
@@ -39,7 +42,7 @@
                         <span>准证号码</span>
                     </div>
                     <div class="card-item-body">
-                        <md-icon style="color:#d74342">assignment_ind</md-icon>
+                        <div class="infoicon" style="width: 24px;height:24px"></div>
                         <span>{{driverid}}</span>
                     </div>
                 </div>
@@ -253,6 +256,8 @@ export default {
 .card-item-body {
     text-align: left;
     padding-left: 30px;
+    display: flex;
+    display: -webkit-flex;
 }
 
 .card-item-body span {
@@ -315,5 +320,23 @@ export default {
 .errinfo span {
     font-size: 16px;
     line-height: 32px;
+}
+
+.drivercardicon {
+    background: #d74342;
+    mask-image: url(../../public/icons/baseline-commute-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-commute-24px.svg)
+}
+
+.phoneicon {
+    background: #d74342;
+    mask-image: url(../../public/icons/baseline-phone-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-phone-24px.svg)
+}
+
+.infoicon {
+    background: #d74342;
+    mask-image: url(../../public/icons/baseline-assignment_ind-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-assignment_ind-24px.svg)
 }
 </style>

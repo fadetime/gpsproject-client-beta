@@ -77,7 +77,7 @@
                     </div>
 
                     <div class="card-camera">
-                        <md-icon class="md-size-2x">camera_alt</md-icon>
+                        <div class="date_rangeicon"></div>
                     </div>
                 </div>
 
@@ -396,7 +396,7 @@ export default {
 .card-camera {
     text-align: right;
     position: absolute;
-    top: 130px;
+    bottom: 10px;
     right: 13px;
 }
 
@@ -534,5 +534,14 @@ export default {
 .imageDialog div {
     position: relative;
     top: 15%;
+}
+
+.date_rangeicon {
+    background: var(--md-theme-default-icon-on-background, rgba(0, 0, 0, 0.54));
+    background-size:48px 48px;
+    mask-image: url(../../public/icons/baseline-camera_alt-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-camera_alt-24px.svg);
+    width: 48px;
+    height: 48px;
 }
 </style>

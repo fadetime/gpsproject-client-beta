@@ -4,7 +4,7 @@
             <!-- 占位符 -->
         </div>
         <div style="padding:0px 20px 20px 20px">
-            <img src="../../public/img/ebuyLogo.png" style="width:300px">
+            <img src="../../public/img/ebuyLogo.png" style="width:200px">
         </div>
         <div style="padding:10px">
             <input type="text" v-model="username" placeholder="请输入用户名">

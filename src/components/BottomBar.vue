@@ -3,13 +3,22 @@
     <div class="phone-viewport">
         <md-bottom-bar class="md-accent" md-type="shift">
             <md-bottom-bar-item id="bottom-bar-item-home" @click="gohome">
-                <md-icon class="md-bottom-bar-icon">home</md-icon>
+                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_home_white_18dp.png" alt="home">
                 <span class="md-bottom-bar-label">主页</span>
                 <i class="badge" v-if="newPosts">{{ newPosts }}</i>
             </md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-finish" md-label="完成" md-icon="assignment_turned_in" @click="goFinish"></md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-posts" md-label="查找" md-icon="search" @click="gomission"></md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-favorites" md-label="设置" md-icon="settings" @click="gosetup"></md-bottom-bar-item>
+            <md-bottom-bar-item id="bottom-bar-item-finish" @click="goFinish">
+                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_assignment_turned_in_white_18dp.png" alt="finish">
+                <span class="md-bottom-bar-label">完成</span>
+            </md-bottom-bar-item>
+            <md-bottom-bar-item id="bottom-bar-item-posts" @click="gomission">
+                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_search_white_18dp.png" alt="search">
+                <span class="md-bottom-bar-label">查找</span>
+            </md-bottom-bar-item>
+            <md-bottom-bar-item id="bottom-bar-item-favorites" md-label="设置" md-icon="settings" @click="gosetup">
+                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_settings_white_18dp.png" alt="search">
+                <span class="md-bottom-bar-label">设置</span>
+            </md-bottom-bar-item>
         </md-bottom-bar>
     </div>
 </div>
