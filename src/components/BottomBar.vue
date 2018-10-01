@@ -3,20 +3,21 @@
     <div class="phone-viewport">
         <md-bottom-bar class="md-accent" md-type="shift">
             <md-bottom-bar-item id="bottom-bar-item-home" @click="gohome">
-                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_home_white_18dp.png" alt="home">
+                <div class="md-bottom-bar-icon baseline_home"></div>
                 <span class="md-bottom-bar-label">主页</span>
                 <i class="badge" v-if="newPosts">{{ newPosts }}</i>
             </md-bottom-bar-item>
             <md-bottom-bar-item id="bottom-bar-item-finish" @click="goFinish">
-                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_assignment_turned_in_white_18dp.png" alt="finish">
+                <div class="md-bottom-bar-icon assignment_turned"></div>
                 <span class="md-bottom-bar-label">完成</span>
             </md-bottom-bar-item>
             <md-bottom-bar-item id="bottom-bar-item-posts" @click="gomission">
-                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_search_white_18dp.png" alt="search">
+                <div class="md-bottom-bar-icon search_white"></div>
                 <span class="md-bottom-bar-label">查找</span>
             </md-bottom-bar-item>
             <md-bottom-bar-item id="bottom-bar-item-favorites" md-label="设置" md-icon="settings" @click="gosetup">
-                <img class="md-bottom-bar-icon" src="../../public/icons/baseline_settings_white_18dp.png" alt="search">
+                <!-- <img class="md-bottom-bar-icon" style="width:48px;height:48px" src="../../public/icons/baseline_settings_white_48dp.png" alt="search"> -->
+                <div class="md-bottom-bar-icon settings_white"></div>
                 <span class="md-bottom-bar-label">设置</span>
             </md-bottom-bar-item>
         </md-bottom-bar>
@@ -88,5 +89,37 @@ export default {
     font-weight: 600;
     letter-spacing: -.05em;
     font-family: 'Roboto Mono', monospace;
+}
+
+.baseline_home{
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-home-36px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-home-36px.svg);
+    width: 36px;
+    height: 36px;
+}
+
+.assignment_turned{
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-assignment_turned_in-36px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-assignment_turned_in-36px.svg);
+    width: 36px;
+    height: 36px;
+}
+
+.search_white{
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-search-36px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-search-36px.svg);
+    width: 36px;
+    height: 36px;
+}
+
+.settings_white{
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-settings-36px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-settings-36px.svg);
+    width: 36px;
+    height: 36px;
 }
 </style>
