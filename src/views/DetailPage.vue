@@ -110,7 +110,8 @@
 
             <div style="padding-top:40px">
                 <div class="photoarea" @click="uploadFile" v-if="!missionImage">
-                    <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
+                    <!-- <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon> -->
+                    <div v-if="!updateImagePreview" class="add_a_photo"></div>
                     <img :src="updateImagePreview" alt="newimg" v-else>
                 </div>
                 <div class="photoarea" v-else>
@@ -543,5 +544,16 @@ export default {
     -webkit-mask-image: url(../../public/icons/baseline-camera_alt-24px.svg);
     width: 48px;
     height: 48px;
+}
+
+.add_a_photo {
+    background:var(--md-theme-default-icon-on-background, rgba(0, 0, 0, 0.54));
+    mask-image: url(../../public/icons/baseline-add_a_photo-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-add_a_photo-24px.svg);
+    width: 72px;
+    height: 72px;
+    margin: 0 auto ;
+    margin-top: 75px;
+    
 }
 </style>

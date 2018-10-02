@@ -180,6 +180,10 @@ export default {
 </script>
 
 <style scoped>
+#homepage{
+    overflow: hidden;
+}
+
 .emptyarea-top {
     padding: 30px 0;
 }

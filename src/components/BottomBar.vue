@@ -15,8 +15,7 @@
                 <div class="md-bottom-bar-icon search_white"></div>
                 <span class="md-bottom-bar-label">查找</span>
             </md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-favorites" md-label="设置" md-icon="settings" @click="gosetup">
-                <!-- <img class="md-bottom-bar-icon" style="width:48px;height:48px" src="../../public/icons/baseline_settings_white_48dp.png" alt="search"> -->
+            <md-bottom-bar-item id="bottom-bar-item-favorites" @click="gosetup">
                 <div class="md-bottom-bar-icon settings_white"></div>
                 <span class="md-bottom-bar-label">设置</span>
             </md-bottom-bar-item>
