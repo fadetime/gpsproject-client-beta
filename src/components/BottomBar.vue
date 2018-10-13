@@ -4,20 +4,20 @@
         <md-bottom-bar class="md-accent" md-type="shift">
             <md-bottom-bar-item id="bottom-bar-item-home" @click="gohome">
                 <div class="md-bottom-bar-icon baseline_home"></div>
-                <span class="md-bottom-bar-label">主页</span>
+                <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
                 <i class="badge" v-if="newPosts">{{ newPosts }}</i>
             </md-bottom-bar-item>
             <md-bottom-bar-item id="bottom-bar-item-finish" @click="goFinish">
                 <div class="md-bottom-bar-icon assignment_turned"></div>
-                <span class="md-bottom-bar-label">完成</span>
+                <span class="md-bottom-bar-label">{{language.bottomBar.finish}}</span>
             </md-bottom-bar-item>
             <md-bottom-bar-item id="bottom-bar-item-posts" @click="gomission">
                 <div class="md-bottom-bar-icon search_white"></div>
-                <span class="md-bottom-bar-label">查找</span>
+                <span class="md-bottom-bar-label">{{language.bottomBar.find}}</span>
             </md-bottom-bar-item>
             <md-bottom-bar-item id="bottom-bar-item-favorites" @click="gosetup">
                 <div class="md-bottom-bar-icon settings_white"></div>
-                <span class="md-bottom-bar-label">设置</span>
+                <span class="md-bottom-bar-label">{{language.bottomBar.setup}}</span>
             </md-bottom-bar-item>
         </md-bottom-bar>
     </div>
@@ -30,6 +30,9 @@ export default {
     computed:{
         newPosts: function() {
             return this.$store.state.needDoNum;
+        },
+        language(){
+          return this.$store.getters.getLanguage
         }
     },
     methods: {

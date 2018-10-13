@@ -1,6 +1,6 @@
 <template>
     <div id="homepage">
-        <transition name="custom-classes-transition" enter-active-class="animated slideInLeft" leave-active-class="animated slideOutLeft">
+        <div style="position:fixed;top:-20px;width:100%;height:70px;background-color:#fff;z-index:9"></div>
             <div>
                 <div class="topusername" style="box-shadow: 0px 1px 5px;">
                     <div class="topusername-left"></div>
@@ -17,7 +17,7 @@
                 <div v-if="allMission.length == 0" style="padding-top:100px">
                     <img src="../../public/img/ebuyLogo.png" alt="logo" style="width:200px">
                     <br>
-                    <span>~无配送任务~</span>
+                    <span>~{{language.homePage.whenEmpty}}~</span>
                 </div>
                 <div v-else>
                     <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(item,index) in allMission" :key="index">
@@ -31,7 +31,7 @@
 
                                 <div class="card-text" style="padding:10px 0 10px 30px">
                                     <div>
-                                        <span style="font-size:16px;color: #989898">用户数量</span>
+                                        <span style="font-size:16px;color: #989898">{{language.homePage.amountOfUsers}}</span>
                                     </div>
                                 </div>
 
@@ -40,13 +40,13 @@
                                         <div class="allclientnumicon"></div>
                                     </div>
                                     <div class="card-text-right" style="padding-left:50px">
-                                        <span style="font-size:16px">共 {{item.missionclient.length}} 个</span>
+                                        <span style="font-size:16px">{{language.homePage.amountBefore}} {{item.missionclient.length}} {{language.homePage.amountAfter}}</span>
                                     </div>
                                 </div>
 
                                 <div class="card-text" style="padding:10px 0 10px 30px">
                                     <div>
-                                        <span style="font-size:16px;color: #989898">完成数量</span>
+                                        <span style="font-size:16px;color: #989898">{{language.homePage.amountOfFinish}}</span>
                                     </div>
                                 </div>
 
@@ -55,13 +55,13 @@
                                         <div class="assignmenticon"></div>
                                     </div>
                                     <div class="card-text-right" style="padding-left:50px">
-                                        <span style="font-size:16px">共 {{finishNumber[index]}} 个</span>
+                                        <span style="font-size:16px">{{language.homePage.amountBefore}} {{finishNumber[index]}} {{language.homePage.amountAfter}}</span>
                                     </div>
                                 </div>
 
                                 <div class="card-text" style="padding:20px 0 10px 30px">
                                     <div>
-                                        <span style="font-size:16px;color: #989898">订单时间</span>
+                                        <span style="font-size:16px;color: #989898">{{language.homePage.orderTime}}</span>
                                     </div>
                                 </div>
 
@@ -74,15 +74,15 @@
                                     </div>
                                 </div>
 
-                                <div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;padding: 0 0 10px 0;">
+                                <div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;padding: 0 0 10px 0;justify-content: center;">
                                     <div v-for="(x,n) in item.missionclient" :key="n" style="overflow:hidden;width:50px;height:50px;margin: 0 5px;box-shadow: 1px 1px 5px;" v-if="n < 5">
-                                        <img :src="x.image | imgurl" alt="x.clientbname" style="height:100%;width:100%;object-fit:cover">
+                                        <img :src="x.image | imgurl" alt="x.clientbname" style="height:100%;width:100%;object-fit:contain" v-on:error.once="loadDefault($event)">
                                     </div>
                                 </div>
                                 <div class="card-text" style="padding:10px 0;border-top:1px solid #eee">
                                     <div style="margin:0 auto;color:#707070;font-size:20px">
                                         <span>>>></span>
-                                        <span> 点击查看详情 </span>
+                                        <span> {{language.homePage.clickForDetails}} </span>
                                         <span>>>></span>
                                     </div>
                                 </div>
@@ -96,7 +96,6 @@
                     <!-- 底部占位符 -->
                 </div>
             </div>
-        </transition>
 
     </div>
 </template>
@@ -120,8 +119,14 @@ export default {
             drivername: "",
             dialogName: "",
             finishNumber: [],
-            needDoNum:0
+            needDoNum:0,
+            imgDefault:'/img/ebuyLogo.png'
         };
+    },
+    computed:{
+        language(){
+          return this.$store.getters.getLanguage
+        }
     },
     methods: {
         opendetail(item) {
@@ -132,6 +137,10 @@ export default {
             );
             this.$store.dispatch("setTempArr", item);
             this.$router.push("/detailpage");
+        },
+
+        loadDefault(e){
+          e.currentTarget.src=this.imgDefault
         },
 
         getDriverMission() {
@@ -180,10 +189,6 @@ export default {
 </script>
 
 <style scoped>
-#homepage{
-    overflow: hidden;
-}
-
 .emptyarea-top {
     padding: 30px 0;
 }

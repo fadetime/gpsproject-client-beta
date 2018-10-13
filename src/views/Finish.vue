@@ -10,10 +10,11 @@
                     </md-card>
 
                     <md-card style="width:80%;margin:10px auto" v-for="(x,n) in item.missionclient" :key="n" v-if="x.finishdate">
-                        <div @click="opendetail(x)">
+                        <!-- <div @click="opendetail(x)"> -->
+                        <div>
                             <md-card-header>
                                 <md-card-header-text>
-                                    <div class="md-title">{{x.clientbname}}</div>
+                                    <div class="md-title" style="font-size: 18px;max-width: 172px;">{{x.clientbname}}</div>
                                     <div class="md-subhead">{{x.finishdate | timefilter}}</div>
                                 </md-card-header-text>
 
@@ -26,8 +27,6 @@
 
                 </div>
             </div>
-
-            
 
         </div>
         <!-- 分页器 -->
@@ -46,10 +45,10 @@
             <div class="dialogtop" style="box-shadow: 0px 1px 5px;">
                 <div class="dialogtop-left" @click="uploadDialog = false">
                     <img src="../../public/icons/left.png" alt="exit">
-                    <span>返回</span>
+                    <span>{{language.finishPage.returnPage}}</span>
                 </div>
                 <div class="dialogtop-center">
-                    <span>确认完成</span>
+                    <span>{{language.finishPage.confirmState}}</span>
                 </div>
                 <div class="dialogtop-right"></div>
             </div>
@@ -70,11 +69,11 @@
 
             <div class="bottominfo">
                 <div class="bottominfo-title">
-                    <span style="font-size:20px">已完成</span>
+                    <span style="font-size:20px">{{language.finishPage.finish}}</span>
                 </div>
                 <div class="bottominfo-body">
                     <div class="bottominfo-body-left">
-                        <span>完成日期</span>
+                        <span>{{language.finishPage.completionDate}}</span>
                     </div>
                     <div class="bottominfo-body-right">
                         <span>{{dialogDate | timefilter}}</span>
@@ -82,7 +81,7 @@
                 </div>
                 <div class="bottominfo-body">
                     <div class="bottominfo-body-left">
-                        <span>完成时间</span>
+                        <span>{{language.finishPage.completionTime}}</span>
                     </div>
                     <div class="bottominfo-body-right">
                         <span>{{dialogDate | dateFilter}}</span>
@@ -95,80 +94,85 @@
 </template>
 
 <script>
-import Swiper from "swiper";
-import "swiper/dist/css/swiper.min.css";
-import axios from "axios";
-import config from "../assets/js/config";
+import Swiper from 'swiper'
+import 'swiper/dist/css/swiper.min.css'
+import axios from 'axios'
+import config from '../assets/js/config'
 
 export default {
     created() {
-        this.drivername = localStorage.getItem("drivername");
-        this.getDriverMission();
+        this.drivername = localStorage.getItem('drivername')
+        this.getDriverMission()
+    },
+    computed: {
+        language() {
+            return this.$store.getters.getLanguage
+        }
     },
     mounted() {
         setTimeout(() => {
             // 滑块部分
-            const mySwiper = new Swiper(".swiper-container", {
+            const mySwiper = new Swiper('.swiper-container', {
                 autoplay: false,
                 // centeredSlides:true,
-                direction: "horizontal",
+                direction: 'horizontal',
                 loop: true,
 
                 pagination: {
-                    el: ".swiper-pagination"
+                    el: '.swiper-pagination'
                 },
 
                 // 如果需要前进后退按钮
                 navigation: {
-                    nextEl: ".button-right",
-                    prevEl: ".button-left"
+                    nextEl: '.button-right',
+                    prevEl: '.button-left'
                 }
-            });
+            })
             // 滑块部分
-        }, 200);
+        }, 200)
     },
     data() {
         return {
             swiperNumber: 0,
             uploadDialog: false,
-            dialogClientName: "",
-            missionImage: "",
-            dialogDate: "",
-            drivername: "",
-            allMission:[],
-            needDoNum:0
-        };
+            dialogClientName: '',
+            missionImage: '',
+            dialogDate: '',
+            drivername: '',
+            allMission: [],
+            needDoNum: 0
+        }
     },
     methods: {
-        opendetail(item) {
-            this.uploadDialog = true;
-            this.dialogClientName = item.clientbname;
-            this.missionImage = item.finishphoto;
-            this.dialogDate = item.finishdate;
-        },
+        // opendetail(item) {
+        //     this.uploadDialog = true;
+        //     this.dialogClientName = item.clientbname;
+        //     this.missionImage = item.finishphoto;
+        //     this.dialogDate = item.finishdate;
+        // },
         getDriverMission() {
             axios
-                .post(config.server + "/client-driver/", {
+                .post(config.server + '/client-driver/', {
                     startdate: new Date().toLocaleDateString(),
                     drivername: this.drivername
                 })
                 .then(doc => {
-                    this.allMission = doc.data.doc;
+                    this.allMission = doc.data.doc
                     doc.data.doc.forEach(elementX => {
                         elementX.missionclient.forEach(elementY => {
                             if (!elementY.finishdate) {
-                                this.needDoNum +=1
+                                this.needDoNum += 1
                             }
-                        });
-                    });
-                    this.$store.dispatch("setDoNum", this.needDoNum);
+                        })
+                    })
+                    this.$store.dispatch('setDoNum', this.needDoNum)
                 })
                 .catch(err => {
-                    console.log(err);
-                });
+                    console.log(err)
+                })
         }
     }
-};
+}
 </script>
 
 <style scoped>
@@ -315,7 +319,7 @@ export default {
     height: 90px;
     line-height: 58px;
     font-weight: bold;
-    background-image: url(../../public/img/wood.jpg);
+    background-image: url(../../public/img/wood.png);
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: 250px 74px;

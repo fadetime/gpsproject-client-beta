@@ -1,9 +1,10 @@
 <template>
 <div id="history-detail">
+    <div style="position:fixed;top:-20px;width:100%;height:70px;background-color:#fff;z-index:9"></div>
     <div class="topusername" style="box-shadow: 0px 1px 5px;">
         <div class="topusername-left" @click="turnback">
             <img src="../../public/icons/left.png" alt="exit">
-            <span>返回</span>
+            <span>{{language.detailPage.returnPage}}</span>
         </div>
         <div class="topusername-center">
             <span>{{tempArr.missionline}}</span>
@@ -30,7 +31,7 @@
 
                 <div class="card-text">
                     <div class="card-text-left">
-                        <span>Address:</span>
+                        <span>{{language.detailPage.address}}:</span>
                     </div>
                     <div class="card-text-right">
                         <span>{{x.clientbaddress}}</span>
@@ -39,7 +40,7 @@
 
                 <div class="card-text">
                     <div class="card-text-left">
-                        <span>Contact: </span>
+                        <span>{{language.detailPage.contact}}: </span>
                     </div>
                     <div class="card-text-right">
                         <span>{{x.clientbphone}}</span>
@@ -48,7 +49,7 @@
 
                 <div class="card-text">
                     <div class="card-text-left">
-                        <span>PostCode: </span>
+                        <span>{{language.detailPage.postCode}}: </span>
                     </div>
                     <div class="card-text-right">
                         <span>{{x.clientbpostcode}}</span>
@@ -57,11 +58,11 @@
 
                 <div class="card-text" style="padding:5px 20px 20px 20px">
                     <div class="card-text-left">
-                        <span>State: </span>
+                        <span>{{language.detailPage.state}}: </span>
                     </div>
                     <div class="card-text-right">
-                        <span style="color:#f9cf97" v-if="!x.finishdate">Shipping</span>
-                        <span style="color:#99cc33" v-else>finish</span>
+                        <span style="color:#f9cf97" v-if="!x.finishdate">{{language.detailPage.shipping}}</span>
+                        <span style="color:#99cc33" v-else>{{language.detailPage.finish}}</span>
                     </div>
                 </div>
             </div>
@@ -78,10 +79,10 @@
         <div class="dialogtop" style="box-shadow: 0px 1px 5px;">
             <div class="dialogtop-left" @click="uploadDialog = false,cancel()">
                 <img src="../../public/icons/left.png" alt="exit">
-                <span>返回</span>
+                <span>{{language.detailPage.returnPage}}</span>
             </div>
             <div class="dialogtop-center">
-                <span>确认信息</span>
+                <span>{{language.detailPage.confirm}}</span>
             </div>
             <div class="dialogtop-right"></div>
         </div>
@@ -92,7 +93,7 @@
 
         <div style="padding-top:40px">
             <div class="photoarea" @click="uploadFile" v-if="!missionImage">
-                <md-icon class="md-size-3x" style="padding-top:110px" v-if="!updateImagePreview">add_a_photo</md-icon>
+                <div v-if="!updateImagePreview" class="add_a_photo"></div>
                 <img :src="updateImagePreview" alt="newimg" v-else>
             </div>
                 <div class="photoarea" v-else>
@@ -116,7 +117,7 @@
                 </div>
                 <div v-else class="bottombutton">
                     <div class="bottombutton-center">
-                        <span style="font-size:20px">已完成</span>
+                        <span style="font-size:20px">{{language.detailPage.finish}}</span>
                         <br>
                         <span style="font-size:16px">{{finishDate | timefilter}}</span>
                     </div>
@@ -147,6 +148,9 @@ export default {
     computed: {
         tempArr: function () {
             return this.$store.state.tempArr
+        },
+        language(){
+          return this.$store.getters.getLanguage
         }
     },
     methods: {
@@ -294,7 +298,7 @@ export default {
 .card-text {
     text-align: left;
     padding: 5px 20px;
-    font-size: 20px;
+    font-size: 18px;
     display: -webkit-flex;
     display: flex;
     -webkit-flex-flow: row;
@@ -303,12 +307,16 @@ export default {
 }
 
 .card-text-left {
-    flex-basis: 40%;
+    flex-basis: 30%;
+    font-size: 16px;
+    text-align: right;
 }
 
 .card-text-right {
-    flex-basis: 60%;
+    flex-basis: 70%;
     min-width: 160px;
+    padding-left: 10px;
+    font-size: 16px;
 }
 
 .card-camera {
@@ -377,7 +385,7 @@ export default {
     height: 90px;
     line-height: 58px;
     font-weight: bold;
-    background-image: url(../../public/img/wood.jpg);
+    background-image: url(../../public/img/wood.png);
     background-repeat: no-repeat;
     background-position: bottom;
     background-size: 250px 74px;
@@ -437,5 +445,15 @@ export default {
     font-size: 25px;
     color: #fff;
     font-weight: 600;
+}
+
+.add_a_photo {
+    background:var(--md-theme-default-icon-on-background, rgba(0, 0, 0, 0.54));
+    mask-image: url(../../public/icons/baseline-add_a_photo-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-add_a_photo-24px.svg);
+    width: 72px;
+    height: 72px;
+    margin: 0 auto ;
+    margin-top: 75px;
 }
 </style>

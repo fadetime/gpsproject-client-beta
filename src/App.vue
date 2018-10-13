@@ -1,7 +1,7 @@
 <template>
     <div id="app" v-if="loadingDone">
         <keep-alive>
-            <transition name="custom-classes-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
                 <router-view class="child-view" />
             </transition>
         </keep-alive>
@@ -10,42 +10,54 @@
 </template>
 
 <script>
-import BottomBar from "./components/BottomBar";
+import BottomBar from './components/BottomBar'
 export default {
     components: {
         BottomBar
     },
-    data(){
-        return{
-            loadingDone:false
+    data() {
+        return {
+            loadingDone: false,
+            lang: 'ch'
         }
     },
-    created(){
+    created() {
         document.getElementById('appLoading').className = 'animated fadeOut'
-        setTimeout(()=> {
+        setTimeout(() => {
             document.body.removeChild(document.getElementById('appLoading'))
-            this.loadingDone =true
+            this.loadingDone = true
         }, 100)
+        this.getLang()
     },
     mounted() {
         if (!localStorage.drivertoken) {
-            this.$router.push("/login");
-        }else{
+            this.$router.push('/login')
+        } else {
             let item = localStorage.drivertoken
             this.$store.dispatch('setToken', item)
         }
     },
-    computed:{
+
+    computed: {
         token() {
             return this.$store.state.haveToken
         }
+    },
+    methods: {
+        getLang() {
+            if (localStorage.lang) {
+                this.$store.dispatch('setLanguage', localStorage.lang)
+            } else {
+                this.$store.dispatch('setLanguage', 'ch')
+            }
+        }
     }
-};
+}
 </script>
 
 <style lang="scss">
 #app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
@@ -57,13 +69,14 @@ export default {
     position: absolute;
     width: 100%;
 }
-@import "~vue-material/dist/theme/engine"; // Import the theme engine
+@import '~vue-material/dist/theme/engine'; // Import the theme engine
 @include md-register-theme(
-    "default",
+    'default',
     (
-        primary: #d74342,// The primary color of your application 
-        accent: #d74342  // The accent or secondary color
+        primary: #d74342,
+        // The primary color of your application
+            accent: #d74342// The accent or secondary color
     )
 );
-@import "~vue-material/dist/theme/all"; // Apply the theme
+@import '~vue-material/dist/theme/all'; // Apply the theme
 </style>

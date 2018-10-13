@@ -5,7 +5,7 @@
                 <img src="../../public/img/ebuyLogo.png" alt="Avatar" />
             </div>
             <div class="top-pic" v-else>
-                <img :src="driverimage | imgurl" alt="Avatar">
+                <img :src="driverimage | imgurl" alt="Avatar" v-on:error.once="loadDefault($event)">
             </div>
             <div class="top-title">
                 <span>{{drivername}}</span>
@@ -16,20 +16,20 @@
             <md-card style="width:80%;margin:10px auto;">
                 <div class="card-item">
                     <div class="card-item-title">
-                        <span>驾照类型</span>
+                        <span>{{language.setupPage.licenseType}}</span>
                     </div>
                     <div class="card-item-body">
                         <div class="drivercardicon" style="width: 24px;height:24px"></div>
                         <div>
                             <span>{{drivercard}}</span>
                         </div>
-                        
+
                     </div>
                 </div>
 
                 <div class="card-item">
                     <div class="card-item-title">
-                        <span>联系方式</span>
+                        <span>{{language.setupPage.Contact}}</span>
                     </div>
                     <div class="card-item-body">
                         <div class="phoneicon" style="width: 24px;height:24px"></div>
@@ -39,7 +39,7 @@
 
                 <div class="card-item">
                     <div class="card-item-title">
-                        <span>准证号码</span>
+                        <span>{{language.setupPage.cardNumber}}</span>
                     </div>
                     <div class="card-item-body">
                         <div class="infoicon" style="width: 24px;height:24px"></div>
@@ -48,59 +48,61 @@
                 </div>
             </md-card>
         </div>
-
         <div class="bottom">
-            <md-button class="md-raised md-primary" style="width:80%" @click="isChangePSW = true,showDialog = true">修改密码</md-button>
+            <md-button class="md-raised md-primary" style="width:80%" @click="languageWindow=true">{{language.setupPage.lang}}</md-button>
         </div>
         <div class="bottom">
-            <md-button class="md-raised " style="width:80%;background-color: yellow;" @click="isChangePSW = false,showDialog = true">退出登录</md-button>
+            <md-button class="md-raised md-primary" style="width:80%" @click="isChangePSW = true,showDialog = true">{{language.setupPage.changePsw}}</md-button>
+        </div>
+        <div class="bottom">
+            <md-button class="md-raised " style="width:80%;background-color: yellow;" @click="isChangePSW = false,showDialog = true">{{language.setupPage.signOut}}</md-button>
         </div>
         <div style="height:60px">
             <!-- 底部占位符 -->
         </div>
         <!-- 遮罩层 -->
-        <transition name="custom-classes-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="showDialog" class="dialog" @click.self="showDialog = false">
                 <div class="dialog-body">
                     <div style="width:100%;background-color:#d74342;box-shadow: 1px 1px 5px;">
-                        <span v-if="isChangePSW" style="font-size:20px;color:#fff;line-height: 32px;">修改密码</span>
-                        <span v-else style="font-size:20px;color:#fff;line-height: 32px;">退出登录</span>
+                        <span v-if="isChangePSW" style="font-size:20px;color:#fff;line-height: 32px;">{{language.setupPage.changePsw}}</span>
+                        <span v-else style="font-size:20px;color:#fff;line-height: 32px;">{{language.setupPage.signOut}}</span>
                     </div>
                     <div class="dialog-body-center">
                         <div v-if="isChangePSW" style="width:250px;margin:10px auto;box-shadow:1px 1px 5px">
                             <div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
                                 <div class="dialog-body-center-item-left">
-                                    <label for="oldpsw">原始密码</label>
+                                    <label for="oldpsw">{{language.setupPage.oldPsw}}</label>
                                 </div>
                                 <div class="dialog-body-center-item-right">
-                                    <input type="password" id="oldpsw" placeholder="请输入原始密码" v-model="oldpassword">
+                                    <input type="password" id="oldpsw" :placeholder="language.setupPage.oldPswPlaceHolder" v-model="oldpassword">
                                 </div>
                             </div>
                             <div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
                                 <div class="dialog-body-center-item-left">
-                                    <label for="newpsw">新密码</label>
+                                    <label for="newpsw">{{language.setupPage.newPsw}}</label>
                                 </div>
                                 <div class="dialog-body-center-item-right">
-                                    <input type="password" id="newpsw" placeholder="请输入新密码" v-model="newpassword">
+                                    <input type="password" id="newpsw" :placeholder="language.setupPage.newPswPlaceHolder" v-model="newpassword">
                                 </div>
                             </div>
                             <div class="dialog-body-center-item">
                                 <div class="dialog-body-center-item-left">
-                                    <label for="confirmpsw">确认密码</label>
+                                    <label for="confirmpsw">{{language.setupPage.confirmPsw}}</label>
                                 </div>
                                 <div class="dialog-body-center-item-right">
-                                    <input id="confirmpsw" type="password" placeholder="请确认新密码" v-model="conpassword">
+                                    <input id="confirmpsw" type="password" :placeholder="language.setupPage.confirmPswPlaceHolder" v-model="conpassword">
                                 </div>
                             </div>
                         </div>
 
                         <div v-else style="width:250px;margin:10px auto;box-shadow:1px 1px 5px;height:152px;line-height:142px">
-                            <span>是否确认退出？</span>
+                            <span>{{language.setupPage.quitInfo}}</span>
                         </div>
                     </div>
                     <div class="dialog-body-bottom">
-                        <md-button class="md-raised" @click="showDialog = false">取消</md-button>
-                        <md-button class="md-raised md-primary" @click="confirmChangePsw">确认</md-button>
+                        <md-button class="md-raised" @click="showDialog = false">{{language.setupPage.cancel}}</md-button>
+                        <md-button class="md-raised md-primary" @click="confirmChangePsw">{{language.setupPage.confirm}}</md-button>
                     </div>
                 </div>
             </div>
@@ -113,88 +115,129 @@
             </div>
         </transition>
         <!-- 操作提示 -->
+
+        <!-- language window start -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div class="languageWindow" v-if="languageWindow">
+                <div class="languageWindow-box">
+                    <div style="width:80%;margin:10px auto;border-bottom: 1px solid #fff;height:26px">
+                        <span style="font-size:18px;color:#fff">选择语言</span>
+                    </div>
+                    <div style="padding-top:10px">
+                        <button style="font-size:16px;width:100px;height:35px;" @click="changeToCH">中文</button>
+                    </div>
+                    <div style="padding-top:10px">
+                        <button style="font-size:16px;width:100px;height:35px;" @click="changeToEN">English</button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- language window end -->
     </div>
 </template>
 
 <script>
-import axios from "axios";
-import config from "../assets/js/config";
+import axios from 'axios'
+import config from '../assets/js/config'
 
 export default {
     data() {
         return {
             showDialog: false,
-            drivername: "",
-            drivercard: "",
-            driverphone: "",
-            driverid: "",
-            driverimage: "",
-            errorInfo: "",
-            oldpassword: "",
-            newpassword: "",
-            conpassword: "",
+            drivername: '',
+            drivercard: '',
+            driverphone: '',
+            driverid: '',
+            driverimage: '',
+            errorInfo: '',
+            oldpassword: '',
+            newpassword: '',
+            conpassword: '',
             showError: false,
-            _id: "",
-            isChangePSW: true
-        };
+            _id: '',
+            isChangePSW: true,
+            languageWindow: false,
+            lang: 'ch',
+            imgDefault:'/img/ebuyLogo.png'
+        }
+    },
+    computed: {
+        language() {
+            return this.$store.getters.getLanguage
+        }
     },
     mounted() {
-        this.drivername = localStorage.getItem("drivername");
-        this.drivercard = localStorage.getItem("drivercard");
-        this.driverphone = localStorage.getItem("driverphone");
-        this.driverid = localStorage.getItem("dirverid");
-        this.driverimage = localStorage.getItem("image");
+        this.drivername = localStorage.getItem('drivername')
+        this.drivercard = localStorage.getItem('drivercard')
+        this.driverphone = localStorage.getItem('driverphone')
+        this.driverid = localStorage.getItem('dirverid')
+        this.driverimage = localStorage.getItem('image')
     },
     methods: {
+        loadDefault(e){
+          e.currentTarget.src=this.imgDefault
+        },
+
+        changeToCH() {
+            this.lang = 'ch'
+            this.$store.dispatch('setLanguage', this.lang)
+            this.languageWindow = false
+        },
+
+        changeToEN() {
+            this.lang = 'en'
+            this.$store.dispatch('setLanguage', this.lang)
+            this.languageWindow = false
+        },
+
         confirmChangePsw() {
             if (this.isChangePSW) {
                 if (!this.oldpassword) {
-                    this.errorInfo = "请填写旧密码";
-                    this.showError = true;
+                    this.errorInfo = '请填写旧密码'
+                    this.showError = true
                 } else if (!this.newpassword) {
-                    this.errorInfo = "请填写新密码";
-                    this.showError = true;
+                    this.errorInfo = '请填写新密码'
+                    this.showError = true
                 } else if (!this.conpassword) {
-                    this.errorInfo = "请确认新密码";
-                    this.showError = true;
+                    this.errorInfo = '请确认新密码'
+                    this.showError = true
                 } else if (this.newpassword != this.conpassword) {
-                    this.errorInfo = "两次输入密码不一致";
-                    this.showError = true;
+                    this.errorInfo = '两次输入密码不一致'
+                    this.showError = true
                 } else {
-                    console.log("comit mission");
-                    this._id = localStorage.getItem("_id");
+                    console.log('comit mission')
+                    this._id = localStorage.getItem('_id')
                     axios
-                        .post(config.server + "/client-driver/change", {
+                        .post(config.server + '/client-driver/change', {
                             oldpassword: this.oldpassword,
                             newpassword: this.newpassword,
                             conpassword: this.conpassword,
                             _id: this._id
                         })
                         .then(doc => {
-                            this.oldpassword = "";
-                            this.errorInfo = doc.data.msg;
-                            this.showError = true;
+                            this.oldpassword = ''
+                            this.errorInfo = doc.data.msg
+                            this.showError = true
                             if (doc.data.code === 0) {
-                                this.showDialog = false;
+                                this.showDialog = false
                             }
                         })
                         .catch(err => {
-                            console.log(err);
-                        });
+                            console.log(err)
+                        })
                 }
                 setTimeout(() => {
-                    this.showError = false;
-                }, 2000);
+                    this.showError = false
+                }, 2000)
             } else {
-                localStorage.removeItem("drivertoken");
+                localStorage.clear()
                 let item = null
-                this.$store.dispatch("setToken", item);
-                this.$router.push("/login");
-                
+                this.$store.dispatch('setToken', item)
+                this.$router.push('/login')
             }
         }
     }
-};
+}
 </script>
 
 <style scoped>
@@ -239,14 +282,14 @@ export default {
 }
 
 .card-item {
-    padding: 20px 0;
+    padding: 16px 0;
     border-bottom: 1px solid #eee;
 }
 
 .card-item-title {
     text-align: left;
     padding: 0 0 15px 20px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .card-item-title span {
@@ -261,8 +304,8 @@ export default {
 }
 
 .card-item-body span {
-    padding-left: 10px;
-    font-size: 18px;
+    padding-left: 20px;
+    font-size: 16px;
 }
 
 .dialog {
@@ -325,18 +368,38 @@ export default {
 .drivercardicon {
     background: #d74342;
     mask-image: url(../../public/icons/baseline-commute-24px.svg);
-    -webkit-mask-image: url(../../public/icons/baseline-commute-24px.svg)
+    -webkit-mask-image: url(../../public/icons/baseline-commute-24px.svg);
 }
 
 .phoneicon {
     background: #d74342;
     mask-image: url(../../public/icons/baseline-phone-24px.svg);
-    -webkit-mask-image: url(../../public/icons/baseline-phone-24px.svg)
+    -webkit-mask-image: url(../../public/icons/baseline-phone-24px.svg);
 }
 
 .infoicon {
     background: #d74342;
     mask-image: url(../../public/icons/baseline-assignment_ind-24px.svg);
-    -webkit-mask-image: url(../../public/icons/baseline-assignment_ind-24px.svg)
+    -webkit-mask-image: url(../../public/icons/baseline-assignment_ind-24px.svg);
+}
+
+.languageWindow {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+}
+
+.languageWindow-box {
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100%;
+    height: 200px;
 }
 </style>

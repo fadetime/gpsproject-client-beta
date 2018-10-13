@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import Switch from '../public/Language/switch'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
 	state: {
 		tempArr:{},
 		haveToken:'',
-		needDoNum:0
+		needDoNum:0,
+		language:'',
+		lang:''
 	},
 	mutations: {
 		setTempArr:(state , item) => {
@@ -18,7 +20,12 @@ export default new Vuex.Store({
 		},
 		setDoNum:(state , item) => {
 			state.needDoNum = item
-		}
+		},
+		setLanguage:(state,payload)=>{
+			state.language=Switch(payload)
+			state.lang = payload
+			localStorage.setItem('lang',payload)
+		},
 	},
 	actions: {
 		setTempArr: ({ commit }, item) => {
@@ -29,6 +36,14 @@ export default new Vuex.Store({
 		},
 		setDoNum: ({ commit }, item) => {
 			commit('setDoNum', item)
+		},
+		setLanguage:({commit},payload)=>{
+			commit('setLanguage',payload)
+		},
+	},
+	getters:{
+		getLanguage:(state)=>{
+			return state.language
 		}
 	}
 })
