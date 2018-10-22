@@ -38,6 +38,7 @@ export default {
     methods: {
         gohome() {
             this.$router.push('/')
+            
         },
         gomission() {
             this.$router.push('/history')

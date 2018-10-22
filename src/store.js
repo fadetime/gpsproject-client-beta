@@ -8,6 +8,7 @@ export default new Vuex.Store({
 		tempArr:{},
 		haveToken:'',
 		needDoNum:0,
+		choiseDay:'today',
 		language:'',
 		lang:''
 	},
@@ -20,6 +21,9 @@ export default new Vuex.Store({
 		},
 		setDoNum:(state , item) => {
 			state.needDoNum = item
+		},
+		setChoiseDay:(state , item) => {
+			state.choiseDay = item
 		},
 		setLanguage:(state,payload)=>{
 			state.language=Switch(payload)
@@ -36,6 +40,9 @@ export default new Vuex.Store({
 		},
 		setDoNum: ({ commit }, item) => {
 			commit('setDoNum', item)
+		},
+		setChoiseDay: ({ commit }, item) => {
+			commit('setChoiseDay', item)
 		},
 		setLanguage:({commit},payload)=>{
 			commit('setLanguage',payload)
