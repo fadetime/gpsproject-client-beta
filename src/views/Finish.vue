@@ -19,7 +19,7 @@
                                 </md-card-header-text>
 
                                 <md-card-media>
-                                    <img :src="x.finishphoto | imgurl" alt="People" style="width: 100%;height: 100%;object-fit: contain;">
+                                    <img :src="x.finishphoto | imgurl" alt="People" style="width: 100%;height: 100%;object-fit: contain;" v-on:error.once="loadDefault($event)">
                                 </md-card-media>
                             </md-card-header>
                         </div>
@@ -143,7 +143,8 @@ export default {
             dialogDate: '',
             drivername: '',
             allMission: [],
-            needDoNum: 0
+            needDoNum: 0,
+            imgDefault: '/img/ebuyLogo.png',
         }
     },
     methods: {
@@ -153,6 +154,9 @@ export default {
         //     this.missionImage = item.finishphoto;
         //     this.dialogDate = item.finishdate;
         // },
+        loadDefault(e) {
+            e.currentTarget.src = this.imgDefault
+        },
         getDriverMission() {
             let findDate
             if(this.choiseDay === 'today'){

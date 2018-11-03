@@ -16,9 +16,9 @@
             </div>
             <div>
                 <div style="display:flex;display:-webkit-flex;justify-content:center">
-                    <div :class="choiceDayClassA" style="border-top-left-radius: 20px;border-bottom-left-radius: 20px;" @click="choiceDayMethod('yesterday')">昨天</div>
-                    <div :class="choiceDayClassB" style="margin:0 3px" @click="choiceDayMethod('today')">今天</div>
-                    <div :class="choiceDayClassC" style="border-top-right-radius: 20px;border-bottom-right-radius: 20px;" @click="choiceDayMethod('tomorrow')">明天</div>
+                    <div :class="choiceDayClassA" style="border-top-left-radius: 20px;border-bottom-left-radius: 20px;" @click="choiceDayMethod('yesterday')">{{language.homePage.yesterday}}</div>
+                    <div :class="choiceDayClassB" style="margin:0 3px" @click="choiceDayMethod('today')">{{language.homePage.today}}</div>
+                    <div :class="choiceDayClassC" style="border-top-right-radius: 20px;border-bottom-right-radius: 20px;" @click="choiceDayMethod('tomorrow')">{{language.homePage.tomorrow}}</div>
                 </div>
             </div>
             <div v-if="allMission.length == 0" style="padding-top:100px">
@@ -199,13 +199,16 @@ export default {
             this.$store.dispatch('setDoNum', this.needDoNum)
             let findDate
             if(this.choiseDay === 'today'){
-                findDate = new Date().toLocaleDateString()
+                findDate = new Date()
+                findDate.setHours(0,0,0,0)
                 findDate = new Date(findDate).getTime()
             }else if(this.choiseDay === 'yesterday'){
-                findDate = new Date().toLocaleDateString()
+                findDate = new Date()
+                findDate.setHours(0,0,0,0)
                 findDate = new Date(findDate).getTime() - 86400000
             }else {
-                findDate = new Date().toLocaleDateString()
+                findDate = new Date()
+                findDate.setHours(0,0,0,0)
                 findDate = new Date(findDate).getTime() + 86400000
             }
             axios

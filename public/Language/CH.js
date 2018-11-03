@@ -9,6 +9,9 @@ export default{
     },
     homePage:{
         whenEmpty:'无配送任务',
+        yesterday:'昨天',
+        today:'今天',
+        tomorrow:'明天',
         amountOfUsers:'用户数量',
         amountOfFinish:'完成数量',
         amountBefore:'共',
@@ -25,7 +28,13 @@ export default{
         state:'状态',
         confirm:'确认完成',
         shipping:'运送中',
-        finish:'已送达'
+        finish:'已送达',
+        missionSuccess:'任务提交成功',
+        missionError:'任务提交失败',
+        confirmBox_title:'提示',
+        confirmBox_info:'是否确认提交',
+        confirmBox_cancel:'取消',
+        confirmBox_confirm:'确认'
     },
     finishPage:{
         returnPage:'返回',

@@ -36,11 +36,11 @@
                         </div>
                     </div>
 
-                    <div style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;" @click="openImage(x)">
+                    <div style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;background: #fff;" @click="openImage(x)">
                         <img :src="x.image | imgurl" alt="clientPic" style="width: 100%;height: 100%;object-fit: contain;" v-on:error.once="loadDefault($event)">
                     </div>
-                    <div @click="upload(x)">
-                        <div class="card-text">
+                    <div>
+                        <div class="card-text" @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.address}}:</span>
                             </div>
@@ -49,7 +49,7 @@
                             </div>
                         </div>
 
-                        <div class="card-text">
+                        <div class="card-text" @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.contact}}: </span>
                             </div>
@@ -58,7 +58,7 @@
                             </div>
                         </div>
 
-                        <div class="card-text">
+                        <div class="card-text" @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.postCode}}: </span>
                             </div>
@@ -67,7 +67,7 @@
                             </div>
                         </div>
 
-                        <div class="card-text" style="padding:5px 20px 20px 20px">
+                        <div class="card-text" style="padding:5px 20px 20px 20px" @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.state}}: </span>
                             </div>
@@ -77,8 +77,9 @@
                             </div>
                         </div>
 
-                        <div class="card-camera">
-                            <div class="date_rangeicon"></div>
+                        <div class="card-camera" @click.prevent.self="upload(x)">
+                            <div v-if="x.isNeedPic" class="date_rangeicon" @click="upload(x)"></div>
+                            <div v-else class="date_done" @click="openConfirmBoxMethod(x)"></div>
                         </div>
                     </div>
 
@@ -112,6 +113,9 @@
                 <div style="padding-top:40px">
                     <div class="photoarea" @click="uploadFile" v-if="!missionImage">
                         <div v-if="!updateImagePreview" class="add_a_photo"></div>
+                        <!-- <div v-if="!updateImagePreview">
+                            <span>非必要</span>
+                        </div> -->
                         <img :src="updateImagePreview" alt="newimg" v-else>
                     </div>
                     <div class="photoarea" v-else>
@@ -153,6 +157,38 @@
             </div>
         </transition>
         <!-- image dialog end -->
+        <!-- err info box -->
+        <transition name="custom-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
+            <div class="errinfo" v-if="showError" @click="closeErrorInfo">
+                <span>{{errorInfo}}</span>
+            </div>
+        </transition>
+        <!-- err info box -->
+        <!-- confirm box  -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-show="confirmBox" class="confirmBox"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-show="confirmBox" class="confirmBox-back" @click.prevent.self="confirmBox = false">
+                <div class="confirmBox-body">
+                    <div class="confirmBox-body-title">
+                        <span>{{tempShiping}}</span>
+                    </div>
+                    <div class="confirmBox-body-center">
+                        <span>{{language.detailPage.confirmBox_info}}</span>
+                    </div>
+                    <div class="confirmBox-body-bottom">
+                        <div class="confirmBox-body-bottom-left" @click="confirmBox = false">
+                            <span>{{language.detailPage.confirmBox_cancel}}</span>
+                        </div>
+                        <div class="confirmBox-body-bottom-right" @click="noPicUpdate">
+                            <span>{{language.detailPage.confirmBox_confirm}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- confirm box  -->
     </div>
 </template>
 
@@ -182,7 +218,11 @@ export default {
             imageSrc: '',
             needDoNum: 0,
             isClear: false,
-            imgDefault: '/img/ebuyLogo.png'
+            imgDefault: '/img/ebuyLogo.png',
+            showError: false,
+            errorInfo: 'Get some error',
+            confirmBox: false,
+            tempShiping:''
         }
     },
     computed: {
@@ -194,6 +234,39 @@ export default {
         }
     },
     methods: {
+        closeErrorInfo() {
+            this.showError = false
+        },
+        openConfirmBoxMethod(x){
+            this.confirmBox = true
+            this.tempShiping = x.clientbname
+        },
+        noPicUpdate() {
+            console.log('it worked')
+            axios
+                .post(config.server + '/client-driver/exupdate', {
+                    _id: this.tempArr._id,
+                    clientName: this.tempShiping
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if (doc.data.code === 0) {
+                        this.missionGetOne()
+                        this.confirmBox = false
+                        this.showError = true
+                        this.errorInfo = this.language.detailPage.missionSuccess
+                    } else {
+                        this.showError = true
+                        this.errorInfo = this.language.detailPage.missionError
+                    }
+                    setTimeout(() => {
+                        this.showError = false
+                    }, 3000)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault
         },
@@ -267,7 +340,7 @@ export default {
             document.getElementById('upload_file').click()
         },
 
-        upload(x, item) {
+        upload(x) {
             this.uploadDialog = true
             this.dialogClientName = x.clientbname
             this._id = this.tempArr._id
@@ -287,7 +360,7 @@ export default {
                     arrow.style.transition = '1s'
                 }, 2000)
             } else {
-                var payload = new FormData()
+                let payload = new FormData()
                 let date = new Date()
                 let maxSize = 200 * 1024 //200KB
                 lrz(this.updateImage, {
@@ -315,8 +388,16 @@ export default {
                                 if (doc.data.code == 0) {
                                     this.uploadDialog = false
                                     this.updateImagePreview = ''
+                                    this.showError = true
+                                    this.errorInfo = this.language.detailPage.missionSuccess
                                     this.missionGetOne()
+                                } else {
+                                    this.showError = true
+                                    this.errorInfo = this.language.detailPage.missionError
                                 }
+                                setTimeout(() => {
+                                    this.showError = false
+                                }, 3000)
                             })
                             .catch(err => {
                                 console.log(err)
@@ -558,6 +639,14 @@ export default {
     width: 48px;
     height: 48px;
 }
+.date_done {
+    background: var(--md-theme-default-icon-on-background, rgba(0, 0, 0, 0.54));
+    background-size: 48px 48px;
+    mask-image: url(../../public/icons/baseline-check_circle_outline-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-check_circle_outline-24px.svg);
+    width: 48px;
+    height: 48px;
+}
 
 .add_a_photo {
     background: var(--md-theme-default-icon-on-background, rgba(0, 0, 0, 0.54));
@@ -567,5 +656,94 @@ export default {
     height: 72px;
     margin: 0 auto;
     margin-top: 75px;
+}
+
+.errinfo {
+    position: fixed;
+    z-index: 19;
+    top: 8px;
+    background-color: rgba(255, 255, 0, 0.6);
+    width: 100%;
+}
+
+.errinfo span {
+    font-size: 16px;
+    line-height: 32px;
+}
+
+.confirmBox {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 23;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.confirmBox-back{
+    position: fixed;
+    z-index: 24;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.confirmBox-body{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    background: #fff;
+    width:250px;
+    height: 190px;
+}
+
+.confirmBox-body-title{
+    background: #d74342;
+    color: #fff;
+    height: 30px;
+    font-size: 18px;
+    line-height: 30px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+            rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, 
+            rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.confirmBox-body-center{
+    height: 120px;
+    line-height: 120px;
+    font-size: 16px;
+}
+
+.confirmBox-body-bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.confirmBox-body-bottom-left{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+            rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, 
+            rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    width: 100px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 16px;
+}
+
+.confirmBox-body-bottom-right{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+            rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, 
+            rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    background: #d74342;
+    width: 100px;
+    font-size: 16px;
+    height: 32px;
+    line-height: 32px;
+    color: #fff;
+    margin-left: 10px;
 }
 </style>
