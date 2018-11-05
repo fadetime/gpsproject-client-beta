@@ -17,7 +17,14 @@ export default{
         amountBefore:'共',
         amountAfter:'个',
         orderTime:'订单时间',
-        clickForDetails:'点击查看详情'
+        clickForDetails:'点击查看详情',
+        wiper:'雨刷',
+        headlight:'大灯',
+        mirror:'后视镜',
+        tyre:'车胎',
+        backup:'备用车胎',
+        brake:'刹车',
+        confirmCheck:'确认提交'
     },
     detailPage:{
         returnPage:'返回',
@@ -34,7 +41,8 @@ export default{
         confirmBox_title:'提示',
         confirmBox_info:'是否确认提交',
         confirmBox_cancel:'取消',
-        confirmBox_confirm:'确认'
+        confirmBox_confirm:'确认',
+        timeLimit:'要求时间'
     },
     finishPage:{
         returnPage:'返回',

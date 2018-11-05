@@ -104,6 +104,75 @@
             </div>
         </div>
 
+        <!-- check car box start -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="showCheckCarBox" class="checkcar-back"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="showCheckCarBox" class="checkcar-front" @click.self.prevent="showCheckCarBox = false">
+                <div class="checkcar-body">
+                    <div class="checkcar-body-top">
+                        <span>车辆检查</span>
+                    </div>
+                    <div class="checkcar-body-center">
+                        <div class="checkcar-body-center-item">
+                            <label for="checkwiper" class="checkcar-body-center-item-left">
+                                <span>{{language.homePage.wiper}}</span>
+                            </label>
+                            <div class="checkcar-body-center-item-right">
+                                <md-checkbox id="checkwiper" v-model="wiper" style="margin:0"></md-checkbox>
+                            </div>
+                        </div>
+                        <div class="checkcar-body-center-item">
+                            <label for="checkheadlight" class="checkcar-body-center-item-left">
+                                <span>{{language.homePage.headlight}}</span>
+                            </label>
+                            <div class="checkcar-body-center-item-right">
+                                <md-checkbox id="checkheadlight" v-model="headlight" style="margin:0"></md-checkbox>
+                            </div>
+                        </div>
+                        <div class="checkcar-body-center-item">
+                            <label for="checkmirror" class="checkcar-body-center-item-left">
+                                <span>{{language.homePage.mirror}}</span>
+                            </label>
+                            <div class="checkcar-body-center-item-right">
+                                <md-checkbox id="checkmirror" v-model="mirror" style="margin:0"></md-checkbox>
+                            </div>
+                        </div>
+                        <div class="checkcar-body-center-item">
+                            <label for="checktyre" class="checkcar-body-center-item-left">
+                                <span>{{language.homePage.tyre}}</span>
+                            </label>
+                            <div class="checkcar-body-center-item-right">
+                                <md-checkbox id="checktyre" v-model="tyre" style="margin:0"></md-checkbox>
+                            </div>
+                        </div>
+                        <div class="checkcar-body-center-item">
+                            <label for="checkbackup" class="checkcar-body-center-item-left">
+                                <span>{{language.homePage.backup}}</span>
+                            </label>
+                            <div class="checkcar-body-center-item-right">
+                                <md-checkbox id="checkbackup" v-model="backup" style="margin:0"></md-checkbox>
+                            </div>
+                        </div>
+                        <div class="checkcar-body-center-item">
+                            <label for="checkbrake" class="checkcar-body-center-item-left">
+                                <span>{{language.homePage.brake}}</span>
+                            </label>
+                            <div class="checkcar-body-center-item-right">
+                                <md-checkbox id="checkbrake" v-model="brake" style="margin:0"></md-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="confirmCheckCar">
+                            {{language.homePage.confirmCheck}}
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- check car box end -->
     </div>
 </template>
 
@@ -131,7 +200,14 @@ export default {
             imgDefault: '/img/ebuyLogo.png',
             choiceDayClassA: 'choiceday',
             choiceDayClassB: 'bechoiceday',
-            choiceDayClassC: 'choiceday'
+            choiceDayClassC: 'choiceday',
+            showCheckCarBox: false,
+            wiper: true,
+            headlight: true,
+            mirror: true,
+            tyre: true,
+            backup: true,
+            brake: true
         }
     },
     computed: {
@@ -143,16 +219,42 @@ export default {
         }
     },
     methods: {
-        getChoiceDayMethod(){
+        confirmCheckCar() {
+            let tempData = {
+                driver: this.drivername,
+                mission_id: this.$store.state.tempArr._id,
+                car_id: this.$store.state.tempArr.Car_id,
+                wiper: this.wiper,
+                headlight: this.headlight,
+                mirror: this.mirror,
+                tyre: this.tyre,
+                backup: this.backup,
+                brake: this.brake
+            }
+            this.showCheckCarBox = false
+            axios
+                .post(config.server + '/checkcar/', tempData)
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.$router.push('/detailpage')
+                    } else {
+                        console.log(doc)
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        getChoiceDayMethod() {
             if (this.choiseDay === 'today') {
                 this.choiceDayClassA = 'choiceday'
                 this.choiceDayClassB = 'bechoiceday'
                 this.choiceDayClassC = 'choiceday'
-            }else if(this.choiseDay === 'yesterday'){
+            } else if (this.choiseDay === 'yesterday') {
                 this.choiceDayClassA = 'bechoiceday'
                 this.choiceDayClassB = 'choiceday'
                 this.choiceDayClassC = 'choiceday'
-            }else{
+            } else {
                 this.choiceDayClassA = 'choiceday'
                 this.choiceDayClassB = 'choiceday'
                 this.choiceDayClassC = 'bechoiceday'
@@ -165,14 +267,13 @@ export default {
                 this.choiceDayClassC = 'choiceday'
                 this.$store.dispatch('setChoiseDay', 'today')
                 this.getDriverMission()
-
-            }else if(item === 'yesterday'){
+            } else if (item === 'yesterday') {
                 this.choiceDayClassA = 'bechoiceday'
                 this.choiceDayClassB = 'choiceday'
                 this.choiceDayClassC = 'choiceday'
                 this.$store.dispatch('setChoiseDay', 'yesterday')
                 this.getDriverMission()
-            }else{
+            } else {
                 this.choiceDayClassA = 'choiceday'
                 this.choiceDayClassB = 'choiceday'
                 this.choiceDayClassC = 'bechoiceday'
@@ -181,13 +282,19 @@ export default {
             }
         },
         opendetail(item) {
+            console.log(item)
             item.missionclient = _.orderBy(
                 item.missionclient,
                 ['finishdate'],
                 ['desc']
             )
             this.$store.dispatch('setTempArr', item)
-            this.$router.push('/detailpage')
+            if (!item.CarCheck) {
+                console.log('false')
+                this.showCheckCarBox = true
+            } else {
+                this.$router.push('/detailpage')
+            }
         },
 
         loadDefault(e) {
@@ -198,17 +305,17 @@ export default {
             this.needDoNum = 0
             this.$store.dispatch('setDoNum', this.needDoNum)
             let findDate
-            if(this.choiseDay === 'today'){
+            if (this.choiseDay === 'today') {
                 findDate = new Date()
-                findDate.setHours(0,0,0,0)
+                findDate.setHours(0, 0, 0, 0)
                 findDate = new Date(findDate).getTime()
-            }else if(this.choiseDay === 'yesterday'){
+            } else if (this.choiseDay === 'yesterday') {
                 findDate = new Date()
-                findDate.setHours(0,0,0,0)
+                findDate.setHours(0, 0, 0, 0)
                 findDate = new Date(findDate).getTime() - 86400000
-            }else {
+            } else {
                 findDate = new Date()
-                findDate.setHours(0,0,0,0)
+                findDate.setHours(0, 0, 0, 0)
                 findDate = new Date(findDate).getTime() + 86400000
             }
             axios
@@ -372,5 +479,66 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     color: #fff;
+}
+
+.checkcar-back {
+    position: fixed;
+    z-index: 23;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.checkcar-front {
+    position: fixed;
+    z-index: 24;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.checkcar-body {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background: #fff;
+    width: 160px;
+}
+
+.checkcar-body-top {
+    background: #d74342;
+    color: #fff;
+    font-size: 16px;
+    height: 40px;
+    line-height: 40px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.checkcar-body-center {
+    padding: 8px 12px;
+}
+
+.checkcar-body-center-item {
+    display: flex;
+    display: -webkit-flex;
+    height: 40px;
+    line-height: 40px;
+}
+
+.checkcar-body-center-item-left {
+    flex-basis: 50%;
+    text-align: right;
+}
+
+.checkcar-body-center-item-right {
+    padding-left: 8px;
+    flex-basis: 50%;
 }
 </style>

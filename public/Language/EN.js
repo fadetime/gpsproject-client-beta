@@ -17,7 +17,14 @@ export default{
         amountBefore:'',
         amountAfter:'',
         orderTime:'Order time',
-        clickForDetails:'Click for details'
+        clickForDetails:'Click for details',
+        wiper:'wiper',
+        headlight:'headlight',
+        mirror:'mirror',
+        tyre:'tyre',
+        backup:'backup',
+        brake:'brake',
+        confirmCheck:'Confirm check'
     },
     detailPage:{
         returnPage:' ',
@@ -34,7 +41,8 @@ export default{
         confirmBox_title:'Tips',
         confirmBox_info:'Update this order?',
         confirmBox_cancel:'Cancel',
-        confirmBox_confirm:'Confirm'
+        confirmBox_confirm:'Confirm',
+        timeLimit:'Time limit'
     },
     finishPage:{
         returnPage:'',

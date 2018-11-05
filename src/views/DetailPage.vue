@@ -40,6 +40,14 @@
                         <img :src="x.image | imgurl" alt="clientPic" style="width: 100%;height: 100%;object-fit: contain;" v-on:error.once="loadDefault($event)">
                     </div>
                     <div>
+                        <div class="card-text" @click="upload(x)" v-if="x.timeLimit">
+                            <div class="card-text-left">
+                                <span>{{language.detailPage.timeLimit}}:</span>
+                            </div>
+                            <div class="card-text-right">
+                                <span>{{x.timeLimit}}</span>
+                            </div>
+                        </div>
                         <div class="card-text" @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.address}}:</span>
