@@ -39,7 +39,7 @@ export default{
         missionSuccess:'Mission update success',
         missionError:'Mission Update fail',
         confirmBox_title:'Tips',
-        confirmBox_info:'Update this order?',
+        confirmBox_info:'Finish this order',
         confirmBox_cancel:'Cancel',
         confirmBox_confirm:'Confirm',
         timeLimit:'Time limit'

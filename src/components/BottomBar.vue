@@ -1,44 +1,48 @@
 <template>
-<div id="bottombar">
-    <div class="phone-viewport">
-        <md-bottom-bar class="md-accent" md-type="shift">
-            <md-bottom-bar-item id="bottom-bar-item-home" @click="gohome">
-                <div class="md-bottom-bar-icon baseline_home"></div>
-                <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
-                <i class="badge" v-if="newPosts">{{ newPosts }}</i>
-            </md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-finish" @click="goFinish">
-                <div class="md-bottom-bar-icon assignment_turned"></div>
-                <span class="md-bottom-bar-label">{{language.bottomBar.finish}}</span>
-            </md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-posts" @click="gomission">
-                <div class="md-bottom-bar-icon search_white"></div>
-                <span class="md-bottom-bar-label">{{language.bottomBar.find}}</span>
-            </md-bottom-bar-item>
-            <md-bottom-bar-item id="bottom-bar-item-favorites" @click="gosetup">
-                <div class="md-bottom-bar-icon settings_white"></div>
-                <span class="md-bottom-bar-label">{{language.bottomBar.setup}}</span>
-            </md-bottom-bar-item>
-        </md-bottom-bar>
+    <div id="bottombar">
+        <transition name="custom-classes-transition" enter-active-class="animated slideInUp faster" leave-active-class="animated slideOutDown faster">
+            <div v-if="showBottom" class="phone-viewport">
+                <md-bottom-bar class="md-accent" md-type="shift">
+                    <md-bottom-bar-item id="bottom-bar-item-home" @click="gohome">
+                        <div class="md-bottom-bar-icon baseline_home"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
+                        <i class="badge" v-if="newPosts">{{ newPosts }}</i>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-finish" @click="goFinish">
+                        <div class="md-bottom-bar-icon assignment_turned"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.finish}}</span>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-posts" @click="gomission">
+                        <div class="md-bottom-bar-icon search_white"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.find}}</span>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-favorites" @click="gosetup">
+                        <div class="md-bottom-bar-icon settings_white"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.setup}}</span>
+                    </md-bottom-bar-item>
+                </md-bottom-bar>
+            </div>
+        </transition>
     </div>
-</div>
 </template>
 
 <script>
 export default {
     name: 'Shift',
-    computed:{
+    computed: {
         newPosts: function() {
-            return this.$store.state.needDoNum;
+            return this.$store.state.needDoNum
         },
-        language(){
-          return this.$store.getters.getLanguage
+        language() {
+            return this.$store.getters.getLanguage
+        },
+        showBottom: function() {
+            return this.$store.state.showBottom
         }
     },
     methods: {
         gohome() {
             this.$router.push('/')
-            
         },
         gomission() {
             this.$router.push('/history')
@@ -63,16 +67,16 @@ export default {
     display: inline-flex;
     align-items: flex-end;
     overflow: hidden;
-    border: 1px solid rgba(#000, .26);
-    background: rgba(#000, .06);
+    border: 1px solid rgba(#000, 0.26);
+    background: rgba(#000, 0.06);
 }
 
 .phone-viewport {
     display: inline-flex;
     align-items: flex-end;
     overflow: hidden;
-    border: 1px solid rgba(#000, .26);
-    background: rgba(#000, .06);
+    border: 1px solid rgba(#000, 0.26);
+    background: rgba(#000, 0.06);
 }
 
 .badge {
@@ -90,11 +94,11 @@ export default {
     font-size: 10px;
     font-style: normal;
     font-weight: 600;
-    letter-spacing: -.05em;
+    letter-spacing: -0.05em;
     font-family: 'Roboto Mono', monospace;
 }
 
-.baseline_home{
+.baseline_home {
     background: #fff;
     mask-image: url(../../public/icons/baseline-home-36px.svg);
     -webkit-mask-image: url(../../public/icons/baseline-home-36px.svg);
@@ -102,7 +106,7 @@ export default {
     height: 36px;
 }
 
-.assignment_turned{
+.assignment_turned {
     background: #fff;
     mask-image: url(../../public/icons/baseline-assignment_turned_in-36px.svg);
     -webkit-mask-image: url(../../public/icons/baseline-assignment_turned_in-36px.svg);
@@ -110,7 +114,7 @@ export default {
     height: 36px;
 }
 
-.search_white{
+.search_white {
     background: #fff;
     mask-image: url(../../public/icons/baseline-search-36px.svg);
     -webkit-mask-image: url(../../public/icons/baseline-search-36px.svg);
@@ -118,7 +122,7 @@ export default {
     height: 36px;
 }
 
-.settings_white{
+.settings_white {
     background: #fff;
     mask-image: url(../../public/icons/baseline-settings-36px.svg);
     -webkit-mask-image: url(../../public/icons/baseline-settings-36px.svg);

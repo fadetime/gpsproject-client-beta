@@ -27,16 +27,16 @@
         <div v-else>
             <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(x,no) in tempArr.missionclient" :key="no" v-if="!x.finishdate">
                 <md-ripple>
-                    <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
+                    <!-- <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
                         <span style="font-size:20px;color:#fff;font-weight: 800;line-height: 40px;">{{no+1}}</span>
-                    </div>
+                    </div> -->
                     <div class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;" @click="openImage(x)">
                         <div class="card-text-title" style="margin:0 auto;line-height: 40px;">
                             <span style="text-align:right">{{x.clientbname}}</span>
                         </div>
                     </div>
 
-                    <div style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;background: #fff;" @click="openImage(x)">
+                    <div v-if="x.image" style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;background: #fff;" @click="openImage(x)">
                         <img :src="x.image | imgurl" alt="clientPic" style="width: 100%;height: 100%;object-fit: contain;" v-on:error.once="loadDefault($event)">
                     </div>
                     <div>
@@ -180,10 +180,10 @@
             <div v-show="confirmBox" class="confirmBox-back" @click.prevent.self="confirmBox = false">
                 <div class="confirmBox-body">
                     <div class="confirmBox-body-title">
-                        <span>{{tempShiping}}</span>
+                        <span>{{language.detailPage.confirmBox_info}}</span>
                     </div>
                     <div class="confirmBox-body-center">
-                        <span>{{language.detailPage.confirmBox_info}}</span>
+                        <span>{{tempShiping}}</span>
                     </div>
                     <div class="confirmBox-body-bottom">
                         <div class="confirmBox-body-bottom-left" @click="confirmBox = false">
@@ -331,6 +331,7 @@ export default {
                 })
         },
         turnback() {
+            this.$store.dispatch('setShowButtom', true)
             this.$router.push('/')
         },
         fileChange(el) {

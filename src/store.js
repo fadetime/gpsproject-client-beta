@@ -10,7 +10,8 @@ export default new Vuex.Store({
 		needDoNum:0,
 		choiseDay:'today',
 		language:'',
-		lang:''
+		lang:'',
+		showBottom:true
 	},
 	mutations: {
 		setTempArr:(state , item) => {
@@ -30,6 +31,9 @@ export default new Vuex.Store({
 			state.lang = payload
 			localStorage.setItem('lang',payload)
 		},
+		setShowButtom:(state , item) => {
+			state.showBottom = item
+		}
 	},
 	actions: {
 		setTempArr: ({ commit }, item) => {
@@ -47,6 +51,9 @@ export default new Vuex.Store({
 		setLanguage:({commit},payload)=>{
 			commit('setLanguage',payload)
 		},
+		setShowButtom:({commit},payload)=>{
+			commit('setShowButtom',payload)
+		}
 	},
 	getters:{
 		getLanguage:(state)=>{

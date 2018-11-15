@@ -115,52 +115,79 @@
                         <span>车辆检查</span>
                     </div>
                     <div class="checkcar-body-center">
+                        <div class="checkcar-body-center-title">
+                            <span>{{carNum}}</span>
+                        </div>
                         <div class="checkcar-body-center-item">
                             <label for="checkwiper" class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.wiper}}</span>
                             </label>
-                            <div class="checkcar-body-center-item-right">
+                            <div class="checkcar-body-center-item-middle">
                                 <md-checkbox id="checkwiper" v-model="wiper" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="wiper" style="color:green">正常</span>
+                                <span v-else style="color:#c3c304">报损</span>
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
                             <label for="checkheadlight" class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.headlight}}</span>
                             </label>
-                            <div class="checkcar-body-center-item-right">
+                            <div class="checkcar-body-center-item-middle">
                                 <md-checkbox id="checkheadlight" v-model="headlight" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="headlight" style="color:green">正常</span>
+                                <span v-else style="color:#c3c304">报损</span>
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
                             <label for="checkmirror" class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.mirror}}</span>
                             </label>
-                            <div class="checkcar-body-center-item-right">
+                            <div class="checkcar-body-center-item-middle">
                                 <md-checkbox id="checkmirror" v-model="mirror" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="mirror" style="color:green">正常</span>
+                                <span v-else style="color:#c3c304">报损</span>
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
                             <label for="checktyre" class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.tyre}}</span>
                             </label>
-                            <div class="checkcar-body-center-item-right">
+                            <div class="checkcar-body-center-item-middle">
                                 <md-checkbox id="checktyre" v-model="tyre" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="tyre" style="color:green">正常</span>
+                                <span v-else style="color:#c3c304">报损</span>
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
                             <label for="checkbackup" class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.backup}}</span>
                             </label>
-                            <div class="checkcar-body-center-item-right">
+                            <div class="checkcar-body-center-item-middle">
                                 <md-checkbox id="checkbackup" v-model="backup" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="backup" style="color:green">正常</span>
+                                <span v-else style="color:#c3c304">报损</span>
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
                             <label for="checkbrake" class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.brake}}</span>
                             </label>
-                            <div class="checkcar-body-center-item-right">
+                            <div class="checkcar-body-center-item-middle">
                                 <md-checkbox id="checkbrake" v-model="brake" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="brake" style="color:green">正常</span>
+                                <span v-else style="color:#c3c304">报损</span>
                             </div>
                         </div>
                     </div>
@@ -207,7 +234,8 @@ export default {
             mirror: true,
             tyre: true,
             backup: true,
-            brake: true
+            brake: true,
+            carNum:null
         }
     },
     computed: {
@@ -292,8 +320,10 @@ export default {
             if (!item.CarCheck) {
                 console.log('false')
                 this.showCheckCarBox = true
+                this.carNum = item.missioncar
             } else {
                 this.$router.push('/detailpage')
+                this.$store.dispatch('setShowButtom', false)
             }
         },
 
@@ -508,7 +538,7 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
-    width: 160px;
+    width: 180px;
 }
 
 .checkcar-body-top {
@@ -525,6 +555,11 @@ export default {
     padding: 8px 12px;
 }
 
+.checkcar-body-center-title{
+    border-bottom: 1px solid rgba(0,0,0,.12);
+    font-size: 16px;
+}
+
 .checkcar-body-center-item {
     display: flex;
     display: -webkit-flex;
@@ -535,10 +570,18 @@ export default {
 .checkcar-body-center-item-left {
     flex-basis: 50%;
     text-align: right;
+    line-height: 34px;
+    padding-right: 8px;
+}
+
+.checkcar-body-center-item-middle {
+    padding-left: 16px;
+    flex-basis: 25%;
 }
 
 .checkcar-body-center-item-right {
     padding-left: 8px;
-    flex-basis: 50%;
+    flex-basis: 25%;
+    line-height: 34px;
 }
 </style>
