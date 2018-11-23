@@ -242,6 +242,22 @@ export default {
         }
     },
     methods: {
+        getPositionMethod() {
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    console.log(position)
+                    let temp = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    }
+                    console.log(temp)
+                })
+            }else {
+                // Browser doesn't support
+                alert('不支持定位功能')
+                console.log('browser doesnt support geolocation')
+            }
+        },
         closeErrorInfo() {
             this.showError = false
         },
@@ -250,14 +266,31 @@ export default {
             this.tempShiping = x.clientbname
         },
         noPicUpdate() {
-            console.log('it worked')
-            axios
+            //获取用户位置
+            let tempPosition
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    
+                    tempPosition = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    }
+                })
+            }else {
+                // Browser doesn't support
+                alert('不支持定位功能')
+                console.log('browser doesnt support geolocation')
+            }
+
+            
+            setTimeout(() => {
+                axios
                 .post(config.server + '/client-driver/exupdate', {
                     _id: this.tempArr._id,
-                    clientName: this.tempShiping
+                    clientName: this.tempShiping,
+                    position:tempPosition
                 })
                 .then(doc => {
-                    console.log(doc)
                     if (doc.data.code === 0) {
                         this.missionGetOne()
                         this.confirmBox = false
@@ -274,6 +307,8 @@ export default {
                 .catch(err => {
                     console.log(err)
                 })
+            }, 200);
+            
         },
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault
@@ -690,7 +725,7 @@ export default {
     right: 0;
 }
 
-.confirmBox-back{
+.confirmBox-back {
     position: fixed;
     z-index: 24;
     display: flex;
@@ -702,51 +737,48 @@ export default {
     right: 0;
 }
 
-.confirmBox-body{
+.confirmBox-body {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     background: #fff;
-    width:250px;
+    width: 250px;
     height: 190px;
 }
 
-.confirmBox-body-title{
+.confirmBox-body-title {
     background: #d74342;
     color: #fff;
     height: 30px;
     font-size: 18px;
     line-height: 30px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-            rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, 
-            rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
-.confirmBox-body-center{
+.confirmBox-body-center {
     height: 120px;
     line-height: 120px;
     font-size: 16px;
 }
 
-.confirmBox-body-bottom{
+.confirmBox-body-bottom {
     display: flex;
     display: -webkit-flex;
     justify-content: center;
 }
 
-.confirmBox-body-bottom-left{
+.confirmBox-body-bottom-left {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-            rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, 
-            rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     width: 100px;
     height: 32px;
     line-height: 32px;
     font-size: 16px;
 }
 
-.confirmBox-body-bottom-right{
+.confirmBox-body-bottom-right {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
-            rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, 
-            rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     background: #d74342;
     width: 100px;
     font-size: 16px;

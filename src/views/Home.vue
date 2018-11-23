@@ -29,7 +29,7 @@
             <div v-else>
                 <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(item,index) in allMission" :key="index">
                     <md-ripple>
-                        <div @click="opendetail(item)">
+                        <div @click="opendetail(item,index)">
                             <div class="card-text" style="padding:10px 0 10px 30px;border-bottom: 1px solid #eee;">
                                 <div>
                                     <span style="font-size:20px">{{item.missionline}}</span>
@@ -112,84 +112,116 @@
             <div v-if="showCheckCarBox" class="checkcar-front" @click.self.prevent="showCheckCarBox = false">
                 <div class="checkcar-body">
                     <div class="checkcar-body-top">
-                        <span>车辆检查</span>
+                        <span>{{language.homePage.checkCarTitle}}</span>
                     </div>
                     <div class="checkcar-body-center">
                         <div class="checkcar-body-center-title">
                             <span>{{carNum}}</span>
                         </div>
-                        <div class="checkcar-body-center-item">
-                            <label for="checkwiper" class="checkcar-body-center-item-left">
-                                <span>{{language.homePage.wiper}}</span>
-                            </label>
-                            <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checkwiper" v-model="wiper" style="margin:0"></md-checkbox>
+                        <div v-if="checkPage" class="checkcar-body-center-page">
+                            <div class="checkcar-body-center-item">
+                                <label for="checkwiper" class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.wiper}}</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checkwiper" v-model="wiper" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="wiper" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
                             </div>
-                            <div class="checkcar-body-center-item-right">
-                                <span v-if="wiper" style="color:green">正常</span>
-                                <span v-else style="color:#c3c304">报损</span>
+                            <div class="checkcar-body-center-item">
+                                <label for="checkheadlight" class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.headlight}}</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checkheadlight" v-model="headlight" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="headlight" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
+                            </div>
+                            <div class="checkcar-body-center-item">
+                                <label for="checkmirror" class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.mirror}}</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checkmirror" v-model="mirror" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="mirror" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
+                            </div>
+                            <div class="checkcar-body-center-item">
+                                <label for="checktyre" class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.tyre}}</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checktyre" v-model="tyre" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="tyre" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
+                            </div>
+                            <div class="checkcar-body-center-item">
+                                <label for="checkbackup" class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.backup}}</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checkbackup" v-model="backup" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="backup" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
+                            </div>
+                            <div class="checkcar-body-center-item">
+                                <label for="checkbrake" class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.brake}}</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checkbrake" v-model="brake" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="brake" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
+                            </div>
+                            <div class="checkcar-body-center-item">
+                                <div class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.box}}</span>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <input type="number" style="width:160%;margin-left:10px;" v-model="boxNum">
+                                </div>
                             </div>
                         </div>
-                        <div class="checkcar-body-center-item">
-                            <label for="checkheadlight" class="checkcar-body-center-item-left">
-                                <span>{{language.homePage.headlight}}</span>
-                            </label>
-                            <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checkheadlight" v-model="headlight" style="margin:0"></md-checkbox>
+                        <div v-else class="checkcar-body-center-page">
+                            <div class="checkcar-body-center-item">
+                                <label for="checkbrake" class="checkcar-body-center-item-left">
+                                    <span>{{language.homePage.otherOk}}</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checkbrake" v-model="otherError" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="otherError" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
                             </div>
-                            <div class="checkcar-body-center-item-right">
-                                <span v-if="headlight" style="color:green">正常</span>
-                                <span v-else style="color:#c3c304">报损</span>
-                            </div>
-                        </div>
-                        <div class="checkcar-body-center-item">
-                            <label for="checkmirror" class="checkcar-body-center-item-left">
-                                <span>{{language.homePage.mirror}}</span>
-                            </label>
-                            <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checkmirror" v-model="mirror" style="margin:0"></md-checkbox>
-                            </div>
-                            <div class="checkcar-body-center-item-right">
-                                <span v-if="mirror" style="color:green">正常</span>
-                                <span v-else style="color:#c3c304">报损</span>
+                            <div>
+                                <textarea name="othererror" id="othererror" rows="5" style="width:100%" :disabled="otherError" :placeholder="language.homePage.description" v-model="otherErrorText"></textarea>
                             </div>
                         </div>
-                        <div class="checkcar-body-center-item">
-                            <label for="checktyre" class="checkcar-body-center-item-left">
-                                <span>{{language.homePage.tyre}}</span>
-                            </label>
-                            <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checktyre" v-model="tyre" style="margin:0"></md-checkbox>
-                            </div>
-                            <div class="checkcar-body-center-item-right">
-                                <span v-if="tyre" style="color:green">正常</span>
-                                <span v-else style="color:#c3c304">报损</span>
-                            </div>
-                        </div>
-                        <div class="checkcar-body-center-item">
-                            <label for="checkbackup" class="checkcar-body-center-item-left">
-                                <span>{{language.homePage.backup}}</span>
-                            </label>
-                            <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checkbackup" v-model="backup" style="margin:0"></md-checkbox>
-                            </div>
-                            <div class="checkcar-body-center-item-right">
-                                <span v-if="backup" style="color:green">正常</span>
-                                <span v-else style="color:#c3c304">报损</span>
-                            </div>
-                        </div>
-                        <div class="checkcar-body-center-item">
-                            <label for="checkbrake" class="checkcar-body-center-item-left">
-                                <span>{{language.homePage.brake}}</span>
-                            </label>
-                            <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checkbrake" v-model="brake" style="margin:0"></md-checkbox>
-                            </div>
-                            <div class="checkcar-body-center-item-right">
-                                <span v-if="brake" style="color:green">正常</span>
-                                <span v-else style="color:#c3c304">报损</span>
-                            </div>
-                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="changeOtherCheckPage">
+                            {{language.homePage.other}}
+                        </md-button>
                     </div>
                     <div>
                         <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="confirmCheckCar">
@@ -200,6 +232,61 @@
             </div>
         </transition>
         <!-- check car box end -->
+
+        <!-- check again box start -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="showCheckAgainBox" class="checkcar-back"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="showCheckAgainBox" class="checkcar-front" @click.self.prevent="showCheckAgainBox = false">
+                <div class="checkcar-body">
+                    <div class="checkcar-body-top">
+                        <span>车辆检查</span>
+                    </div>
+                    <div class="checkcar-body-center">
+                        <div class="checkcar-body-center-title">
+                            <span>{{carNum}}</span>
+                        </div>
+                        <div class="checkcar-body-center-item">
+                            <label for="checkwiper" class="checkcar-body-center-item-left">
+                                <span>内干净</span>
+                            </label>
+                            <div class="checkcar-body-center-item-middle">
+                                <md-checkbox id="checkwiper" v-model="clean" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="wiper" style="color:green">是</span>
+                                <span v-else style="color:#c3c304">否</span>
+                            </div>
+                        </div>
+                        <div class="checkcar-body-center-item">
+                            <div class="checkcar-body-center-item-left">
+                                <span>框(数量)</span>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <input type="number" style="width:160%;margin-left:10px;" v-model="boxNumAgain">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="confirmCheckAgain">
+                            {{language.homePage.confirmCheck}}
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- check again box end -->
+
+        <!-- 操作提示 -->
+        <transition name="custom-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
+            <div class="errinfo" v-if="showError">
+                <span>{{errorInfo}}</span>
+            </div>
+        </transition>
+        <!-- 操作提示 -->
+
     </div>
 </template>
 
@@ -235,7 +322,17 @@ export default {
             tyre: true,
             backup: true,
             brake: true,
-            carNum:null
+            otherError: true,
+            carNum: null,
+            checkPage: true,
+            otherErrorText: null,
+            boxNum: null,
+            errorInfo: '',
+            showError: false,
+            showCheckAgainBox: false,
+            boxNumAgain: null,
+            carCheck_id:null,
+            clean:true
         }
     },
     computed: {
@@ -247,21 +344,15 @@ export default {
         }
     },
     methods: {
-        confirmCheckCar() {
-            let tempData = {
-                driver: this.drivername,
-                mission_id: this.$store.state.tempArr._id,
-                car_id: this.$store.state.tempArr.Car_id,
-                wiper: this.wiper,
-                headlight: this.headlight,
-                mirror: this.mirror,
-                tyre: this.tyre,
-                backup: this.backup,
-                brake: this.brake
-            }
-            this.showCheckCarBox = false
+        confirmCheckAgain() {
+            this.carCheck_id
             axios
-                .post(config.server + '/checkcar/', tempData)
+                .post(config.server + '/checkcar/edit', {
+                    carCheck_id:this.carCheck_id,
+                    boxNumAgain:this.boxNumAgain,
+                    mission_id: this.$store.state.tempArr._id,
+                    clean:this.clean
+                })
                 .then(doc => {
                     if (doc.data.code === 0) {
                         this.$router.push('/detailpage')
@@ -272,6 +363,92 @@ export default {
                 .catch(err => {
                     console.log(err)
                 })
+        },
+        changeOtherCheckPage() {
+            this.checkPage = !this.checkPage
+        },
+        confirmCheckCar() {
+            if (!this.boxNum) {
+                this.showError = true
+                this.errorInfo = '请输入框的数量'
+                setTimeout(() => {
+                    this.showError = false
+                }, 2000)
+            } else {
+                let tempData = {
+                    driver: this.drivername,
+                    mission_id: this.$store.state.tempArr._id,
+                    car_id: this.$store.state.tempArr.Car_id,
+                    wiper: this.wiper,
+                    headlight: this.headlight,
+                    mirror: this.mirror,
+                    tyre: this.tyre,
+                    backup: this.backup,
+                    brake: this.brake,
+                    boxNum: this.boxNum
+                }
+                let errData = {}
+                if (!this.otherError) {
+                    this.$set(tempData, 'text', this.otherErrorText)
+                }
+                if (
+                    !this.wiper ||
+                    !this.headlight ||
+                    !this.mirror ||
+                    !this.tyre ||
+                    !this.backup ||
+                    !this.brake ||
+                    !this.otherError
+                ) {
+                    console.log('enter long if')
+                    this.$set(tempData, 'finish', false)
+                    this.$set(errData, 'car_id', tempData.car_id) //车辆_id
+                    this.$set(errData, 'driver', this.drivername) //司机
+                    if (!this.wiper) {
+                        this.$set(errData, 'wiper', 1)
+                    }
+                    if (!this.headlight) {
+                        this.$set(errData, 'headlight', 1)
+                    }
+                    if (!this.mirror) {
+                        this.$set(errData, 'mirror', 1)
+                    }
+                    if (!this.tyre) {
+                        this.$set(errData, 'tyre', 1)
+                    }
+                    if (!this.backup) {
+                        this.$set(errData, 'backup', 1)
+                    }
+                    if (!this.brake) {
+                        this.$set(errData, 'brake', 1)
+                    }
+                    if (!this.otherError) {
+                        this.$set(errData, 'other', 1)
+                        this.$set(errData, 'note', this.otherErrorText)
+                    }
+                    axios
+                        .post(config.server + '/fixcar/', errData)
+                        .then(doc => {
+                            console.log('fix car done')
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
+                this.showCheckCarBox = false
+                axios
+                    .post(config.server + '/checkcar/', tempData)
+                    .then(doc => {
+                        if (doc.data.code === 0) {
+                            this.$router.push('/detailpage')
+                        } else {
+                            console.log(doc)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
         },
         getChoiceDayMethod() {
             if (this.choiseDay === 'today') {
@@ -309,18 +486,19 @@ export default {
                 this.getDriverMission()
             }
         },
-        opendetail(item) {
-            console.log(item)
+        opendetail(item, index) {
+            this.carCheck_id = item.carCheck_id
             item.missionclient = _.orderBy(
                 item.missionclient,
                 ['finishdate'],
                 ['desc']
             )
             this.$store.dispatch('setTempArr', item)
-            if (!item.CarCheck) {
-                console.log('false')
+            this.carNum = item.missioncar
+            if (!item.carCheckFirst) {
                 this.showCheckCarBox = true
-                this.carNum = item.missioncar
+            } else if (item.missionclient.length == this.finishNumber[index] && !item.carCheckFinish) {
+                this.showCheckAgainBox = true
             } else {
                 this.$router.push('/detailpage')
                 this.$store.dispatch('setShowButtom', false)
@@ -555,8 +733,8 @@ export default {
     padding: 8px 12px;
 }
 
-.checkcar-body-center-title{
-    border-bottom: 1px solid rgba(0,0,0,.12);
+.checkcar-body-center-title {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     font-size: 16px;
 }
 
@@ -583,5 +761,18 @@ export default {
     padding-left: 8px;
     flex-basis: 25%;
     line-height: 34px;
+}
+
+.errinfo {
+    position: fixed;
+    z-index: 19;
+    top: 8px;
+    background-color: rgba(255, 255, 0, 0.6);
+    width: 100%;
+}
+
+.errinfo span {
+    font-size: 16px;
+    line-height: 32px;
 }
 </style>

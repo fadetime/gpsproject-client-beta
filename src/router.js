@@ -7,7 +7,9 @@ import Setup from './views/Setup.vue'
 import DetailPage from './views/DetailPage.vue'
 import Finish from './views/Finish.vue'
 import HistoryDetail from './views/HistoryDetail.vue'
+import fixCar from './views/fixCar.vue'
 import AuthGuard from './auth-guard'
+import fixCarGuard from './fixCar-guard'
 
 Vue.use(Router)
 
@@ -54,5 +56,11 @@ export default new Router({
       component: HistoryDetail,
       beforeEnter: AuthGuard
     },
+    {
+      path: '/fixcar',
+      name: 'fixCar',
+      component: fixCar,
+      beforeEnter: fixCarGuard
+    }
   ]
 })

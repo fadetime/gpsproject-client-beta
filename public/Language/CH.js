@@ -18,13 +18,20 @@ export default{
         amountAfter:'个',
         orderTime:'订单时间',
         clickForDetails:'点击查看详情',
+        checkCarTitle:'车辆检查',
         wiper:'雨刷',
         headlight:'大灯',
         mirror:'后视镜',
         tyre:'车胎',
         backup:'备用车胎',
         brake:'刹车',
-        confirmCheck:'确认提交'
+        confirmCheck:'确认提交',
+        ok:'正常',
+        error:'报损',
+        box:'框(数量)',
+        other:'其他问题',
+        otherOk:'其他正常',
+        description:'输入描述...'
     },
     detailPage:{
         returnPage:'返回',
@@ -75,6 +82,7 @@ export default{
         home:'主页',
         finish:'完成',
         find:'查找',
-        setup:'设置'
+        setup:'设置',
+        sms:'信息'
     }
 }

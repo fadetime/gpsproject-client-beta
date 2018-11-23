@@ -110,6 +110,7 @@ export default {
                             localStorage.dirverid = doc.data.driverid
                             localStorage.image = doc.data.image
                             localStorage._id = doc.data._id
+                            localStorage.driverRole = doc.data.role
                             localStorage.drivertoken = doc.data.token
                             let item = doc.data.token
                             this.$store.dispatch('setToken', item)

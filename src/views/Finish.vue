@@ -160,14 +160,23 @@ export default {
         getDriverMission() {
             let findDate
             if(this.choiseDay === 'today'){
-                findDate = new Date().toLocaleDateString()
+                findDate = new Date()
+                findDate.setHours(0, 0, 0, 0)
                 findDate = new Date(findDate).getTime()
+                // findDate = new Date().toLocaleDateString()
+                // findDate = new Date(findDate).getTime()
             }else if(this.choiseDay === 'yesterday'){
-                findDate = new Date().toLocaleDateString()
+                findDate = new Date()
+                findDate.setHours(0, 0, 0, 0)
                 findDate = new Date(findDate).getTime() - 86400000
+                // findDate = new Date().toLocaleDateString()
+                // findDate = new Date(findDate).getTime() - 86400000
             }else {
-                findDate = new Date().toLocaleDateString()
+                findDate = new Date()
+                findDate.setHours(0, 0, 0, 0)
                 findDate = new Date(findDate).getTime() + 86400000
+                // findDate = new Date().toLocaleDateString()
+                // findDate = new Date(findDate).getTime() + 86400000
             }
             axios
                 .post(config.server + '/client-driver/', {

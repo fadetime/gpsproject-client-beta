@@ -18,13 +18,20 @@ export default{
         amountAfter:'',
         orderTime:'Order time',
         clickForDetails:'Click for details',
-        wiper:'wiper',
-        headlight:'headlight',
-        mirror:'mirror',
-        tyre:'tyre',
-        backup:'backup',
-        brake:'brake',
-        confirmCheck:'Confirm check'
+        checkCarTitle:'Check car',
+        wiper:'Wiper',
+        headlight:'Headlight',
+        mirror:'Mirror',
+        tyre:'Tyre',
+        backup:'Backup',
+        brake:'Brake',
+        confirmCheck:'Confirm check',
+        ok:'Ok',
+        error:'Error',
+        box:'Box(Num)',
+        other:'Other error',
+        otherOk:'Other',
+        description:'input description...'
     },
     detailPage:{
         returnPage:' ',
@@ -75,6 +82,7 @@ export default{
         home:'HOME',
         finish:'FINISH',
         find:'FIND',
-        setup:'SETUP'
+        setup:'SETUP',
+        sms:'SMS'
     }
 }
