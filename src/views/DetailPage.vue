@@ -32,7 +32,7 @@
                     </div> -->
                     <div class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;" @click="openImage(x)">
                         <div class="card-text-title" style="margin:0 auto;line-height: 40px;">
-                            <span style="text-align:right">{{x.clientbname}}</span>
+                            <span style="text-align:right">{{x.clientbname}}{{x.clientbnameEN}}</span>
                         </div>
                     </div>
 

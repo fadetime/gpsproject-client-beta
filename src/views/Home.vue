@@ -196,7 +196,7 @@
                                     <span>{{language.homePage.box}}</span>
                                 </div>
                                 <div class="checkcar-body-center-item-right">
-                                    <input type="number" style="width:160%;margin-left:10px;" v-model="boxNum">
+                                    <input type="number" style="width:160%;margin-left:11px;" v-model="boxNum">
                                 </div>
                             </div>
                         </div>
