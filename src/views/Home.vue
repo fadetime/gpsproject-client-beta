@@ -368,6 +368,7 @@ export default {
             this.checkPage = !this.checkPage
         },
         confirmCheckCar() {
+            console.log(this.$store.state.tempArr.Car_id)
             if (!this.boxNum) {
                 this.showError = true
                 this.errorInfo = '请输入框的数量'
@@ -375,6 +376,7 @@ export default {
                     this.showError = false
                 }, 2000)
             } else {
+                
                 let tempData = {
                     driver: this.drivername,
                     mission_id: this.$store.state.tempArr._id,
@@ -487,6 +489,7 @@ export default {
             }
         },
         opendetail(item, index) {
+            console.log(item)
             this.carCheck_id = item.carCheck_id
             item.missionclient = _.orderBy(
                 item.missionclient,
@@ -533,6 +536,7 @@ export default {
                 })
                 .then(doc => {
                     this.allMission = doc.data.doc
+                    console.log(this.allMission)
                     // 计算完成
                     let startNum = -1
                     let countNum = 0

@@ -108,7 +108,9 @@ export default {
                     _id: this.shippingDara._id
                 })
                 .then(doc => {
-                    console.log(doc)
+                    if(doc.data.code === 0) {
+                        this.getFixMissionMethod()
+                    }
                 })
                 .catch(err => {
                     console.log(err)
