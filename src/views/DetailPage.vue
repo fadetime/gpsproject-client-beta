@@ -30,12 +30,24 @@
                     <!-- <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
                         <span style="font-size:20px;color:#fff;font-weight: 800;line-height: 40px;">{{no+1}}</span>
                     </div> -->
-                    <div class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;" @click="openImage(x)">
-                        <div class="card-text-title" style="margin:0 auto;line-height: 40px;">
-                            <span style="text-align:right">{{x.clientbname}}{{x.clientbnameEN}}</span>
+                    <div>   
+                        <div v-if="lang === 'en'" class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;flex-direction: column;" @click="openImage(x)">
+                            <div class="card-text-title" style="margin:0 auto;line-height:24px;height:24px;text-overflow:ellipsis;white-space: nowrap;">
+                                <span style="text-align:right">{{x.clientbnameEN}}</span>
+                            </div>
+                            <div class="card-text-title" style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
+                                <span style="font-size: 16px;text-align:right">{{x.clientbname}}</span>
+                            </div>
+                        </div>
+                        <div v-else class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;flex-direction: column;" @click="openImage(x)">
+                            <div class="card-text-title" style="margin:0 auto;line-height:24px;height:24px;text-overflow:ellipsis;white-space: nowrap;">
+                                <span style="text-align:right">{{x.clientbname}}</span>
+                            </div>
+                            <div class="card-text-title" style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
+                                <span style="font-size: 16px;text-align:right">{{x.clientbnameEN}}</span>
+                            </div>
                         </div>
                     </div>
-
                     <div v-if="x.image" style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;background: #fff;" @click="openImage(x)">
                         <img :src="x.image | imgurl" alt="clientPic" style="width: 100%;height: 100%;object-fit: contain;" v-on:error.once="loadDefault($event)">
                     </div>
@@ -121,9 +133,6 @@
                 <div style="padding-top:40px">
                     <div class="photoarea" @click="uploadFile" v-if="!missionImage">
                         <div v-if="!updateImagePreview" class="add_a_photo"></div>
-                        <!-- <div v-if="!updateImagePreview">
-                            <span>非必要</span>
-                        </div> -->
                         <img :src="updateImagePreview" alt="newimg" v-else>
                     </div>
                     <div class="photoarea" v-else>
@@ -174,10 +183,10 @@
         <!-- err info box -->
         <!-- confirm box  -->
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div v-show="confirmBox" class="confirmBox"></div>
+            <div v-if="confirmBox" class="confirmBox"></div>
         </transition>
         <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-show="confirmBox" class="confirmBox-back" @click.prevent.self="confirmBox = false">
+            <div v-if="confirmBox" class="confirmBox-back" @click.prevent.self="confirmBox = false">
                 <div class="confirmBox-body">
                     <div class="confirmBox-body-title">
                         <span>{{language.detailPage.confirmBox_info}}</span>
@@ -239,6 +248,9 @@ export default {
         },
         tempArr: function() {
             return this.$store.state.tempArr
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
     methods: {
@@ -282,40 +294,88 @@ export default {
                 console.log('browser doesnt support geolocation')
             }
 
-            
-            setTimeout(() => {
-                axios
-                .post(config.server + '/client-driver/exupdate', {
-                    _id: this.tempArr._id,
-                    clientName: this.tempShiping,
-                    position:tempPosition
-                })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.missionGetOne()
-                        this.confirmBox = false
-                        this.showError = true
-                        this.errorInfo = this.language.detailPage.missionSuccess
-                    } else {
-                        this.showError = true
-                        this.errorInfo = this.language.detailPage.missionError
-                    }
+
+            if(localStorage.limitSubmit){
+                let tempTime = new Date().getTime()
+                let testTime = localStorage.getItem('limitSubmit')
+                testTime = parseInt(localStorage.limitSubmit)
+                if(tempTime < testTime + 60000){
+                    this.showError = true
+                    let showNum = (testTime + 60000 - tempTime)/1000
+                    showNum = Math.ceil(showNum)
+                    this.errorInfo = this.language.detailPage.waitTimeInfofront + showNum + this.language.detailPage.waitTimeInfoback
+                    this.confirmBox = false
                     setTimeout(() => {
                         this.showError = false
                     }, 3000)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-            }, 200);
+                }else{
+                    setTimeout(() => {
+                        axios
+                        .post(config.server + '/client-driver/exupdate', {
+                            _id: this.tempArr._id,
+                            clientName: this.tempShiping,
+                            position:tempPosition
+                        })
+                        .then(doc => {
+                            if (doc.data.code === 0) {
+                                this.missionGetOne()
+                                this.confirmBox = false
+                                this.showError = true
+                                this.errorInfo = this.language.detailPage.missionSuccess
+                                localStorage.limitSubmit = new Date().getTime()
+                            } else {
+                                this.showError = true
+                                this.errorInfo = this.language.detailPage.missionError
+                            }
+                            setTimeout(() => {
+                                this.showError = false
+                            }, 3000)
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                    }, 200);
+                }
+            }else{
+                setTimeout(() => {
+                    axios
+                    .post(config.server + '/client-driver/exupdate', {
+                        _id: this.tempArr._id,
+                        clientName: this.tempShiping,
+                        position:tempPosition
+                    })
+                    .then(doc => {
+                        if (doc.data.code === 0) {
+                            this.missionGetOne()
+                            this.confirmBox = false
+                            this.showError = true
+                            this.errorInfo = this.language.detailPage.missionSuccess
+                            localStorage.limitSubmit = new Date().getTime()
+                        } else {
+                            this.showError = true
+                            this.errorInfo = this.language.detailPage.missionError
+                        }
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }, 200);
+            }
+            
+
             
         },
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault
         },
         openImage(item) {
-            this.imageDialog = true
-            this.imageSrc = item.image
+            if(item.image){
+                this.imageDialog = true
+                this.imageSrc = item.image
+            }
         },
         missionGetOne() {
             axios
