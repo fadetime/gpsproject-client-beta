@@ -11,10 +11,18 @@
                 <div class="infobox-title">
                     {{item.car_id.carid}}
                 </div>
-                <div style="padding: 5px 0;">
-                    {{item.driver}}
-                </div>
                 <div class="infobox-body">
+                    <div class="infobox-body-title">
+                        <span>提交司机</span>
+                    </div>
+                    <div class="infobox-body-item">
+                        <span>{{item.driver}}</span>
+                    </div>
+                </div>
+                <div class="infobox-body" v-if="item.wiper>0 || item.headlight>0 || item.mirror>0 || item.tyre>0 || item.backup>0 || item.brake>0">
+                    <div class="infobox-body-title">
+                        <span>损坏部分</span>
+                    </div>
                     <div v-if="item.wiper > 0" class="infobox-body-item">
                         <div>雨刷</div>
                         <!-- <div>开关</div> -->
@@ -40,8 +48,11 @@
                         <!-- <div>开关</div> -->
                     </div>
                 </div>
-                <div class="infobox-body" style="margin-top:5px">
-                    <div v-if="item.other > 0">
+                <div v-if="item.other > 0" class="infobox-body" style="margin-bottom:5px">
+                    <div class="infobox-body-title">
+                        <span>其他备注</span>
+                    </div>
+                    <div class="infobox-body-item">
                         <span>{{item.note}}</span>
                     </div>
                 </div>
@@ -108,7 +119,7 @@ export default {
                     _id: this.shippingDara._id
                 })
                 .then(doc => {
-                    if(doc.data.code === 0) {
+                    if(doc.data.code == 0) {
                         this.getFixMissionMethod()
                     }
                 })
@@ -170,6 +181,7 @@ export default {
     font-size: 16px;
     height: 30px;
     line-height: 32px;
+    margin-bottom: 12px;
 }
 
 .infobox-body {
@@ -178,11 +190,24 @@ export default {
     border: 1px solid #e0e0e0;
     justify-content: center;
     width: 80%;
-    margin: 0 auto;
+    margin: 6px auto 12px auto;
+    position: relative;
+}
+
+.infobox-body-title{
+    position: absolute;
+    top:-10px;
+    background-color: #d74342;
+    color: #fff;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 1px 10px;
 }
 
 .infobox-body-item {
-    padding: 0 5px;
+    padding: 14px 5px;
 }
 
 .infobox-back {

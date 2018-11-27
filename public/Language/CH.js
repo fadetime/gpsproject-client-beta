@@ -31,7 +31,9 @@ export default{
         box:'框(数量)',
         other:'其他问题',
         otherOk:'其他正常',
-        description:'输入描述...'
+        description:'输入描述...',
+        clean:'车内干净',
+        boxNumErr:'请输入框数量'
     },
     detailPage:{
         returnPage:'返回',

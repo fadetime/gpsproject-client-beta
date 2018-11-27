@@ -57,6 +57,10 @@
         <div class="bottom">
             <md-button class="md-raised " style="width:80%;background-color: yellow;" @click="isChangePSW = false,showDialog = true">{{language.setupPage.signOut}}</md-button>
         </div>
+        <div style="padding-top:30px">
+            <span style="color:#e0e0e0">{{version}}</span>
+        </div>
+
         <div style="height:60px">
             <!-- 底部占位符 -->
         </div>
@@ -139,10 +143,12 @@
 <script>
 import axios from 'axios'
 import config from '../assets/js/config'
+import myPackage from '../../package.json'
 
 export default {
     data() {
         return {
+            version:myPackage.version,
             showDialog: false,
             drivername: '',
             drivercard: '',

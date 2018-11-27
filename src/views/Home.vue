@@ -14,13 +14,13 @@
             <div class="emptyarea-top">
                 <!-- 顶部占位符 -->
             </div>
-            <div>
+            <!-- <div>
                 <div style="display:flex;display:-webkit-flex;justify-content:center">
                     <div :class="choiceDayClassA" style="border-top-left-radius: 20px;border-bottom-left-radius: 20px;" @click="choiceDayMethod('yesterday')">{{language.homePage.yesterday}}</div>
                     <div :class="choiceDayClassB" style="margin:0 3px" @click="choiceDayMethod('today')">{{language.homePage.today}}</div>
                     <div :class="choiceDayClassC" style="border-top-right-radius: 20px;border-bottom-right-radius: 20px;" @click="choiceDayMethod('tomorrow')">{{language.homePage.tomorrow}}</div>
                 </div>
-            </div>
+            </div> -->
             <div v-if="allMission.length == 0" style="padding-top:100px">
                 <img src="../../public/img/ebuyLogo.png" alt="logo" style="width:200px">
                 <br>
@@ -29,7 +29,16 @@
             <div v-else>
                 <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(item,index) in allMission" :key="index">
                     <md-ripple>
-                        <div @click="opendetail(item,index)">
+                        <div @click="opendetail(item,index)" style="position: relative;">
+                            <div v-if="item.complete">
+                                <div v-if="lang === 'en'" class="completediv">
+                                    <img src="../../public/img/missionComplete.png" alt="complete">
+                                </div>
+                                <div v-else class="completediv">
+                                    <img src="../../public/img/missionCompleteCH.png" alt="complete">
+                                </div>
+                            </div>
+                            
                             <div class="card-text" style="padding:10px 0 10px 30px;border-bottom: 1px solid #eee;">
                                 <div>
                                     <span style="font-size:20px">{{item.missionline}}</span>
@@ -241,7 +250,7 @@
             <div v-if="showCheckAgainBox" class="checkcar-front" @click.self.prevent="showCheckAgainBox = false">
                 <div class="checkcar-body">
                     <div class="checkcar-body-top">
-                        <span>车辆检查</span>
+                        <span>{{language.homePage.checkCarTitle}}</span>
                     </div>
                     <div class="checkcar-body-center">
                         <div class="checkcar-body-center-title">
@@ -249,25 +258,39 @@
                         </div>
                         <div class="checkcar-body-center-item">
                             <label for="checkwiper" class="checkcar-body-center-item-left">
-                                <span>内干净</span>
+                                <span>{{language.homePage.clean}}</span>
                             </label>
                             <div class="checkcar-body-center-item-middle">
                                 <md-checkbox id="checkwiper" v-model="clean" style="margin:0"></md-checkbox>
                             </div>
                             <div class="checkcar-body-center-item-right">
-                                <span v-if="wiper" style="color:green">是</span>
-                                <span v-else style="color:#c3c304">否</span>
+                                <span v-if="clean" style="color:green">{{language.homePage.ok}}</span>
+                                <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
                             <div class="checkcar-body-center-item-left">
-                                <span>框(数量)</span>
+                                <span>{{language.homePage.box}}</span>
                             </div>
                             <div class="checkcar-body-center-item-right">
                                 <input type="number" style="width:160%;margin-left:10px;" v-model="boxNumAgain">
                             </div>
                         </div>
-
+                        <div class="checkcar-body-center-item">
+                            <label for="checkbrake" class="checkcar-body-center-item-left">
+                                <span>{{language.homePage.otherOk}}</span>
+                            </label>
+                            <div class="checkcar-body-center-item-middle">
+                                <md-checkbox id="checkbrake" v-model="otherErrorAgain" style="margin:0"></md-checkbox>
+                            </div>
+                            <div class="checkcar-body-center-item-right">
+                                <span v-if="otherErrorAgain" style="color:green">{{language.homePage.ok}}</span>
+                                <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <textarea name="othererror" id="othererror" rows="5" style="width:100%" :disabled="otherErrorAgain" :placeholder="language.homePage.description" v-model="otherErrorTextAgain"></textarea>
+                        </div>
                     </div>
                     <div>
                         <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="confirmCheckAgain">
@@ -326,13 +349,15 @@ export default {
             carNum: null,
             checkPage: true,
             otherErrorText: null,
+            otherErrorTextAgain: null,
             boxNum: null,
             errorInfo: '',
             showError: false,
             showCheckAgainBox: false,
             boxNumAgain: null,
-            carCheck_id:null,
-            clean:true
+            carCheck_id: null,
+            clean: true,
+            otherErrorAgain: true
         }
     },
     computed: {
@@ -341,28 +366,73 @@ export default {
         },
         choiseDay() {
             return this.$store.state.choiseDay
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
     methods: {
         confirmCheckAgain() {
-            this.carCheck_id
-            axios
-                .post(config.server + '/checkcar/edit', {
-                    carCheck_id:this.carCheck_id,
-                    boxNumAgain:this.boxNumAgain,
+            if (!this.boxNumAgain) {
+                this.showError = true
+                this.errorInfo = this.language.homePage.boxNumErr
+                setTimeout(() => {
+                    this.showError = false
+                }, 2000)
+            } else {
+                axios
+                    .post(config.server + '/checkcar/edit', {
+                        carCheck_id: this.carCheck_id,
+                        boxNumAgain: this.boxNumAgain,
+                        mission_id: this.$store.state.tempArr._id,
+                        clean: this.clean
+                    })
+                    .then(doc => {
+                        if (doc.data.code === 0) {
+                            this.$router.push('/detailpage')
+                        } else {
+                            console.log(doc)
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+
+                axios.post(config.server + '/client-driver/complete',{
                     mission_id: this.$store.state.tempArr._id,
-                    clean:this.clean
                 })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.$router.push('/detailpage')
-                    } else {
-                        console.log(doc)
-                    }
+                .then(item => {
+                    console.log(item)
                 })
                 .catch(err => {
                     console.log(err)
                 })
+
+
+                if (!this.otherErrorAgain) {
+                    let errData = {}
+                    this.$set(
+                        errData,
+                        'car_id',
+                        this.$store.state.tempArr.Car_id
+                    ) //车辆_id
+                    this.$set(errData, 'driver', this.drivername) //司机
+                    this.$set(errData, 'other', 1)
+                    this.$set(errData, 'note', this.otherErrorTextAgain)
+                    axios
+                        .post(config.server + '/fixcar/', errData)
+                        .then(doc => {
+                            if (doc.data.code === 0) {
+                                console.log('货后报损成功')
+                            } else {
+                                console.log(doc)
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }
+            }
         },
         changeOtherCheckPage() {
             this.checkPage = !this.checkPage
@@ -371,12 +441,11 @@ export default {
             console.log(this.$store.state.tempArr.Car_id)
             if (!this.boxNum) {
                 this.showError = true
-                this.errorInfo = '请输入框的数量'
+                this.errorInfo = this.language.homePage.boxNumErr
                 setTimeout(() => {
                     this.showError = false
                 }, 2000)
             } else {
-                
                 let tempData = {
                     driver: this.drivername,
                     mission_id: this.$store.state.tempArr._id,
@@ -500,7 +569,10 @@ export default {
             this.carNum = item.missioncar
             if (!item.carCheckFirst) {
                 this.showCheckCarBox = true
-            } else if (item.missionclient.length == this.finishNumber[index] && !item.carCheckFinish) {
+            } else if (
+                item.missionclient.length == this.finishNumber[index] &&
+                !item.carCheckFinish
+            ) {
                 this.showCheckAgainBox = true
             } else {
                 this.$router.push('/detailpage')
@@ -515,28 +587,15 @@ export default {
         getDriverMission() {
             this.needDoNum = 0
             this.$store.dispatch('setDoNum', this.needDoNum)
-            let findDate
-            if (this.choiseDay === 'today') {
-                findDate = new Date()
-                findDate.setHours(0, 0, 0, 0)
-                findDate = new Date(findDate).getTime()
-            } else if (this.choiseDay === 'yesterday') {
-                findDate = new Date()
-                findDate.setHours(0, 0, 0, 0)
-                findDate = new Date(findDate).getTime() - 86400000
-            } else {
-                findDate = new Date()
-                findDate.setHours(0, 0, 0, 0)
-                findDate = new Date(findDate).getTime() + 86400000
-            }
             axios
                 .post(config.server + '/client-driver/', {
-                    startdate: findDate,
                     drivername: this.drivername
                 })
                 .then(doc => {
                     this.allMission = doc.data.doc
+                    
                     console.log(this.allMission)
+                    this.allMission = _.orderBy(this.allMission,['complete'],['asc'])
                     // 计算完成
                     let startNum = -1
                     let countNum = 0
@@ -778,5 +837,20 @@ export default {
 .errinfo span {
     font-size: 16px;
     line-height: 32px;
+}
+
+.completediv{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.completediv img{
+    width: 150px;
+    transform:rotate(14deg);
+    -ms-transform:rotate(14deg); 	/* IE 9 */
+    -moz-transform:rotate(14deg); 	/* Firefox */
+    -webkit-transform:rotate(14deg); /* Safari 和 Chrome */
+    -o-transform:rotate(14deg); 
 }
 </style>

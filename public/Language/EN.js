@@ -31,7 +31,9 @@ export default{
         box:'Box(Num)',
         other:'Other error',
         otherOk:'Other',
-        description:'input description...'
+        description:'Input description...',
+        clean:'Clean car',
+        boxNumErr:'Please input box of number'
     },
     detailPage:{
         returnPage:' ',
