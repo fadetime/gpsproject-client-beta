@@ -51,9 +51,7 @@ export default{
         confirmBox_info:'Finish this order',
         confirmBox_cancel:'Cancel',
         confirmBox_confirm:'Confirm',
-        timeLimit:'Time limit',
-        waitTimeInfofront:'Please wait',
-        waitTimeInfoback:'s'
+        timeLimit:'Time limit'
     },
     finishPage:{
         returnPage:'',

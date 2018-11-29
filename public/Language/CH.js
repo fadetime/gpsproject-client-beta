@@ -51,9 +51,7 @@ export default{
         confirmBox_info:'完成配送',
         confirmBox_cancel:'取消',
         confirmBox_confirm:'确认',
-        timeLimit:'要求时间',
-        waitTimeInfofront:'请',
-        waitTimeInfoback:'s后提交'
+        timeLimit:'要求时间'
     },
     finishPage:{
         returnPage:'返回',

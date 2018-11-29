@@ -60,6 +60,9 @@
                     <md-button style="background:#d74342;color:#fff;height:30px" @click="finishMethod(item)">完成维修</md-button>
                 </div>
             </div>
+            <div style="height:80px">
+                <!-- 底部占位符 -->
+            </div>
         </div>
         <div v-else class="empty">
             <div class="empty-title">

@@ -282,7 +282,6 @@ export default {
             let tempPosition
             if(navigator.geolocation){
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    
                     tempPosition = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
@@ -293,80 +292,31 @@ export default {
                 alert('不支持定位功能')
                 console.log('browser doesnt support geolocation')
             }
-
-
-            if(localStorage.limitSubmit){
-                let tempTime = new Date().getTime()
-                let testTime = localStorage.getItem('limitSubmit')
-                testTime = parseInt(localStorage.limitSubmit)
-                if(tempTime < testTime + 60000){
-                    this.showError = true
-                    let showNum = (testTime + 60000 - tempTime)/1000
-                    showNum = Math.ceil(showNum)
-                    this.errorInfo = this.language.detailPage.waitTimeInfofront + showNum + this.language.detailPage.waitTimeInfoback
-                    this.confirmBox = false
+            setTimeout(() => {
+                axios
+                .post(config.server + '/client-driver/exupdate', {
+                    _id: this.tempArr._id,
+                    clientName: this.tempShiping,
+                    position:tempPosition
+                })
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.missionGetOne()
+                        this.confirmBox = false
+                        this.showError = true
+                        this.errorInfo = this.language.detailPage.missionSuccess
+                    } else {
+                        this.showError = true
+                        this.errorInfo = this.language.detailPage.missionError
+                    }
                     setTimeout(() => {
                         this.showError = false
                     }, 3000)
-                }else{
-                    setTimeout(() => {
-                        axios
-                        .post(config.server + '/client-driver/exupdate', {
-                            _id: this.tempArr._id,
-                            clientName: this.tempShiping,
-                            position:tempPosition
-                        })
-                        .then(doc => {
-                            if (doc.data.code === 0) {
-                                this.missionGetOne()
-                                this.confirmBox = false
-                                this.showError = true
-                                this.errorInfo = this.language.detailPage.missionSuccess
-                                localStorage.limitSubmit = new Date().getTime()
-                            } else {
-                                this.showError = true
-                                this.errorInfo = this.language.detailPage.missionError
-                            }
-                            setTimeout(() => {
-                                this.showError = false
-                            }, 3000)
-                        })
-                        .catch(err => {
-                            console.log(err)
-                        })
-                    }, 200);
-                }
-            }else{
-                setTimeout(() => {
-                    axios
-                    .post(config.server + '/client-driver/exupdate', {
-                        _id: this.tempArr._id,
-                        clientName: this.tempShiping,
-                        position:tempPosition
-                    })
-                    .then(doc => {
-                        if (doc.data.code === 0) {
-                            this.missionGetOne()
-                            this.confirmBox = false
-                            this.showError = true
-                            this.errorInfo = this.language.detailPage.missionSuccess
-                            localStorage.limitSubmit = new Date().getTime()
-                        } else {
-                            this.showError = true
-                            this.errorInfo = this.language.detailPage.missionError
-                        }
-                        setTimeout(() => {
-                            this.showError = false
-                        }, 3000)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                }, 200);
-            }
-            
-
-            
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }, 200);
         },
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault
