@@ -56,6 +56,14 @@
                         <span>{{item.note}}</span>
                     </div>
                 </div>
+                <div v-if="item.image" class="infobox-body" style="margin-bottom:5px">
+                    <div class="infobox-body-title">
+                        <span>相关照片</span>
+                    </div>
+                    <div class="infobox-body-item">
+                        <img :src="item.image | imgurl" alt="photo">
+                    </div>
+                </div>
                 <div>
                     <md-button style="background:#d74342;color:#fff;height:30px" @click="finishMethod(item)">完成维修</md-button>
                 </div>

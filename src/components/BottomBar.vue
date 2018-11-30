@@ -16,7 +16,7 @@
                         <div class="md-bottom-bar-icon search_white" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.find}}</span>
                     </md-bottom-bar-item>
-                    <md-bottom-bar-item v-if="driverRole === 'maintain'" id="bottom-bar-item-favorites" @click="gofix">
+                    <md-bottom-bar-item v-if="driverRole === 'maintain'" id="bottom-bar-item-fixcar" @click="gofix">
                         <div class="md-bottom-bar-icon feedback_white" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.sms}}</span>
                     </md-bottom-bar-item>

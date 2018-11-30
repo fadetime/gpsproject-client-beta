@@ -225,6 +225,15 @@
                             <div>
                                 <textarea name="othererror" id="othererror" rows="5" style="width:100%" :disabled="otherError" :placeholder="language.homePage.description" v-model="otherErrorText"></textarea>
                             </div>
+
+                            <!-- take photo area start -->
+                            <div class="checkcar-body-center-camera" @click="uploadFile">
+                                <div v-if="!updateImagePreview" class="checkcar-camera"></div>
+                                <img v-else :src="updateImagePreview" class="checkcar-photo" alt="newimg">
+                            </div>
+                            <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+                            <!-- take photo area end -->
+                            
                         </div>
                     </div>
                     <div>
@@ -357,7 +366,9 @@ export default {
             boxNumAgain: null,
             carCheck_id: null,
             clean: true,
-            otherErrorAgain: true
+            otherErrorAgain: true,
+            updateImagePreview:'',
+            updateImage:''
         }
     },
     computed: {
@@ -372,6 +383,23 @@ export default {
         }
     },
     methods: {
+        // upload photo method start
+        fileChange(el) {
+            if (typeof FileReader === 'undefined') {
+                return alert('浏览器不支持上传图片')
+            }
+            if (!el.target.files[0].size) return //判断是否有文件数量
+            this.updateImagePreview = window.URL.createObjectURL(
+                el.target.files[0]
+            )
+            this.updateImage = el.target.files[0]
+            el.target.value = ''
+        },
+
+        uploadFile() {
+            document.getElementById('upload_file').click()
+        },
+        // upload photo method end
         confirmCheckAgain() {
             if (!this.boxNumAgain) {
                 this.showError = true
@@ -439,7 +467,6 @@ export default {
             this.checkPage = !this.checkPage
         },
         confirmCheckCar() {
-            console.log(this.$store.state.tempArr.Car_id)
             if (!this.boxNum) {
                 this.showError = true
                 this.errorInfo = this.language.homePage.boxNumErr
@@ -460,6 +487,7 @@ export default {
                     boxNum: this.boxNum
                 }
                 let errData = {}
+                let payload = new FormData()
                 if (!this.otherError) {
                     this.$set(tempData, 'text', this.otherErrorText)
                 }
@@ -470,42 +498,81 @@ export default {
                     !this.tyre ||
                     !this.backup ||
                     !this.brake ||
-                    !this.otherError
+                    !this.otherError ||
+                    this.updateImage
                 ) {
                     console.log('enter long if')
+                    
                     this.$set(tempData, 'finish', false)
                     this.$set(errData, 'car_id', tempData.car_id) //车辆_id
+                    payload.append('car_id', tempData.car_id)
                     this.$set(errData, 'driver', this.drivername) //司机
+                    payload.append('driver', this.drivername)
                     if (!this.wiper) {
                         this.$set(errData, 'wiper', 1)
+                        payload.append('wiper', 1)
                     }
                     if (!this.headlight) {
                         this.$set(errData, 'headlight', 1)
+                        payload.append('headlight', 1)
                     }
                     if (!this.mirror) {
                         this.$set(errData, 'mirror', 1)
+                        payload.append('mirror', 1)
                     }
                     if (!this.tyre) {
                         this.$set(errData, 'tyre', 1)
+                        payload.append('tyre', 1)
                     }
                     if (!this.backup) {
                         this.$set(errData, 'backup', 1)
+                        payload.append('backup', 1)
                     }
                     if (!this.brake) {
                         this.$set(errData, 'brake', 1)
+                        payload.append('brake', 1)
                     }
                     if (!this.otherError) {
                         this.$set(errData, 'other', 1)
+                        payload.append('other', 1)
                         this.$set(errData, 'note', this.otherErrorText)
+                        payload.append('note', this.otherErrorText)
                     }
-                    axios
+                    if(this.updateImage){
+                        console.log('enter have photo method')
+                        let maxSize = 200 * 1024 //200KB
+                        lrz(this.updateImage, {
+                            quality: 0.5
+                        })
+                        .then(res => {
+                            if (this.updateImage.size > maxSize) {
+                                this.updateImage = res.file
+                            }
+                            payload.append('image', this.updateImage)
+                            axios.post(config.server + '/fixcar/photo', payload)
+                            .then(doc => {
+                                console.log('fix car info with photo send done')
+                                this.updateImage = ''
+                                this.updateImagePreview=''
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                        })
+                        .catch(err => {
+                            console.log('lrz err')
+                            console.log(err)
+                        })
+                    }else{
+                        axios
                         .post(config.server + '/fixcar/', errData)
                         .then(doc => {
-                            console.log('fix car done')
+                            console.log('fix car info send done')
                         })
                         .catch(err => {
                             console.log(err)
                         })
+                    }
                 }
                 this.showCheckCarBox = false
                 axios
@@ -853,5 +920,26 @@ export default {
     -moz-transform:rotate(14deg); 	/* Firefox */
     -webkit-transform:rotate(14deg); /* Safari 和 Chrome */
     -o-transform:rotate(14deg); 
+}
+
+.checkcar-camera{
+    background: var(--md-theme-default-icon-on-background, rgba(0, 0, 0, 0.54));
+    background-size: 48px 48px;
+    mask-image: url(../../public/icons/baseline-camera_alt-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-camera_alt-24px.svg);
+    width: 48px;
+    height: 48px;
+}
+
+.checkcar-body-center-camera{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    background: #ebebe4;
+    border:2px dashed #696969
+}
+
+.checkcar-photo{
+    height: 150px;
 }
 </style>
