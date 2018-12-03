@@ -413,7 +413,8 @@ export default {
                         carCheck_id: this.carCheck_id,
                         boxNumAgain: this.boxNumAgain,
                         mission_id: this.$store.state.tempArr._id,
-                        clean: this.clean
+                        clean: this.clean,
+                        finishDate:new Date().getTime()
                     })
                     .then(doc => {
                         if (doc.data.code === 0) {
@@ -435,8 +436,6 @@ export default {
                 .catch(err => {
                     console.log(err)
                 })
-
-
                 if (!this.otherErrorAgain) {
                     let errData = {}
                     this.$set(
@@ -626,7 +625,6 @@ export default {
             }
         },
         opendetail(item, index) {
-            console.log(item)
             this.carCheck_id = item.carCheck_id
             item.missionclient = _.orderBy(
                 item.missionclient,
@@ -634,6 +632,8 @@ export default {
                 ['desc']
             )
             this.$store.dispatch('setTempArr', item)
+            console.log(item)
+            this.mission_id = item._id
             this.carNum = item.missioncar
             if (!item.carCheckFirst) {
                 this.showCheckCarBox = true
