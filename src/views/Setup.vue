@@ -66,7 +66,7 @@
         </div>
         <!-- 遮罩层 -->
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div v-if="showDialog" class="dialog" @click.self="showDialog = false">
+            <div v-if="showDialog" class="dialog" @click.self="showDialog = false" @touchmove.prevent>
                 <div class="dialog-body">
                     <div style="width:100%;background-color:#d74342;box-shadow: 1px 1px 5px;">
                         <span v-if="isChangePSW" style="font-size:20px;color:#fff;line-height: 32px;">{{language.setupPage.changePsw}}</span>
@@ -122,7 +122,7 @@
 
         <!-- language window start -->
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div class="languageWindow" v-if="languageWindow">
+            <div class="languageWindow" v-if="languageWindow" @touchmove.prevent>
                 <div class="languageWindow-box">
                     <div style="width:80%;margin:10px auto;border-bottom: 1px solid #fff;height:26px">
                         <span style="font-size:18px;color:#fff">选择语言</span>

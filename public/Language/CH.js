@@ -33,7 +33,11 @@ export default{
         otherOk:'其他正常',
         description:'输入描述...',
         clean:'车内干净',
-        boxNumErr:'请输入框数量'
+        boxNumErr:'请输入框数量',
+        PreviewClient:'客户预览',
+        previewClient:'客户预览',
+        clientName:'客户名',
+        close:'关闭'
     },
     detailPage:{
         returnPage:'返回',

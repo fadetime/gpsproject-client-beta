@@ -74,7 +74,7 @@
     </div>
 
     <!-- upload dialog start -->
-    <md-dialog :md-active.sync="uploadDialog">
+    <md-dialog :md-active.sync="uploadDialog" @touchmove.prevent>
 
         <div class="dialogtop" style="box-shadow: 0px 1px 5px;">
             <div class="dialogtop-left" @click="uploadDialog = false,cancel()">

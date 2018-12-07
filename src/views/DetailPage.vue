@@ -113,7 +113,7 @@
 
         <!-- upload dialog start -->
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <md-dialog :md-active.sync="uploadDialog">
+            <md-dialog :md-active.sync="uploadDialog" @touchmove.prevent>
 
                 <div class="dialogtop" style="box-shadow: 0px 1px 5px;">
                     <div class="dialogtop-left" @click="uploadDialog = false,cancel()">
@@ -186,7 +186,7 @@
             <div v-if="confirmBox" class="confirmBox"></div>
         </transition>
         <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="confirmBox" class="confirmBox-back" @click.prevent.self="confirmBox = false">
+            <div v-if="confirmBox" class="confirmBox-back" @click.prevent.self="confirmBox = false" @touchmove.prevent>
                 <div class="confirmBox-body">
                     <div class="confirmBox-body-title">
                         <span>{{language.detailPage.confirmBox_info}}</span>

@@ -33,7 +33,11 @@ export default{
         otherOk:'Other',
         description:'Input description...',
         clean:'Clean car',
-        boxNumErr:'Please input box of number'
+        boxNumErr:'Please input box of number',
+        PreviewClient:'PREVIEW CLIENT',
+        previewClient:'Preview client',
+        clientName:'Client name',
+        close:'Close'
     },
     detailPage:{
         returnPage:' ',

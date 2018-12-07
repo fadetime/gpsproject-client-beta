@@ -14,13 +14,6 @@
             <div class="emptyarea-top">
                 <!-- 顶部占位符 -->
             </div>
-            <!-- <div>
-                <div style="display:flex;display:-webkit-flex;justify-content:center">
-                    <div :class="choiceDayClassA" style="border-top-left-radius: 20px;border-bottom-left-radius: 20px;" @click="choiceDayMethod('yesterday')">{{language.homePage.yesterday}}</div>
-                    <div :class="choiceDayClassB" style="margin:0 3px" @click="choiceDayMethod('today')">{{language.homePage.today}}</div>
-                    <div :class="choiceDayClassC" style="border-top-right-radius: 20px;border-bottom-right-radius: 20px;" @click="choiceDayMethod('tomorrow')">{{language.homePage.tomorrow}}</div>
-                </div>
-            </div> -->
             <div v-if="allMission.length == 0" style="padding-top:100px">
                 <img src="../../public/img/ebuyLogo.png" alt="logo" style="width:200px">
                 <br>
@@ -242,6 +235,11 @@
                         </md-button>
                     </div>
                     <div>
+                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="previewClient = true">
+                            {{language.homePage.PreviewClient}}
+                        </md-button>
+                    </div>
+                    <div>
                         <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="confirmCheckCar">
                             {{language.homePage.confirmCheck}}
                         </md-button>
@@ -310,10 +308,52 @@
             </div>
         </transition>
         <!-- check again box end -->
+        
+        <!-- Preview client start -->
+        <transition name="preview-client-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="previewClient" class="previewclient-back"></div>
+        </transition>
+        <transition name="preview-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="previewClient" class="previewclient-front" @click.self.prevent="previewClient = false">
+                <div class="previewclient-box">
+                    <div class="checkcar-body-top">
+                        <span>{{language.homePage.previewClient}}</span>
+                    </div>
+                    <div class="previewclient-box-body">
+                        <div class="previewclient-box-body-title">
+                            <div class="previewclient-box-body-title-left">
+                                No.
+                            </div>
+                            <div class="previewclient-box-body-title-right">
+                                <span>{{language.homePage.clientName}}</span>
+                            </div>
+                        </div>
+                        <div class="previewclient-box-body-body">
+                            <div v-for="(item,index) in clientArray" :key="index" style="display:flex;display:-webkit-flex" @click="showFullName(item)">
+                                <div class="previewclient-box-body-body-left">
+                                    <span>{{index + 1}}</span>
+                                </div>
+                                <div class="previewclient-box-body-body-right">
+                                    <span v-if="lang === 'en'">{{item.clientbnameEN}}</span>
+                                    <span v-else>{{item.clientbname}}</span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="previewClient= false">
+                            {{language.homePage.close}}
+                        </md-button>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- Preview client end -->
 
         <!-- 操作提示 -->
-        <transition name="custom-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
-            <div class="errinfo" v-if="showError">
+        <transition name="tips-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
+            <div class="errinfo" v-if="showError" @click="showError = false">
                 <span>{{errorInfo}}</span>
             </div>
         </transition>
@@ -368,7 +408,10 @@ export default {
             clean: true,
             otherErrorAgain: true,
             updateImagePreview:'',
-            updateImage:''
+            updateImage:'',
+            previewClient:false,
+            missionclient:[],
+            clientArray:[]
         }
     },
     computed: {
@@ -383,6 +426,17 @@ export default {
         }
     },
     methods: {
+        showFullName(item){
+            this.showError = true
+            if(this.lang === 'en'){
+                this.errorInfo = item.clientbnameEN
+            }else{
+                this.errorInfo = item.clientbname
+            }
+            setTimeout(() => {
+                this.showError = false
+            }, 3000);
+        },
         // upload photo method start
         fileChange(el) {
             if (typeof FileReader === 'undefined') {
@@ -625,6 +679,8 @@ export default {
             }
         },
         opendetail(item, index) {
+            this.clientArray = item.missionclient
+            console.log(this.lang)
             this.carCheck_id = item.carCheck_id
             item.missionclient = _.orderBy(
                 item.missionclient,
@@ -632,7 +688,6 @@ export default {
                 ['desc']
             )
             this.$store.dispatch('setTempArr', item)
-            console.log(item)
             this.mission_id = item._id
             this.carNum = item.missioncar
             if (!item.carCheckFirst) {
@@ -661,8 +716,6 @@ export default {
                 })
                 .then(doc => {
                     this.allMission = doc.data.doc
-                    
-                    console.log(this.allMission)
                     this.allMission = _.orderBy(this.allMission,['complete'],['asc'])
                     // 计算完成
                     let startNum = -1
@@ -830,6 +883,16 @@ export default {
     background: rgba(0, 0, 0, 0.12);
 }
 
+.previewclient-back {
+    position: fixed;
+    z-index: 25;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
 .checkcar-front {
     position: fixed;
     z-index: 24;
@@ -843,6 +906,18 @@ export default {
     align-items: center;
 }
 
+.previewclient-front {
+    position: fixed;
+    z-index: 26;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
 .checkcar-body {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
@@ -850,6 +925,12 @@ export default {
     width: 180px;
 }
 
+.previewclient-box{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background: #fff;
+    width: 200px;
+}
 .checkcar-body-top {
     background: #d74342;
     color: #fff;
@@ -898,8 +979,9 @@ export default {
     position: fixed;
     z-index: 19;
     top: 8px;
-    background-color: rgba(255, 255, 0, 0.6);
+    background-color: rgba(255, 255, 0, 0.7);
     width: 100%;
+    z-index: 99;
 }
 
 .errinfo span {
@@ -942,4 +1024,48 @@ export default {
 .checkcar-photo{
     height: 150px;
 }
+
+.previewclient-box-body{
+    margin: 0 10px;
+    margin-top: 10px;
+}
+
+.previewclient-box-body-title{
+    display: flex;
+    display: -webkit-flex;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 16px;
+}
+
+.previewclient-box-body-title-left{
+    width: 40px;
+}
+
+.previewclient-box-body-title-right{
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap
+}
+
+.previewclient-box-body-body{
+    height: 377px;
+    overflow-y: auto;
+}
+
+.previewclient-box-body-body-left{
+    width: 40px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.previewclient-box-body-body-right{
+    width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap;
+    height: 30px;
+    line-height: 30px;
+}
+
 </style>
