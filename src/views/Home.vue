@@ -194,6 +194,18 @@
                                 </div>
                             </div>
                             <div class="checkcar-body-center-item">
+                                <label for="checkbrake" class="checkcar-body-center-item-left">
+                                    <span>油卡</span>
+                                </label>
+                                <div class="checkcar-body-center-item-middle">
+                                    <md-checkbox id="checkbrake" v-model="petrolCard" style="margin:0"></md-checkbox>
+                                </div>
+                                <div class="checkcar-body-center-item-right">
+                                    <span v-if="petrolCard" style="color:green">{{language.homePage.ok}}</span>
+                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                </div>
+                            </div>
+                            <div class="checkcar-body-center-item">
                                 <div class="checkcar-body-center-item-left">
                                     <span>{{language.homePage.box}}</span>
                                 </div>
@@ -411,7 +423,8 @@ export default {
             updateImage:'',
             previewClient:false,
             missionclient:[],
-            clientArray:[]
+            clientArray:[],
+            petrolCard:true
         }
     },
     computed: {
@@ -537,7 +550,8 @@ export default {
                     tyre: this.tyre,
                     backup: this.backup,
                     brake: this.brake,
-                    boxNum: this.boxNum
+                    boxNum: this.boxNum,
+                    petrolCard:this.petrolCard
                 }
                 let errData = {}
                 let payload = new FormData()
@@ -680,7 +694,6 @@ export default {
         },
         opendetail(item, index) {
             this.clientArray = item.missionclient
-            console.log(this.lang)
             this.carCheck_id = item.carCheck_id
             item.missionclient = _.orderBy(
                 item.missionclient,
