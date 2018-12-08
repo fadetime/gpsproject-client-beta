@@ -33,7 +33,7 @@
                     <div>   
                         <div v-if="lang === 'en'" class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;flex-direction: column;" @click="openImage(x)">
                             <div class="card-text-title" style="margin:0 auto;line-height:24px;height:24px;text-overflow:ellipsis;white-space: nowrap;">
-                                <span style="text-align:right">{{x.clientbnameEN}}</span>
+                                <span style="text-align:center;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{x.clientbnameEN}}</span>
                             </div>
                             <div class="card-text-title" style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
                                 <span style="font-size: 16px;text-align:right">{{x.clientbname}}</span>
@@ -44,7 +44,7 @@
                                 <span style="text-align:right">{{x.clientbname}}</span>
                             </div>
                             <div class="card-text-title" style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
-                                <span style="font-size: 16px;text-align:right">{{x.clientbnameEN}}</span>
+                                <span style="font-size: 16px;text-align:right;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{x.clientbnameEN}}</span>
                             </div>
                         </div>
                     </div>

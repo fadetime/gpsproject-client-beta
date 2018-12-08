@@ -111,7 +111,7 @@
             <div v-if="showCheckCarBox" class="checkcar-back"></div>
         </transition>
         <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="showCheckCarBox" class="checkcar-front" @click.self.prevent="showCheckCarBox = false">
+            <div v-if="showCheckCarBox" class="checkcar-front" @click.self.prevent="showCheckCarBox = false" @touchmove.prevent>
                 <div class="checkcar-body">
                     <div class="checkcar-body-top">
                         <span>{{language.homePage.checkCarTitle}}</span>
@@ -266,7 +266,7 @@
             <div v-if="showCheckAgainBox" class="checkcar-back"></div>
         </transition>
         <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="showCheckAgainBox" class="checkcar-front" @click.self.prevent="showCheckAgainBox = false">
+            <div v-if="showCheckAgainBox" class="checkcar-front" @click.self.prevent="showCheckAgainBox = false" @touchmove.prevent>
                 <div class="checkcar-body">
                     <div class="checkcar-body-top">
                         <span>{{language.homePage.checkCarTitle}}</span>
@@ -326,7 +326,7 @@
             <div v-if="previewClient" class="previewclient-back"></div>
         </transition>
         <transition name="preview-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="previewClient" class="previewclient-front" @click.self.prevent="previewClient = false">
+            <div v-if="previewClient" class="previewclient-front" @click.self.prevent="previewClient = false" @touchmove.prevent>
                 <div class="previewclient-box">
                     <div class="checkcar-body-top">
                         <span>{{language.homePage.previewClient}}</span>
