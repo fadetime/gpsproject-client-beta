@@ -1,6 +1,6 @@
 {
-  "name": "gpsproject-client-beta",
-  "version": "0.8.10",
+  "name": "driver",
+  "version": "0.8.12",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

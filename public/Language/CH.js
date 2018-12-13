@@ -88,6 +88,7 @@ export default{
         home:'主页',
         finish:'完成',
         find:'查找',
+        search:'搜索',
         setup:'设置',
         sms:'信息'
     }

@@ -1,14 +1,24 @@
 {
-  "name": "gpsproject-client-beta",
-  "short_name": "gpsproject-client-beta",
+  "name": "Delivery-Driver-Alpha",
+  "short_name": "Driver",
   "icons": [
     {
-      "src": "/img/icons/android-chrome-192x192.png",
+      "src": "/img/icons/ic_launcher96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/icons/ic_launcher144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/icons/ic_launcher192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/img/icons/android-chrome-512x512.png",
+      "src": "/img/icons/ic_launcher512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -16,5 +26,5 @@
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#4DBA87"
+  "theme_color": "#d74342"
 }

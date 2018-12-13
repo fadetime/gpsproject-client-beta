@@ -8,8 +8,10 @@ import DetailPage from './views/DetailPage.vue'
 import Finish from './views/Finish.vue'
 import HistoryDetail from './views/HistoryDetail.vue'
 import fixCar from './views/fixCar.vue'
+import search from './views/Search.vue'
 import AuthGuard from './auth-guard'
 import fixCarGuard from './fixCar-guard'
+import searchGuard from './search-guard'
 
 Vue.use(Router)
 
@@ -61,6 +63,12 @@ export default new Router({
       name: 'fixCar',
       component: fixCar,
       beforeEnter: fixCarGuard
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: search,
+      beforeEnter: searchGuard
     }
   ]
 })

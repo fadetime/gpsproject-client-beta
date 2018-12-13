@@ -88,6 +88,7 @@ export default{
         home:'HOME',
         finish:'FINISH',
         find:'FIND',
+        search:'SEARCH',
         setup:'SETUP',
         sms:'SMS'
     }

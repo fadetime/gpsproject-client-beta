@@ -1,5 +1,5 @@
 <template>
-    <div id="homepage">
+    <div id="homepage" style="overflow：hidden">
         <div style="position:fixed;top:-20px;width:100%;height:70px;background-color:#fff;z-index:9"></div>
         <div>
             <div class="topusername" style="box-shadow: 0px 1px 5px;">
@@ -19,7 +19,7 @@
                 <br>
                 <span>~{{language.homePage.whenEmpty}}~</span>
             </div>
-            <div v-else>
+            <div v-else ref="mainbox">
                 <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(item,index) in allMission" :key="index">
                     <md-ripple>
                         <div @click="opendetail(item,index)" style="position: relative;">
@@ -247,7 +247,7 @@
                         </md-button>
                     </div>
                     <div>
-                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="previewClient = true">
+                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="openPreviewMethod">
                             {{language.homePage.PreviewClient}}
                         </md-button>
                     </div>
@@ -323,10 +323,10 @@
         
         <!-- Preview client start -->
         <transition name="preview-client-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div v-if="previewClient" class="previewclient-back"></div>
+            <div v-if="previewClient" class="previewclient-back" ></div>
         </transition>
         <transition name="preview-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="previewClient" class="previewclient-front" @click.self.prevent="previewClient = false" @touchmove.prevent>
+            <div v-if="previewClient" class="previewclient-front" @click.self.prevent="closePreviewMethod">
                 <div class="previewclient-box">
                     <div class="checkcar-body-top">
                         <span>{{language.homePage.previewClient}}</span>
@@ -354,7 +354,7 @@
                         </div>
                     </div>
                     <div>
-                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="previewClient= false">
+                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="closePreviewMethod">
                             {{language.homePage.close}}
                         </md-button>
                     </div>
@@ -382,11 +382,18 @@ import _ from 'lodash'
 
 export default {
     name: 'homepage',
+    beforeCreate() {
+        if(localStorage.getItem('driverRole') === 'dayshift'){
+            this.$router.push('/search')
+        }
+    },
+
     mounted() {
         this.drivername = localStorage.getItem('drivername')
         this.getChoiceDayMethod()
         this.getDriverMission()
     },
+
     data() {
         return {
             allMission: [],
@@ -439,6 +446,16 @@ export default {
         }
     },
     methods: {
+        closePreviewMethod(){
+            this.previewClient = false
+            this.$refs.mainbox.style.position='relative'
+        },
+
+        openPreviewMethod(){
+            this.previewClient = true
+            this.$refs.mainbox.style.position='fixed'
+        },
+
         showFullName(item){
             this.showError = true
             if(this.lang === 'en'){
@@ -450,6 +467,7 @@ export default {
                 this.showError = false
             }, 3000);
         },
+
         // upload photo method start
         fileChange(el) {
             if (typeof FileReader === 'undefined') {
@@ -942,7 +960,7 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
-    width: 200px;
+    width: 80%;
 }
 .checkcar-body-top {
     background: #d74342;
@@ -1055,7 +1073,7 @@ export default {
 }
 
 .previewclient-box-body-title-right{
-    width: 120px;
+    width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space:nowrap
@@ -1063,7 +1081,7 @@ export default {
 
 .previewclient-box-body-body{
     height: 377px;
-    overflow-y: auto;
+    overflow-y:scroll;
 }
 
 .previewclient-box-body-body-left{
@@ -1073,12 +1091,11 @@ export default {
 }
 
 .previewclient-box-body-body-right{
-    width: 120px;
+    width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space:nowrap;
     height: 30px;
     line-height: 30px;
 }
-
 </style>

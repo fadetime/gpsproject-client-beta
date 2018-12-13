@@ -1,7 +1,7 @@
 export default (to, from, next) => {
     // setTimeout(()=>{
       if(localStorage.drivertoken){
-        next()
+          next()
       } else {
         next('/login')
       }
