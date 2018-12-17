@@ -14,8 +14,8 @@
             <div class="emptyarea-top">
                 <!-- 顶部占位符 -->
             </div>
-            <div v-if="allMission.length == 0" style="padding-top:100px">
-                <img src="../../public/img/ebuyLogo.png" alt="logo" style="width:200px">
+            <div v-if="allMission.length == 0" style="width: 50%;margin: 0 auto;padding-top: 15vh;">
+                <img src="../../public/img/ebuyLogo.png" alt="logo">
                 <br>
                 <span>~{{language.homePage.whenEmpty}}~</span>
             </div>
@@ -384,7 +384,7 @@ export default {
     name: 'homepage',
     beforeCreate() {
         if(localStorage.getItem('driverRole') === 'dayshift'){
-            this.$router.push('/search')
+            this.$router.push('/dayShiftHome')
         }
     },
 
@@ -962,6 +962,7 @@ export default {
     background: #fff;
     width: 80%;
 }
+
 .checkcar-body-top {
     background: #d74342;
     color: #fff;

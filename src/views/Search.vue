@@ -37,6 +37,11 @@
                                 <span>{{item.clientbaddress}}</span>
                             </div>
                         </div>
+                        <div style="margin-top: 5px;margin-bottom: 5px;">
+                            <div class="search-body-center-button" @click="showIncreaseOrderBoxMethod(item)">
+                                <span>添加到任务</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div v-show="pageNow > 0" v-if="countNum >= pageSize * pageNow" class="search-body-center-more" @click="getMoreMethod">
@@ -61,6 +66,54 @@
         <div class="search-footer">
             <!-- 底部占位符 -->
         </div>
+        <!-- show increase order box start -->
+        <transition name="preview-client-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="showIncreaseOrderBox" class="increaseorder-back" ></div>
+        </transition>
+        <transition name="preview-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="showIncreaseOrderBox" class="increaseorder-front" @click.self.prevent="showIncreaseOrderBox = false">
+                <div class="increaseorder-box">
+                    <div class="increaseorder-box-top">
+                        <span>添加任务</span>
+                    </div>
+                    <div  class="increaseorder-box-body">
+                        <div class="increaseorder-box-body-title">
+                            <span style="font-size:16px">{{clientShipping.clientbname}}</span>
+                        </div>
+                        <div class="increaseorder-box-body-center">
+                            <div :class="choiseLift" style="margin-right:10px" @click="choiseOrderModeMethod('left')">
+                                <div :class="choiseLeftImg"></div>
+                                <div>
+                                    <span :class="choiseLeftText">加单</span>
+                                </div>
+                            </div>
+                            <div :class="choiseRight" @click="choiseOrderModeMethod('right')">
+                                <div :class="choiseRightImg"></div>
+                                <div>
+                                    <span :class="choiseRightText">补单</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="increaseorder-box-footer">
+                        <div class="search-body-center-button" style="width: 80px;margin-right:10px" @click="showIncreaseOrderBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="search-body-center-button" style="width: 80px;" @click="confirmIncreaseOrder">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- show increase order box end -->
+        <!-- 操作提示 -->
+        <transition name="tips-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
+            <div class="errinfo" v-if="showError" @click="showError = false">
+                <span>{{errorInfo}}</span>
+            </div>
+        </transition>
+        <!-- 操作提示 -->
     </div>
 </template>
 
@@ -76,10 +129,101 @@ export default {
             pageNow:1,
             clientArray:[],
             countNum:null,
-            returnNull:false
+            returnNull:false,
+            showIncreaseOrderBox:false,
+            clientShipping:null,
+            choiseLift:'increaseorder-box-body-center-item',
+            choiseRight:'increaseorder-box-body-center-item',
+            isIncreaseOrder:null,
+            choiseLeftImg:'increaseorderimg1',
+            choiseRightImg:'increaseorderimg2',
+            choiseLeftText:'textcolor',
+            choiseRightText:'textcolor',
+            showError:false,
+            errorInfo:'未知错误',
+            driverName:null
         }
     },
+    mounted() {
+        this.driverName = localStorage.getItem('drivername')
+    },
     methods:{
+        confirmIncreaseOrder(){
+            if(this.isIncreaseOrder === null){
+                this.showError = true
+                this.errorInfo = '请选择任务类型'
+                setTimeout(() => {
+                    this.showError = false
+                }, 3000);
+            }else{
+                console.log('premit mission to server')
+                axios.post(config.server + '/dayshiftmission/create',{
+                    client_id:this.clientShipping._id,
+                    clientName:this.clientShipping.clientbname,
+                    clientNameEN:this.clientShipping.clientbnameEN,
+                    note:this.clientShipping.note,
+                    clientAddress:this.clientShipping.clientbaddress,
+                    clientPhone:this.clientShipping.clientbphone,
+                    clientPostcode:this.clientShipping.clientbpostcode,
+                    image:this.clientShipping.image,
+                    isIncreaseOrder:this.isIncreaseOrder,
+                    driverName:this.driverName,
+                    orderDate:new Date().toISOString()
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.showIncreaseOrderBox = false
+                        this.showError = true
+                        this.errorInfo = '添加任务成功'
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }else{
+                        this.showIncreaseOrderBox = false
+                        this.showError = true
+                        this.errorInfo = '添加出错，请联系管理员'
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+
+        choiseOrderModeMethod(mode){
+            if(mode === 'left'){
+                this.isIncreaseOrder = true
+                this.choiseLift = 'increaseorder-box-body-center-item-red'
+                this.choiseRight = 'increaseorder-box-body-center-item'
+                this.choiseLeftImg = 'increaseorderimg1-red'
+                this.choiseRightImg = 'increaseorderimg2'
+                this.choiseLeftText = 'textcolor-red'
+                this.choiseRightText = 'textcolor'
+            }else{
+                this.isIncreaseOrder = false
+                this.choiseRight = 'increaseorder-box-body-center-item-red'
+                this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseRightImg = 'increaseorderimg2-red'
+                this.choiseLeftImg = 'increaseorderimg1'
+                this.choiseRightText = 'textcolor-red'
+                this.choiseLeftText = 'textcolor'
+            }
+        },
+        showIncreaseOrderBoxMethod(client){
+            this.choiseLift = 'increaseorder-box-body-center-item'
+            this.choiseRight = 'increaseorder-box-body-center-item'
+            this.choiseLeftImg = 'increaseorderimg1'
+            this.choiseRightImg = 'increaseorderimg2'
+            this.choiseLeftText = 'textcolor'
+            this.choiseRightText = 'textcolor'
+            this.isIncreaseOrder = null
+            this.showIncreaseOrderBox = true
+            this.clientShipping = client
+        },
         searchMethod(){
             this.returnNull = false
             this.pageNow = 1
@@ -123,7 +267,7 @@ export default {
 
 <style scoped>
 .search-title{
-    height: 50px;
+    height: 40px;
     background: #d74342;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
@@ -132,7 +276,7 @@ export default {
 .search-title span{
     color: #fff;
     font-size: 18px;
-    line-height: 50px;
+    line-height: 40px;
 }
 
 .search-body {
@@ -214,6 +358,23 @@ export default {
     transition: 0.2s;
 }
 
+.search-body-center-button{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 100px;
+    margin: 0 auto;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    height: 30px;
+    line-height: 30px;
+    transition: 0.2s;
+}
+
+.search-body-center-button:active{
+    box-shadow:none;
+    transition: 0.2s;
+}
+
 .search-body-logo{
     width: 50%;
     margin: 0 auto;
@@ -222,6 +383,151 @@ export default {
 
 .search-footer{
     height: 80px;
+}
+
+.increaseorder-back {
+    position: fixed;
+    z-index: 25;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.increaseorder-front {
+    position: fixed;
+    z-index: 26;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.increaseorder-box{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background: #fff;
+}
+
+.increaseorder-box-top {
+    background: #d74342;
+    color: #fff;
+    font-size: 16px;
+    height: 40px;
+    line-height: 40px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.increaseorderimg1 {
+    background: #e0e0e0;
+    mask-image: url(../../public/icons/increaseOrder1.svg);
+    -webkit-mask-image: url(../../public/icons/increaseOrder1.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.increaseorderimg1-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/increaseOrder1.svg);
+    -webkit-mask-image: url(../../public/icons/increaseOrder1.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.increaseorderimg2 {
+    background: #e0e0e0;
+    mask-image: url(../../public/icons/increaseOrder2.svg);
+    -webkit-mask-image: url(../../public/icons/increaseOrder2.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.increaseorderimg2-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/increaseOrder2.svg);
+    -webkit-mask-image: url(../../public/icons/increaseOrder2.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.textcolor{
+    color: #e0e0e0;
+    transition: 0.2s;
+}
+
+.textcolor-red{
+    color: #000;
+    transition: 0.2s;
+}
+
+.increaseorder-box-body-title{
+    padding-top:10px;
+    border-bottom: 1px solid #e0e0e0;
+    height: 40px;
+    line-height: 30px;
+    margin: 0 10px;
+}
+
+.increaseorder-box-body-center{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin: 0 10px;
+    margin-top: 10px;
+}
+
+.increaseorder-box-body-center-item{
+    border: 1px solid #e0e0e0;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.increaseorder-box-body-center-item-red{
+    border: 1px solid #d74342;
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.increaseorder-box-footer{
+    display: flex;
+    display: -webkit-flex;
+    margin: 10px;
+}
+
+.errinfo {
+    position: fixed;
+    z-index: 19;
+    top: 8px;
+    background-color: rgba(255, 255, 0, 0.7);
+    width: 100%;
+    z-index: 99;
+}
+
+.errinfo span {
+    font-size: 16px;
+    line-height: 32px;
 }
 </style>
 

@@ -8,6 +8,11 @@
                         <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
                         <i class="badge" v-if="newPosts" style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
                     </md-bottom-bar-item>
+                    <md-bottom-bar-item v-if="driverRole === 'dayshift'" id="bottom-bar-item-home" @click="goDayHome">
+                        <div class="md-bottom-bar-icon baseline_home" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
+                        <i class="badge" v-if="newPosts" style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
+                    </md-bottom-bar-item>
                     <md-bottom-bar-item v-if="driverRole != 'dayshift'" id="bottom-bar-item-finish" @click="goFinish">
                         <div class="md-bottom-bar-icon assignment_turned" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.finish}}</span>
@@ -54,6 +59,9 @@ export default {
     methods: {
         gohome() {
             this.$router.push('/')
+        },
+        goDayHome() {
+            this.$router.push('/dayshifthome')
         },
         gomission() {
             this.$router.push('/history')
