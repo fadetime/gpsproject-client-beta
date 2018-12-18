@@ -67,6 +67,20 @@ export default{
     historyPage:{
         selectDate:'请选择日期'
     },
+    dayShiftHome:{
+        removeMission:'删除任务',
+        startMission:'开始任务',
+        finishMission:'结束任务'
+    },
+    searchPage:{
+        searchClient:'搜索客户',
+        inputClientName:'请输入客户名称',
+        clientPhone:'客户电话:',
+        postCode:'客户邮编:',
+        address:'客户地址:',
+        increaseOrder:'添加任务',
+        more:'更多信息'
+    },
     setupPage:{
         licenseType:'驾照类型',
         Contact:'联系方式',

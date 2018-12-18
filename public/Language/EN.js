@@ -67,6 +67,20 @@ export default{
     historyPage:{
         selectDate:'Please select date'
     },
+    dayShiftHome:{
+        removeMission:'Remove',
+        startMission:'Start',
+        finishMission:'Finish'
+    },
+    searchPage:{
+        searchClient:'Search Client',
+        inputClientName:'Search client name',
+        clientPhone:'ClientPhone:',
+        postCode:'PostCode:',
+        address:'Address:',
+        increaseOrder:'IncreaseOrder',
+        more:'More+'
+    },
     setupPage:{
         licenseType:'License type',
         Contact:'Contact',

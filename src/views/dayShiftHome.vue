@@ -19,7 +19,8 @@
                  v-for="(item,index) in missionArray"
                  :key="index">
                 <div class="search-body-center-item-title">
-                    <span>{{item.clientName}}</span>
+                    <span v-if="lang === 'ch'">{{item.clientName}}</span>
+                    <span v-else>{{item.clientNameEN}}</span>
                 </div>
                 <div class="search-body-center-item-body">
                     <div v-if="item.backTime">
@@ -36,7 +37,7 @@
                     </div>
                     <div class="search-body-center-item-body-item">
                         <div class="search-body-center-item-body-item-left">
-                            <span>客户电话：</span>
+                            <span>{{language.searchPage.clientPhone}}</span>
                         </div>
                         <div class="search-body-center-item-body-item-right">
                             <span>{{item.clientPhone}}</span>
@@ -44,7 +45,7 @@
                     </div>
                     <div class="search-body-center-item-body-item">
                         <div class="search-body-center-item-body-item-left">
-                            <span>客户邮编：</span>
+                            <span>{{language.searchPage.postCode}}</span>
                         </div>
                         <div class="search-body-center-item-body-item-right">
                             <span>{{item.clientPostcode}}</span>
@@ -52,7 +53,7 @@
                     </div>
                     <div class="search-body-center-item-body-item">
                         <div class="search-body-center-item-body-item-left">
-                            <span>客户地址：</span>
+                            <span>{{language.searchPage.address}}</span>
                         </div>
                         <div class="search-body-center-item-body-item-right">
                             <span>{{item.clientAddress}}</span>
@@ -64,11 +65,11 @@
                             <div class="search-body-center-button"
                                  style="background:#d74342;color:#fff"
                                  @click="removeMission(item)">
-                                <span>删除任务</span>
+                                <span>{{language.dayShiftHome.removeMission}}</span>
                             </div>
                             <div class="search-body-center-button"
                                  @click="startMissionMethod(item)">
-                                <span>开始任务</span>
+                                <span>{{language.dayShiftHome.startMission}}</span>
                             </div>
                         </div>
                         <div v-else
@@ -79,7 +80,7 @@
                             <div v-if="!item.backTime"
                                  class="search-body-center-button"
                                  @click="endMissionMethod(item)">
-                                <span>结束任务</span>
+                                <span>{{language.dayShiftHome.finishMission}}</span>
                             </div>
                         </div>
                     </div>
@@ -102,11 +103,15 @@
                  @click.self.prevent="showRemoveBox = false">
                 <div class="removebox-box">
                     <div class="removebox-box-top">
-                        <span>删除任务</span>
+                        <span v-if="lang === 'ch'">删除任务</span>
+                        <span v-else>Remove Mission</span>
                     </div>
                     <div class="removebox-box-body">
                         <div class="removebox-box-body-title">
-                            <span style="font-size:16px">删除原因</span>
+                            <span v-if="lang === 'ch'"
+                                  style="font-size:16px">删除原因</span>
+                            <span v-else
+                                  style="font-size:16px">Choise Reason</span>
                         </div>
                         <div class="removebox-box-body-item">
                             <div>
@@ -116,7 +121,10 @@
                                        v-model="radioPicked">
                             </div>
                             <div style="padding-left:10px">
-                                <label for="radio1">添加错误</label>
+                                <label v-if="lang === 'ch'"
+                                       for="radio1">添加错误</label>
+                                <label v-else
+                                       for="radio1">Add error</label>
                             </div>
                         </div>
                         <div class="removebox-box-body-item">
@@ -127,7 +135,10 @@
                                        v-model="radioPicked">
                             </div>
                             <div style="padding-left:10px">
-                                <label for="radio2">送货取消</label>
+                                <label v-if="lang === 'ch'"
+                                       for="radio2">送货取消</label>
+                                <label v-else
+                                       for="radio2">chancelled</label>
                             </div>
                         </div>
                         <div class="removebox-box-body-item">
@@ -138,7 +149,10 @@
                                        v-model="radioPicked">
                             </div>
                             <div style="padding-left:10px">
-                                <label for="radio3">其他原因</label>
+                                <label v-if="lang === 'ch'"
+                                       for="radio3">其他原因</label>
+                                <label v-else
+                                       for="radio3">other</label>
                             </div>
                         </div>
                         <div class="removebox-box-body-item">
@@ -155,12 +169,14 @@
                         <div class="removebox-body-center-button"
                              style="width: 80px;margin-right:10px"
                              @click="showRemoveBox = false">
-                            <span>取消</span>
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>chancel</span>
                         </div>
                         <div class="removebox-body-center-button"
                              style="width: 80px;"
                              @click="removeMissionMtehod()">
-                            <span>确定</span>
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
                         </div>
                     </div>
                 </div>
@@ -229,14 +245,22 @@ export default {
                     this.getDriverMission();
                     if (doc.data.code === 0) {
                         this.showError = true;
-                        this.errorInfo = "任务已完成";
+                        if (lang === "ch") {
+                            this.errorInfo = "任务已完成";
+                        } else {
+                            this.errorInfo = "mission complete";
+                        }
                         this.showRemoveBox = false;
                         setTimeout(() => {
                             this.showError = false;
                         }, 3000);
                     } else {
                         this.showError = true;
-                        this.errorInfo = "已完失败";
+                        if (lang === "ch") {
+                            this.errorInfo = "出现错误";
+                        } else {
+                            this.errorInfo = "something wrong";
+                        }
                         this.showRemoveBox = false;
                         setTimeout(() => {
                             this.showError = false;
@@ -268,7 +292,11 @@ export default {
         removeMissionMtehod() {
             if (this.radioPicked === null) {
                 this.showError = true;
-                this.errorInfo = "请选择删除原因";
+                if (lang === "ch") {
+                    this.errorInfo = "请选择删除原因";
+                } else {
+                    this.errorInfo = "Choise reason";
+                }
                 setTimeout(() => {
                     this.showError = false;
                 }, 3000);
@@ -290,7 +318,11 @@ export default {
                     .then(doc => {
                         if (doc.data.code === 0) {
                             this.showError = true;
-                            this.errorInfo = "删除成功";
+                            if (lang === "ch") {
+                                this.errorInfo = "删除成功";
+                            } else {
+                                this.errorInfo = "Remove success";
+                            }
                             this.showRemoveBox = false;
                             this.getDriverMission();
                             setTimeout(() => {
@@ -298,7 +330,11 @@ export default {
                             }, 3000);
                         } else {
                             this.showError = true;
-                            this.errorInfo = "删除失败";
+                            if (lang === "ch") {
+                                this.errorInfo = "删除失败";
+                            } else {
+                                this.errorInfo = "Remove fail";
+                            }
                             this.showRemoveBox = false;
                             setTimeout(() => {
                                 this.showError = false;
@@ -344,7 +380,11 @@ export default {
                         this.$store.dispatch("setDoNum", this.needDoNum);
                     } else {
                         this.showError = true;
-                        this.errorInfo = "未找到白班任务";
+                        if (lang === "ch") {
+                                this.errorInfo = "未找到白班任务";
+                            } else {
+                                this.errorInfo = "Mission not found";
+                            }
                         setTimeout(() => {
                             this.showError = false;
                         }, 3000);
@@ -487,12 +527,13 @@ export default {
     font-size: 14px;
     display: flex;
     display: -webkit-flex;
-    justify-content: center;
+    justify-content: left;
 }
 
 .removebox-box-body-item input {
     width: 16px;
     height: 16px;
+    margin-left: 30px;
 }
 
 .removebox-box-footer {

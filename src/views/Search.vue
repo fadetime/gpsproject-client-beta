@@ -1,21 +1,22 @@
 <template>
     <div id="searchpage">
         <div class="search-title">
-            <span>搜索客户</span>
+            <span>{{language.searchPage.searchClient}}</span>
         </div>
         <div class="search-body">
             <div class="search-body-top">
-                <input type="text" placeholder="请输入客户名称" v-model="keyWord" @keyup.enter="searchMethod">
+                <input type="text" :placeholder="language.searchPage.inputClientName" v-model="keyWord" @keyup.enter="searchMethod">
             </div>
             <div v-if="!returnNull" class="search-body-center">
                 <div class="search-body-center-item" v-for="(item,index) in clientArray" :key="index">
                     <div class="search-body-center-item-title">
-                        <span>{{item.clientbname}}</span>
+                        <span v-if="lang === 'ch'">{{item.clientbname}}</span>
+                        <span v-else>{{item.clientbnameEN}}</span>
                     </div>
                     <div class="search-body-center-item-body">
                         <div class="search-body-center-item-body-item">
                             <div class="search-body-center-item-body-item-left">
-                                <span>客户电话：</span>
+                                <span>{{language.searchPage.clientPhone}}</span>
                             </div>
                             <div class="search-body-center-item-body-item-right">
                                 <span>{{item.clientbphone}}</span>
@@ -23,7 +24,7 @@
                         </div>
                         <div class="search-body-center-item-body-item">
                             <div class="search-body-center-item-body-item-left">
-                                <span>客户邮编：</span>
+                                <span>{{language.searchPage.postCode}}</span>
                             </div>
                             <div class="search-body-center-item-body-item-right">
                                 <span>{{item.clientbpostcode}}</span>
@@ -31,7 +32,7 @@
                         </div>
                         <div class="search-body-center-item-body-item">
                             <div class="search-body-center-item-body-item-left">
-                                <span>客户地址：</span>
+                                <span>{{language.searchPage.address}}</span>
                             </div>
                             <div class="search-body-center-item-body-item-right">
                                 <span>{{item.clientbaddress}}</span>
@@ -39,16 +40,17 @@
                         </div>
                         <div style="margin-top: 5px;margin-bottom: 5px;">
                             <div class="search-body-center-button" @click="showIncreaseOrderBoxMethod(item)">
-                                <span>添加到任务</span>
+                                <span>{{language.searchPage.increaseOrder}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div v-show="pageNow > 0" v-if="countNum >= pageSize * pageNow" class="search-body-center-more" @click="getMoreMethod">
-                    <span>更多信息</span>
+                    <span>{{language.searchPage.more}}</span>
                 </div>
                 <div v-show="pageNow > 0 && clientArray.length != 0" v-else>
-                    <span style="color:#6a6a6a">~~没有更多信息~~</span>
+                    <span v-if="lang === 'ch'" style="color:#6a6a6a">~~没有更多信息~~</span>
+                    <span v-else style="color:#6a6a6a">~~No more info~~</span>
                 </div>
                 <div v-if="clientArray.length === 0" class="search-body-logo">
                     <img src="../../public/img/ebuyLogo.png" alt="ebuylogo">
@@ -56,7 +58,8 @@
             </div>
             <div v-else class="search-body-center">
                 <div style="padding-top:10vh">
-                    <span>~~未找到该客户~~</span>
+                    <span v-if="lang === 'ch'">~~未找到该客户~~</span>
+                    <span v-else>~~Client was not found~~</span>
                 </div>
                 <div>
                     <img src="../../public/img/crycat.gif" alt="notfond">
@@ -74,33 +77,39 @@
             <div v-if="showIncreaseOrderBox" class="increaseorder-front" @click.self.prevent="showIncreaseOrderBox = false">
                 <div class="increaseorder-box">
                     <div class="increaseorder-box-top">
-                        <span>添加任务</span>
+                        <span v-if="lang === 'ch'">添加任务</span>
+                        <span v-else>Incresae Order</span>
                     </div>
                     <div  class="increaseorder-box-body">
                         <div class="increaseorder-box-body-title">
-                            <span style="font-size:16px">{{clientShipping.clientbname}}</span>
+                            <span v-if="lang === 'ch'" style="font-size:16px">{{clientShipping.clientbname}}</span>
+                            <span v-else style="font-size:16px">{{clientShipping.clientbnameEN}}</span>
                         </div>
                         <div class="increaseorder-box-body-center">
                             <div :class="choiseLift" style="margin-right:10px" @click="choiseOrderModeMethod('left')">
                                 <div :class="choiseLeftImg"></div>
                                 <div>
-                                    <span :class="choiseLeftText">加单</span>
+                                    <span v-if="lang === 'ch'" :class="choiseLeftText">加单</span>
+                                    <span v-else :class="choiseLeftText">Increase</span>
                                 </div>
                             </div>
                             <div :class="choiseRight" @click="choiseOrderModeMethod('right')">
                                 <div :class="choiseRightImg"></div>
                                 <div>
-                                    <span :class="choiseRightText">补单</span>
+                                    <span v-if="lang === 'ch'" :class="choiseRightText">补单</span>
+                                    <span v-else :class="choiseRightText">Farther</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="increaseorder-box-footer">
                         <div class="search-body-center-button" style="width: 80px;margin-right:10px" @click="showIncreaseOrderBox = false">
-                            <span>取消</span>
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>cancel</span>
                         </div>
                         <div class="search-body-center-button" style="width: 80px;" @click="confirmIncreaseOrder">
-                            <span>确定</span>
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
                         </div>
                     </div>
                 </div>
@@ -147,11 +156,23 @@ export default {
     mounted() {
         this.driverName = localStorage.getItem('drivername')
     },
+    computed: {
+        language() {
+            return this.$store.getters.getLanguage
+        },
+        lang() {
+            return this.$store.state.lang
+        }
+    },
     methods:{
         confirmIncreaseOrder(){
             if(this.isIncreaseOrder === null){
                 this.showError = true
-                this.errorInfo = '请选择任务类型'
+                if(this.lang === 'ch'){
+                    this.errorInfo = '请选择任务类型'
+                }else{
+                    this.errorInfo = 'Choise mission mode'
+                }
                 setTimeout(() => {
                     this.showError = false
                 }, 3000);
@@ -175,14 +196,22 @@ export default {
                     if(doc.data.code === 0){
                         this.showIncreaseOrderBox = false
                         this.showError = true
-                        this.errorInfo = '添加任务成功'
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '添加任务成功'
+                        }else{
+                            this.errorInfo = 'add mission successfully'
+                        }
                         setTimeout(() => {
                             this.showError = false
                         }, 3000);
                     }else{
                         this.showIncreaseOrderBox = false
                         this.showError = true
-                        this.errorInfo = '添加出错，请联系管理员'
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '添加出错，请联系管理员'
+                        }else{
+                            this.errorInfo = 'something wrong'
+                        }
                         setTimeout(() => {
                             this.showError = false
                         }, 3000);
