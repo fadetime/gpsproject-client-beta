@@ -292,6 +292,7 @@ export default {
                             this.showError = true;
                             this.errorInfo = "删除成功";
                             this.showRemoveBox = false;
+                            this.getDriverMission();
                             setTimeout(() => {
                                 this.showError = false;
                             }, 3000);
@@ -313,7 +314,6 @@ export default {
         removeMission(mission) {
             this.showRemoveBox = true;
             this.missionInfo = mission;
-            console.log(this.missionInfo);
         },
 
         getDriverMission() {
