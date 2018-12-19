@@ -17,6 +17,11 @@
                         <div class="md-bottom-bar-icon assignment_turned" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.finish}}</span>
                     </md-bottom-bar-item>
+                    <md-bottom-bar-item v-if="driverRole === 'bill'" id="bottom-bar-item-bill" @click="goBill">
+                        <div class="md-bottom-bar-icon list_alt" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.bill}}</span>
+                        <i class="badge" v-if="haveBill" style="width:24px;height:24px;font-size:14px;color:#d74342">单</i>
+                    </md-bottom-bar-item>
                     <md-bottom-bar-item v-if="driverRole != 'dayshift'" id="bottom-bar-item-posts" @click="gomission">
                         <div class="md-bottom-bar-icon search_white" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.find}}</span>
@@ -54,7 +59,10 @@ export default {
         },
         driverRole: function() {
             return localStorage.getItem('driverRole')
-        }
+        },
+        haveBill: function() {
+            return this.$store.state.haveBill
+        },
     },
     methods: {
         gohome() {
@@ -74,6 +82,9 @@ export default {
         },
         goFinish() {
             this.$router.push('/finish')
+        },
+        goBill(){
+            this.$router.push('/bill')
         },
         gofix() {
             this.$router.push('/fixcar')
@@ -135,6 +146,14 @@ export default {
     background: #fff;
     mask-image: url(../../public/icons/baseline-assignment_turned_in-36px.svg);
     -webkit-mask-image: url(../../public/icons/baseline-assignment_turned_in-36px.svg);
+    width: 36px;
+    height: 36px;
+}
+
+.list_alt {
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-list_alt-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-list_alt-24px.svg);
     width: 36px;
     height: 36px;
 }

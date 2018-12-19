@@ -101,6 +101,7 @@ export default{
     bottomBar:{
         home:'HOME',
         finish:'FINISH',
+        bill:'BILL',
         find:'FIND',
         search:'SEARCH',
         setup:'SETUP',

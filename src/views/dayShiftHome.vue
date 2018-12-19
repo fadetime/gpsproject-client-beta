@@ -245,7 +245,7 @@ export default {
                     this.getDriverMission();
                     if (doc.data.code === 0) {
                         this.showError = true;
-                        if (lang === "ch") {
+                        if (this.lang === "ch") {
                             this.errorInfo = "任务已完成";
                         } else {
                             this.errorInfo = "mission complete";
@@ -256,7 +256,7 @@ export default {
                         }, 3000);
                     } else {
                         this.showError = true;
-                        if (lang === "ch") {
+                        if (this.lang === "ch") {
                             this.errorInfo = "出现错误";
                         } else {
                             this.errorInfo = "something wrong";
@@ -292,7 +292,7 @@ export default {
         removeMissionMtehod() {
             if (this.radioPicked === null) {
                 this.showError = true;
-                if (lang === "ch") {
+                if (this.lang === "ch") {
                     this.errorInfo = "请选择删除原因";
                 } else {
                     this.errorInfo = "Choise reason";
@@ -318,7 +318,7 @@ export default {
                     .then(doc => {
                         if (doc.data.code === 0) {
                             this.showError = true;
-                            if (lang === "ch") {
+                            if (this.lang === "ch") {
                                 this.errorInfo = "删除成功";
                             } else {
                                 this.errorInfo = "Remove success";
@@ -330,7 +330,7 @@ export default {
                             }, 3000);
                         } else {
                             this.showError = true;
-                            if (lang === "ch") {
+                            if (this.lang === "ch") {
                                 this.errorInfo = "删除失败";
                             } else {
                                 this.errorInfo = "Remove fail";
@@ -380,7 +380,7 @@ export default {
                         this.$store.dispatch("setDoNum", this.needDoNum);
                     } else {
                         this.showError = true;
-                        if (lang === "ch") {
+                        if (this.lang === "ch") {
                                 this.errorInfo = "未找到白班任务";
                             } else {
                                 this.errorInfo = "Mission not found";

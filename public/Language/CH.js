@@ -101,6 +101,7 @@ export default{
     bottomBar:{
         home:'主页',
         finish:'完成',
+        bill:'账单',
         find:'查找',
         search:'搜索',
         setup:'设置',

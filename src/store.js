@@ -8,6 +8,7 @@ export default new Vuex.Store({
 		tempArr:{},
 		haveToken:'',
 		needDoNum:0,
+		haveBill:false,
 		choiseDay:'today',
 		language:'',
 		lang:'',
@@ -22,6 +23,9 @@ export default new Vuex.Store({
 		},
 		setDoNum:(state , item) => {
 			state.needDoNum = item
+		},
+		setHaveBill:(state , item) => {
+			state.haveBill = item
 		},
 		setChoiseDay:(state , item) => {
 			state.choiseDay = item
@@ -44,6 +48,9 @@ export default new Vuex.Store({
 		},
 		setDoNum: ({ commit }, item) => {
 			commit('setDoNum', item)
+		},
+		setHaveBill: ({ commit }, item) => {
+			commit('setHaveBill', item)
 		},
 		setChoiseDay: ({ commit }, item) => {
 			commit('setChoiseDay', item)

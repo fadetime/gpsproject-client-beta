@@ -10,6 +10,7 @@ import HistoryDetail from './views/HistoryDetail.vue'
 import fixCar from './views/fixCar.vue'
 import search from './views/Search.vue'
 import dayShiftHome from './views/dayShiftHome.vue'
+import billPage from './views/bill.vue'
 
 import AuthGuard from './auth-guard'
 import fixCarGuard from './fixCar-guard'
@@ -58,6 +59,12 @@ export default new Router({
       path: '/historydetail',
       name: 'HistoryDetail',
       component: HistoryDetail,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/bill',
+      name: 'billPage',
+      component: billPage,
       beforeEnter: AuthGuard
     },
     {

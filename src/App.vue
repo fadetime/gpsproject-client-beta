@@ -37,6 +37,9 @@ export default {
             let item = localStorage.drivertoken
             this.$store.dispatch('setToken', item)
         }
+        if(this.$store.state.haveBill){
+            this.$store.dispatch('setHaveBill', true)
+        }
     },
 
     computed: {
