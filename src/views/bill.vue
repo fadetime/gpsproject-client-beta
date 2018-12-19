@@ -323,10 +323,13 @@ export default {
         },
 
         billMissionFinishMtehod() {
+            let date = new Date().toISOString()
             axios
                 .post(config.server + "/bill/edit", {
                     _id: this.billCount._id,
-                    endNum: this.endNum
+                    endNum: this.endNum,
+                    driverNames:this.driverName,
+                    endDate:date
                 })
                 .then(doc => {
                     this.isShowBillFinishBox = false;

@@ -11,6 +11,7 @@ import fixCar from './views/fixCar.vue'
 import search from './views/Search.vue'
 import dayShiftHome from './views/dayShiftHome.vue'
 import billPage from './views/bill.vue'
+import checkPage from './views/checker.vue'
 
 import AuthGuard from './auth-guard'
 import fixCarGuard from './fixCar-guard'
@@ -65,6 +66,12 @@ export default new Router({
       path: '/bill',
       name: 'billPage',
       component: billPage,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/check',
+      name: 'checkPage',
+      component: checkPage,
       beforeEnter: AuthGuard
     },
     {

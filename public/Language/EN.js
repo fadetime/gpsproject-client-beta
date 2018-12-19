@@ -105,6 +105,7 @@ export default{
         find:'FIND',
         search:'SEARCH',
         setup:'SETUP',
+        check:'CHECK',
         sms:'SMS'
     }
 }

@@ -177,7 +177,8 @@ export default {
                     this.showError = false
                 }, 3000);
             }else{
-                console.log('premit mission to server')
+                let orderDate = new Date().toISOString()
+                console.log(orderDate)
                 axios.post(config.server + '/dayshiftmission/create',{
                     client_id:this.clientShipping._id,
                     clientName:this.clientShipping.clientbname,
@@ -189,7 +190,7 @@ export default {
                     image:this.clientShipping.image,
                     isIncreaseOrder:this.isIncreaseOrder,
                     driverName:this.driverName,
-                    orderDate:new Date().toISOString()
+                    orderDate:orderDate
                 })
                 .then(doc => {
                     console.log(doc)
@@ -263,7 +264,6 @@ export default {
                     word:this.keyWord
                 })
             .then(doc => {
-                console.log(doc.data.count)
                 if(doc.data.code === 0){
                     this.countNum = doc.data.count
                     this.clientArray=this.clientArray.concat(doc.data.doc)

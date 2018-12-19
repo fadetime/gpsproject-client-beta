@@ -105,6 +105,7 @@ export default{
         find:'查找',
         search:'搜索',
         setup:'设置',
+        check:'检查',
         sms:'信息'
     }
 }

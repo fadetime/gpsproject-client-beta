@@ -234,12 +234,11 @@ export default {
     },
     methods: {
         endMissionMethod(mission) {
-            let a = new Date().toDateString();
-            let b = new Date(a).toISOString();
+            let backTime = new Date().toISOString();
             axios
                 .post(config.server + "/dayShiftmission/end", {
                     _id: mission._id,
-                    backTime: b
+                    backTime: backTime
                 })
                 .then(doc => {
                     this.getDriverMission();
@@ -273,16 +272,37 @@ export default {
         },
 
         startMissionMethod(mission) {
-            let a = new Date().toDateString();
-            let b = new Date(a).toISOString();
+            let goTime = new Date().toISOString()
             axios
                 .post(config.server + "/dayShiftmission/start", {
                     _id: mission._id,
-                    goTime: b
+                    goTime: goTime
                 })
                 .then(doc => {
-                    this.getDriverMission();
                     console.log(doc);
+                    if(doc.data.code === 0){
+                        if (this.lang === "ch") {
+                            this.errorInfo = "状态更新成功";
+                        } else {
+                            this.errorInfo = "state update success";
+                        }
+                        this.showRemoveBox = false;
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                        this.getDriverMission();
+                    }else{
+                        if (this.lang === "ch") {
+                            this.errorInfo = "状态更新失败";
+                        } else {
+                            this.errorInfo = "state update failed";
+                        }
+                        this.showRemoveBox = false;
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                    }
+                    
                 })
                 .catch(err => {
                     console.log(err);
@@ -363,7 +383,6 @@ export default {
                     orderDate: b
                 })
                 .then(doc => {
-                    console.log(doc);
                     if (doc.data.code === 0) {
                         this.missionArray = doc.data.doc;
                         this.missionArray = _.orderBy(
@@ -374,7 +393,6 @@ export default {
                         this.missionArray.forEach(elementX => {
                             if (!elementX.backTime) {
                                 this.needDoNum += 1;
-                                console.log("if");
                             }
                         });
                         this.$store.dispatch("setDoNum", this.needDoNum);

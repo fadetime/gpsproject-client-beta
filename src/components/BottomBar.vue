@@ -34,6 +34,10 @@
                         <div class="md-bottom-bar-icon feedback_white" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.sms}}</span>
                     </md-bottom-bar-item>
+                    <!-- <md-bottom-bar-item v-if="driverRole === 'checker'" id="bottom-bar-item-check" @click="goCheck">
+                        <div class="md-bottom-bar-icon baseline-assignment" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.check}}</span>
+                    </md-bottom-bar-item> -->
                     <md-bottom-bar-item id="bottom-bar-item-favorites" @click="gosetup">
                         <div class="md-bottom-bar-icon settings_white" style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.setup}}</span>
@@ -85,6 +89,9 @@ export default {
         },
         goBill(){
             this.$router.push('/bill')
+        },
+        goCheck(){
+            this.$router.push('/check')
         },
         gofix() {
             this.$router.push('/fixcar')
@@ -178,6 +185,14 @@ export default {
     background: #fff;
     mask-image: url(../../public/icons/baseline-feedback-24px.svg);
     -webkit-mask-image: url(../../public/icons/baseline-feedback-24px.svg);
+    width: 36px;
+    height: 36px;
+}
+
+.baseline-assignment{
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-assignment-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-assignment-24px.svg);
     width: 36px;
     height: 36px;
 }
