@@ -66,7 +66,7 @@
                 <div class="bill-icon"
                      style="margin:10px 0"></div>
                 <div style="padding:5px 0">
-                    <span style="color:#6a6a6a">订单任务</span>
+                    <span style="color:#6a6a6a">账单任务</span>
                 </div>
             </div>
         </div>
@@ -434,8 +434,8 @@ export default {
     height: 90%;
 }
 .billtop {
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 40px;
     background: #d74342;
     color: #fff;
     font-size: 18px;
@@ -603,6 +603,7 @@ export default {
     text-align: center;
     font-size: 18px;
 }
+
 .billbox-box-bottom {
     display: flex;
     display: -webkit-flex;
