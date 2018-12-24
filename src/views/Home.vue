@@ -14,7 +14,7 @@
             <div class="emptyarea-top">
                 <!-- 顶部占位符 -->
             </div>
-            <div v-if="allMission.length == 0" style="width: 50%;margin: 0 auto;padding-top: 15vh;">
+            <div v-if="allMission.length == 0 && !isShowCarWash" style="width: 50%;margin: 0 auto;padding-top: 15vh;">
                 <img src="../../public/img/ebuyLogo.png" alt="logo">
                 <br>
                 <span>~{{language.homePage.whenEmpty}}~</span>
@@ -32,9 +32,9 @@
                                 </div>
                             </div>
                             
-                            <div class="card-text" style="padding:10px 0 10px 30px;border-bottom: 1px solid #eee;">
-                                <div>
-                                    <span style="font-size:20px">{{item.missionline}}</span>
+                            <div class="card-text" style="padding:10px 0 10px 0px;border-bottom: 1px solid #eee;">
+                                <div style="margin: 0 auto;">
+                                    <span style="font-size:18px;">{{item.missionline}}</span>
                                 </div>
                             </div>
 
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                             <div class="card-text" style="padding:10px 0;border-top:1px solid #eee">
-                                <div style="margin:0 auto;color:#707070;font-size:20px">
+                                <div style="margin:0 auto;color:#707070;font-size:18px">
                                     <span>>>></span>
                                     <span> {{language.homePage.clickForDetails}} </span>
                                     <span>>>></span>
@@ -100,7 +100,33 @@
                     </md-ripple>
                 </md-card>
             </div>
-
+            <!-- car wash start -->
+            <div v-if="isShowCarWash" style="width:80%;margin:10px auto">
+                <div class="carwashbox">
+                    <div class="carwashbox-title" >
+                        <span v-if="lang === 'ch'">洗车任务</span>
+                        <span v-else>Car Wash</span>
+                    </div>
+                    <div v-if="isShowCarWash" class="carwashbox-body">
+                        <img src="../../public/img/carwash.gif" alt="carWash">
+                    </div>
+                    <div class="carwashbox-footer">
+                        <div class="carwashbox-footer-button"
+                             style="width: 100px;margin-right:10px" 
+                             @click="openCarWashConfrimBox('cancel')">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>cancel</span>
+                        </div>
+                        <div class="carwashbox-footer-button"
+                             style="width: 100px;"
+                             @click="openCarWashConfrimBox('confirm')">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- car wash end -->
             <div class="emptyarea-bottom">
                 <!-- 底部占位符 -->
             </div>
@@ -371,6 +397,71 @@
         </transition>
         <!-- 操作提示 -->
 
+        <!-- car wash confirm box start  -->
+        <transition name="carwash-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowCarWashComfirmBox" class="previewclient-back" ></div>
+        </transition>
+        <transition name="carwash-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowCarWashComfirmBox" class="previewclient-front" @click.self.prevent="isShowCarWashComfirmBox = false">
+                <div class="previewclient-box">
+                    <div class="checkcar-body-top">
+                        <div v-if="isComfirmCarWashMode">
+                            <span v-if="lang === 'ch'">完成洗车</span>
+                            <span v-else>Finish Car Wash</span>
+                        </div>
+                        <div v-else>
+                            <span v-if="lang === 'ch'">取消洗车</span>
+                            <span v-else>Cancel Car Wash</span>
+                        </div>
+                    </div>
+                    <div v-if="isComfirmCarWashMode" class="CarWashComfirmBox-body">
+                        <div v-if="choiseCar === null" class="CarWashComfirmBox-body-title">
+                            <span v-if="lang === 'ch'">选择车辆</span>
+                            <span v-else>Select Car</span>
+                        </div>
+                        <div v-else class="CarWashComfirmBox-body-title" style="color:#212121">
+                            <span>{{choiseCar.carid}}</span>
+                        </div>
+                        <div class="CarWashComfirmBox-body-box">
+                            <div v-for="(item,index) in carPlateArray" :key="index" class="CarWashComfirmBox-body-box-item" @click="choiseCarMethod(item)">
+                                <span>{{item.carid}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="CarWashComfirmBox-body">
+                        <div v-if="choiseCar === null" class="CarWashComfirmBox-body-title">
+                            <span v-if="lang === 'ch'">取消原因</span>
+                            <span v-else>Cancel Reason</span>
+                        </div>
+                        <div class="CarWashComfirmBox-body-textarea">
+                            <textarea name="cancelreason" id="cancelreason" v-model="removeReason"></textarea>
+                        </div>
+                        
+                    </div>
+                    <div class="CarWashComfirmBox-footer">
+                        <div class="carwashbox-footer-button"
+                             style="width: 100px;margin-right:10px" 
+                             @click="isShowCarWashComfirmBox = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>cancel</span>
+                        </div>
+                        <div v-if="isComfirmCarWashMode" class="carwashbox-footer-button"
+                             style="width: 100px;"
+                             @click="confirmCarWashMethod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                        <div v-else class="carwashbox-footer-button"
+                             style="width: 100px;"
+                             @click="cancelCarWashMethod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- car wash confirm box end  -->
     </div>
 </template>
 
@@ -392,6 +483,10 @@ export default {
         this.drivername = localStorage.getItem('drivername')
         this.getChoiceDayMethod()
         this.getDriverMission()
+        let today = new Date().getDay()
+        if(today === 0){
+            this.findCarWashMethod()
+        }
     },
 
     data() {
@@ -431,7 +526,14 @@ export default {
             previewClient:false,
             missionclient:[],
             clientArray:[],
-            petrolCard:true
+            petrolCard:true,
+            isShowCarWash:false,
+            isShowCarWashComfirmBox:false,
+            isComfirmCarWashMode:true,
+            carPlateArray:[],
+            choiseCar:null,
+            _id:null,
+            removeReason:null
         }
     },
     computed: {
@@ -446,6 +548,203 @@ export default {
         }
     },
     methods: {
+        //car wash start
+        cancelCarWashMethod(){
+            let tempDate = new Date().toISOString()
+            axios
+                .post(config.server + '/carwash/cancel', {
+                    _id:this._id,
+                    finishDate:tempDate,
+                    removeReason:this.removeReason
+                })
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.isShowCarWashComfirmBox = false
+                        this.findCarWashMethod()
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '取消洗车成功'
+                        }else{
+                            this.errorInfo = 'Cancel mission success'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }else{
+                        console.log(doc)
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '取消洗车出错'
+                        }else{
+                            this.errorInfo = 'Catch an error while cancel'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        confirmCarWashMethod(){
+            let tempDate = new Date().toISOString()
+            axios
+                .post(config.server + '/carwash/edit', {
+                    carPlate:this.choiseCar.carid,
+                    finishDate:tempDate,
+                    car_id:this.choiseCar._id,
+                    _id:this._id
+                })
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.isShowCarWashComfirmBox = false
+                        this.findCarWashMethod()
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '洗车任务完成'
+                        }else{
+                            this.errorInfo = 'Finish Car Wash'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }else{
+                        console.log(doc)
+                        this.errorInfo = '查找车辆出错'
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        choiseCarMethod(carInfo){
+            this.choiseCar = carInfo
+        },
+
+        openCarWashConfrimBox(mode){
+            if(mode === 'confirm'){
+                this.findAllCarPlate()
+                this.isComfirmCarWashMode = true
+            }else{
+                this.isComfirmCarWashMode = false
+            }
+            this.isShowCarWashComfirmBox = true
+        },
+
+        findAllCarPlate(){
+            axios
+                .get(config.server + '/car/allplate')
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.carPlateArray = doc.data.doc
+                    }else{
+                        this.isShowCarWash = true
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '查找车辆出错'
+                        }else{
+                            this.errorInfo = 'Catch an error while find car info'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        findCarWashMethod() {
+            let tempDate = new Date().toDateString()
+            tempDate =new Date(tempDate).toISOString()
+            axios
+                .post(config.server + '/carwash/find', {
+                    createDate:tempDate,
+                    creator:this.drivername
+                })
+                .then(doc => {
+                    if(doc.data.code === 1){//无任务
+                        this.isShowCarWash = true
+                        this.createCarWashMethod()
+                    }else if(doc.data.code === 0){//有任务 但未完成
+                        this.isShowCarWash = true
+                        this._id = doc.data.doc
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '今日有洗车任务'
+                        }else{
+                            this.errorInfo = 'Have an car wash mission'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }else if(doc.data.code === 3){//有任务 但已完成
+                        this.isShowCarWash = false
+                        this._id = null
+                    }else{//其他
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '查找洗车任务出错'
+                        }else{
+                            this.errorInfo = 'Catch an error while find carwash mission'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        createCarWashMethod() {
+            let tempDate = new Date().toISOString()
+            axios
+                .post(config.server + '/carwash/create', {
+                    createDate:tempDate,
+                    creator:this.drivername
+                })
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this._id = doc.data.doc
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '今日有洗车任务'
+                        }else{
+                            this.errorInfo = 'Have an car wash mission'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }else{
+                        console.log(doc)
+                        this.isShowCarWash = true
+                        if(this.lang === 'ch'){
+                            this.errorInfo = '创建洗车任务出错'
+                        }else{
+                            this.errorInfo = 'Catch an error while create CarWash'
+                        }
+                        this.showError = true
+                        setTimeout(() => {
+                            this.showError = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        //car wash end
+
         closePreviewMethod(){
             this.previewClient = false
             this.$refs.mainbox.style.position='relative'
@@ -1098,5 +1397,104 @@ export default {
     white-space:nowrap;
     height: 30px;
     line-height: 30px;
+}
+
+.carwashbox{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.carwashbox-title{
+    font-size:18px;
+    padding: 10px 0px 10px 0px;
+    border-bottom: 1px solid rgb(238, 238, 238);
+    text-align:center;
+}
+
+.carwashbox-body{
+    border-radius: 10px;
+    overflow: hidden;
+    width: 240px;
+    margin: 10px auto;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.carwashbox-footer {
+    display: flex;
+    display: -webkit-flex;
+    padding-bottom: 10px;
+}
+
+.carwashbox-footer-button {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 100px;
+    margin: 0 auto;
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    height: 30px;
+    line-height: 30px;
+    transition: 0.2s;
+}
+
+.carwashbox-footer-button:active {
+    box-shadow: none;
+    transition: 0.2s;
+}
+
+.CarWashComfirmBox-body{
+    font-size:16px;
+    color: rgb(106, 106, 106);
+    margin-top: 10px;
+}
+
+.CarWashComfirmBox-body-title{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #e0e0e0;
+    width: 80%;
+    margin: 0 auto;
+    color:#6a6a6a;
+}
+
+.CarWashComfirmBox-body-box{
+    height: 150px;
+    overflow: auto;
+    width: 80%;
+    margin: 10px auto;
+    border: 1px solid #eee;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.CarWashComfirmBox-body-textarea{
+    height: 150px;
+    overflow: auto;
+    width: 80%;
+    margin: 10px auto;
+    border: 1px solid #eee;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.CarWashComfirmBox-body-textarea textarea{
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    border: none;
+    outline: none;
+}
+
+.CarWashComfirmBox-body-box-item{
+    height: 30px;
+    line-height: 30px;
+}
+
+.CarWashComfirmBox-footer{
+    display: flex;
+    display: -webkit-flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 </style>

@@ -37,6 +37,9 @@
                 </div>
             </div>
         </div>
+        <div style="height:60px">
+            <!-- 底部占位符 -->
+        </div>
         <!-- mission box start -->
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -205,7 +208,7 @@
                     <div class="checkbox-box-bottom">
                         <div class="checkbox-body-center-button"
                              style="width: 80px;margin-right:10px"
-                             @click="isShowCheckBox = false">
+                             @click="isShowMissionBox = false">
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>chancel</span>
                         </div>
