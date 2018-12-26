@@ -45,6 +45,7 @@ export default{
         address:'Address',
         contact:'Contact',
         postCode:'PostCode',
+        note:'Remarks',
         state:'State',
         confirm:'Confirm',
         shipping:'Shipping',

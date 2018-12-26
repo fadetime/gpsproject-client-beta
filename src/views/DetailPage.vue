@@ -87,6 +87,23 @@
                             </div>
                         </div>
 
+                        <div v-if="lang === 'ch'" v-show="x.note" class="card-text" @click="upload(x)" style="background: #ffff006e;">
+                            <div class="card-text-left">
+                                <span>{{language.detailPage.note}}: </span>
+                            </div>
+                            <div class="card-text-right">
+                                <span>{{x.note}}</span>
+                            </div>
+                        </div>
+                        <div v-else v-show="x.noteEN" class="card-text" @click="upload(x)" style="background: #ffff006e;">
+                            <div class="card-text-left">
+                                <span>{{language.detailPage.note}}: </span>
+                            </div>
+                            <div class="card-text-right">
+                                <span>{{x.noteEN}}</span>
+                            </div>
+                        </div>
+
                         <div class="card-text" style="padding:5px 20px 20px 20px" @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.state}}: </span>

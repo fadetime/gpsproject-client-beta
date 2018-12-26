@@ -45,6 +45,7 @@ export default{
         address:'地址',
         contact:'电话',
         postCode:'邮编',
+        note:'备注',
         state:'状态',
         confirm:'确认完成',
         shipping:'运送中',

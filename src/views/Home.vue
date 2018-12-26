@@ -462,6 +462,36 @@
             </div>
         </transition>
         <!-- car wash confirm box end  -->
+        <!-- key tips box start -->
+        <transition name="carwash-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowKeyTips" class="previewclient-back" ></div>
+        </transition>
+        <transition name="carwash-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowKeyTips" class="previewclient-front" @click.self.prevent="isShowKeyTips = false">
+                <div class="previewclient-box">
+                    <div class="checkcar-body-top">
+                        <span v-if="lang === 'ch'">配送完成</span>
+                        <span v-else>Shipping Finish</span>
+                    </div>
+                    <div style="width:80%;margin:0 auto;text-align:left;padding-top:10px;font-size:16px">
+                        <span v-if="lang === 'ch'">辛苦啦，请将车钥匙放回指定位置，便于其他司机取用。</span>
+                        <span v-else>Before back home, please put car key  back to key hanger.  Serious penalty will be imposed on those bring car key back home. Thanks</span>
+                    </div>
+                    <div>
+                        <img src="../../public/img/star.gif" alt="staricon" style="width:100px;height:100px">
+                    </div>
+                    <div style="margin-bottom:10px">
+                        <div class="carwashbox-footer-button"
+                             style="width: 100px;"
+                             @click="isShowKeyTips = false">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- key tips box end -->
     </div>
 </template>
 
@@ -533,7 +563,8 @@ export default {
             carPlateArray:[],
             choiseCar:null,
             _id:null,
-            removeReason:null
+            removeReason:null,
+            isShowKeyTips:false
         }
     },
     computed: {
@@ -784,6 +815,11 @@ export default {
             document.getElementById('upload_file').click()
         },
         // upload photo method end
+        showKeyTipsMethod() {
+            console.log('this is show key tips methods')
+            this.isShowKeyTips = true
+        },
+
         confirmCheckAgain() {
             if (!this.boxNumAgain) {
                 this.showError = true
@@ -802,7 +838,14 @@ export default {
                     })
                     .then(doc => {
                         if (doc.data.code === 0) {
-                            this.$router.push('/detailpage')
+                            this.showKeyTipsMethod()
+                            // this.$router.push('/detailpage')
+                            let tempHours = new Date().getHours()
+                            if(tempHours > 8 && tempHours < 13){
+                                this.isShowKeyTips = true
+                            }
+                            this.showCheckAgainBox = false
+                            this.getDriverMission()
                         } else {
                             console.log(doc)
                         }
