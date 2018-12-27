@@ -99,6 +99,19 @@
                             <span>{{billDate}}</span>
                         </div>
 
+                        <div v-if="oldNum"
+                             class="billbox-box-body-top"
+                             style="padding:0">
+                            <div class="billbox-box-body-top-title">
+                                <div>
+                                    <span>上次剩余</span>
+                                </div>
+                            </div>
+                            <div class="billbox-box-body-top-num" style="height:40px;line-height:40px">
+                                <span>{{oldNum}}</span>
+                            </div>
+                        </div>
+
                         <div class="billbox-box-body-top"
                              style="padding:0">
                             <div class="billbox-box-body-top-title">
@@ -306,7 +319,8 @@ export default {
             isShowBillFinishBox: false,
             isShowReomveBox: false,
             radioPicked: null,
-            otherText: null
+            otherText: null,
+            oldNum: null
         };
     },
     methods: {
@@ -317,19 +331,19 @@ export default {
                 setTimeout(() => {
                     this.showError = false;
                 }, 3000);
-            }else{
-                console.log('删除')
+            } else {
+                console.log("删除");
             }
         },
 
         billMissionFinishMtehod() {
-            let date = new Date().toISOString()
+            let date = new Date().toISOString();
             axios
                 .post(config.server + "/bill/edit", {
                     _id: this.billCount._id,
                     endNum: this.endNum,
-                    driverNames:this.driverName,
-                    endDate:date
+                    driverNames: this.driverName,
+                    endDate: date
                 })
                 .then(doc => {
                     this.isShowBillFinishBox = false;
@@ -363,21 +377,21 @@ export default {
                     driverName: this.driverName
                 })
                 .then(doc => {
-                    if(doc.data.code === 0){
+                    if (doc.data.code === 0) {
                         this.billCount = doc.data.doc;
-                        this.$store.dispatch('setHaveBill', true)
-                        localStorage.haveBill = true
-                    }else if(doc.data.code === 1){
-                        this.billCount = null
-                        this.$store.dispatch('setHaveBill', false)
-                        localStorage.haveBill = false
-                    }else{
+                        this.$store.dispatch("setHaveBill", true);
+                        localStorage.haveBill = true;
+                    } else if (doc.data.code === 1) {
+                        this.billCount = null;
+                        this.$store.dispatch("setHaveBill", false);
+                        localStorage.haveBill = false;
+                    } else {
                         this.showError = true;
                         this.errorInfo = "获取信息时出现错误";
                         setTimeout(() => {
                             this.showError = false;
                         }, 3000);
-                        console.log(doc)
+                        console.log(doc);
                     }
                 })
                 .catch(err => {
@@ -393,10 +407,16 @@ export default {
                 }, 3000);
             } else {
                 let tempDate = new Date().toISOString();
+                let tempStartNum
+                if(this.oldNum){
+                    tempStartNum = this.billNum + this.oldNum
+                }else{
+                    tempStartNum = this.billNum
+                }
                 axios
                     .post(config.server + "/bill/create", {
                         date: tempDate,
-                        startNum: this.billNum,
+                        startNum: tempStartNum,
                         driverName: this.driverName
                     })
                     .then(doc => {
@@ -422,8 +442,25 @@ export default {
             }
         },
         openBillBoxMetho() {
-            this.isShowBillBox = true;
-            this.billNum = null;
+            axios
+                .get(config.server + "/remainbillnum/find")
+                .then(doc => {
+                    console.log(doc);
+                    if (doc.data.code === 0) {
+                        this.oldNum = doc.data.doc.number;
+                    } else {
+                        this.showError = true;
+                        this.errorInfo = "获取剩余账单数量出现错误";
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                    }
+                    this.isShowBillBox = true;
+                    this.billNum = null;
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
     }
 };

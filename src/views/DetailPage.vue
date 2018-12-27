@@ -211,6 +211,10 @@
                     <div class="confirmBox-body-center">
                         <span>{{tempShiping}}</span>
                     </div>
+                    <!-- <div class="confirmBox-body-center-input">
+                        <input type="text" placeholder="送货框数">
+                        <input type="text" placeholder="收回框数">
+                    </div> -->
                     <div class="confirmBox-body-bottom">
                         <div class="confirmBox-body-bottom-left" @click="confirmBox = false">
                             <span>{{language.detailPage.confirmBox_cancel}}</span>
@@ -769,7 +773,6 @@ export default {
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     background: #fff;
     width: 250px;
-    height: 190px;
 }
 
 .confirmBox-body-title {
@@ -783,15 +786,34 @@ export default {
 }
 
 .confirmBox-body-center {
-    height: 120px;
-    line-height: 120px;
+    height: 40px;
+    line-height: 40px;
     font-size: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    width: 80%;
+    margin: 10px auto;
+}
+
+.confirmBox-body-center-input{
+    padding: 10px 0;
+}
+
+.confirmBox-body-center-input input{
+    height: 30px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    outline: none;
+    text-align: center;
+    margin: 5px 0;
+    font-size: 16px;
+    width: 160px;
 }
 
 .confirmBox-body-bottom {
     display: flex;
     display: -webkit-flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 .confirmBox-body-bottom-left {

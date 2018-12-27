@@ -3,5 +3,5 @@ let product = '//api.ebuymart.sg'
 let nossl = '//18.136.155.152:3000'
 
 export default {
-   server : test
+   server : nossl
 }

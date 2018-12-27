@@ -475,7 +475,7 @@
                     </div>
                     <div style="width:80%;margin:0 auto;text-align:left;padding-top:10px;font-size:16px">
                         <span v-if="lang === 'ch'">辛苦啦，请将车钥匙放回指定位置，便于其他司机取用。</span>
-                        <span v-else>Before back home, please put car key  back to key hanger.  Serious penalty will be imposed on those bring car key back home. Thanks</span>
+                        <span v-else>Remember to put the car key to original car key hanger. Thanks on your co-operation !</span>
                     </div>
                     <div>
                         <img src="../../public/img/star.gif" alt="staricon" style="width:100px;height:100px">
@@ -816,7 +816,6 @@ export default {
         },
         // upload photo method end
         showKeyTipsMethod() {
-            console.log('this is show key tips methods')
             this.isShowKeyTips = true
         },
 
@@ -841,8 +840,14 @@ export default {
                             this.showKeyTipsMethod()
                             // this.$router.push('/detailpage')
                             let tempHours = new Date().getHours()
-                            if(tempHours > 8 && tempHours < 13){
-                                this.isShowKeyTips = true
+                            if(this.drivername === 'Vijay' || this.drivername === '钟兆雷' || this.drivername === 'Karan'){
+                                if(tempHours > 10 && tempHours < 14){
+                                    this.isShowKeyTips = true
+                                }
+                            }else{
+                                if(tempHours > 9 && tempHours < 13){
+                                    this.isShowKeyTips = true
+                                }
                             }
                             this.showCheckAgainBox = false
                             this.getDriverMission()

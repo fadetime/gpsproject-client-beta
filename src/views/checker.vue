@@ -276,7 +276,27 @@ export default {
                     finishDate:time
                 })
                 .then(doc => {
-                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.showError = true;
+                        if (this.lang === "ch") {
+                            this.errorInfo = "检查任务完成";
+                        } else {
+                            this.errorInfo = "Check Done";
+                        }
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                    }else{
+                        this.showError = true;
+                        if (this.lang === "ch") {
+                            this.errorInfo = "检查提交失败";
+                        } else {
+                            this.errorInfo = "Update mission filed";
+                        }
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                    }
                 })
                 .catch(err => {
                     console.log(err)
@@ -303,15 +323,6 @@ export default {
                         setTimeout(() => {
                             this.showError = false;
                         }, 3000);
-                        let tempNum = 0
-                        this.checkMissionArray.forEach(element => {
-                            if(element.checkDate){
-                                tempNum += 1
-                            }
-                        });
-                        if(tempNum === this.checkMissionArray.length) {
-                            this.checkMissionArray = []
-                        }
                     }else{
                         this.showError = true;
                         if (this.lang === "ch") {
@@ -339,11 +350,9 @@ export default {
             } else {
                 this.tempData.petrolCard = !this.tempData.petrolCard;
             }
-            console.log(this.tempData)
         },
 
         openMissionBoxMethod(item) {
-            console.log(item);
             this.isShowMissionBox = true;
             this.tempData = item;
         },
@@ -355,6 +364,16 @@ export default {
                     if(doc.data.code === 0){
                         this.checkMissionArray = doc.data.doc.missionList;
                         this._id = doc.data.doc._id
+                        let tempNum = 0
+                        this.checkMissionArray.forEach(element => {
+                            if(element.checkDate){
+                                tempNum += 1
+                            }
+                        });
+                        if(tempNum === this.checkMissionArray.length) {
+                            this.checkMissionArray = []
+                            this.allFinishCheckMethod()
+                        }
                     }
                 })
                 .catch(err => {
