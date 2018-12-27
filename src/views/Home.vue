@@ -837,9 +837,9 @@ export default {
                     })
                     .then(doc => {
                         if (doc.data.code === 0) {
-                            this.showKeyTipsMethod()
                             // this.$router.push('/detailpage')
                             let tempHours = new Date().getHours()
+                            console.log(tempHours)
                             if(this.drivername === 'Vijay' || this.drivername === '钟兆雷' || this.drivername === 'Karan'){
                                 if(tempHours > 10 && tempHours < 14){
                                     this.isShowKeyTips = true

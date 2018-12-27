@@ -1,9 +1,12 @@
 <template>
     <div id="detail-page">
         <div style="position:fixed;top:-20px;width:100%;height:70px;background-color:#fff;z-index:9"></div>
-        <div class="topusername" style="box-shadow: 0px 1px 5px;">
-            <div class="topusername-left" @click="turnback">
-                <img src="../../public/icons/left.png" alt="exit">
+        <div class="topusername"
+             style="box-shadow: 0px 1px 5px;">
+            <div class="topusername-left"
+                 @click="turnback">
+                <img src="../../public/icons/left.png"
+                     alt="exit">
                 <span>{{language.detailPage.returnPage}}</span>
             </div>
             <div class="topusername-center">
@@ -16,43 +19,67 @@
             <!-- 顶部占位符 -->
         </div>
 
-        <div v-if="isClear" style="padding-top: 20px;">
+        <div v-if="isClear"
+             style="padding-top: 20px;">
             <div>
-                <img src="../../public/img/ebuyLogo.png" alt="logo" style="width:200px;">
+                <img src="../../public/img/ebuyLogo.png"
+                     alt="logo"
+                     style="width:200px;">
             </div>
             <div style="padding-top:20px">
                 <span>~~{{language.detailPage.whenEmpty}}~~</span>
             </div>
         </div>
         <div v-else>
-            <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(x,no) in tempArr.missionclient" :key="no" v-if="!x.finishdate">
+            <md-card md-with-hover
+                     style="width:80%;margin:10px auto;"
+                     v-for="(x,no) in tempArr.missionclient"
+                     :key="no"
+                     v-if="!x.finishdate">
                 <md-ripple>
                     <!-- <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
                         <span style="font-size:20px;color:#fff;font-weight: 800;line-height: 40px;">{{no+1}}</span>
                     </div> -->
-                    <div>   
-                        <div v-if="lang === 'en'" class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;flex-direction: column;" @click="openImage(x)">
-                            <div class="card-text-title" style="margin:0 auto;line-height:24px;height:24px;text-overflow:ellipsis;white-space: nowrap;">
+                    <div>
+                        <div v-if="lang === 'en'"
+                             class="card-text"
+                             style="padding:5px 20px;border-bottom: 1px solid #eee;flex-direction: column;"
+                             @click="openImage(x)">
+                            <div class="card-text-title"
+                                 style="margin:0 auto;line-height:24px;height:24px;text-overflow:ellipsis;white-space: nowrap;">
                                 <span style="text-align:center;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{x.clientbnameEN}}</span>
                             </div>
-                            <div class="card-text-title" style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
+                            <div class="card-text-title"
+                                 style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
                                 <span style="font-size: 16px;text-align:right">{{x.clientbname}}</span>
                             </div>
                         </div>
-                        <div v-else class="card-text" style="padding:5px 20px;border-bottom: 1px solid #eee;flex-direction: column;" @click="openImage(x)">
-                            <div class="card-text-title" style="margin:0 auto;line-height:24px;height:24px;text-overflow:ellipsis;white-space: nowrap;">
+                        <div v-else
+                             class="card-text"
+                             style="padding:5px 20px;border-bottom: 1px solid #eee;flex-direction: column;"
+                             @click="openImage(x)">
+                            <div class="card-text-title"
+                                 style="margin:0 auto;line-height:24px;height:24px;text-overflow:ellipsis;white-space: nowrap;">
                                 <span style="text-align:right">{{x.clientbname}}</span>
                             </div>
-                            <div class="card-text-title" style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
+                            <div class="card-text-title"
+                                 style="margin:0 auto;line-height: 20px;height: 20px;color: #6a6a6a;">
                                 <span style="font-size: 16px;text-align:right;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{x.clientbnameEN}}</span>
                             </div>
                         </div>
                     </div>
-                    <div v-if="x.image" style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;background: #fff;" @click="openImage(x)">
-                        <img :src="x.image | imgurl" alt="clientPic" style="width: 100%;height: 100%;object-fit: contain;" v-on:error.once="loadDefault($event)">
+                    <div v-if="x.image"
+                         style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;background: #fff;"
+                         @click="openImage(x)">
+                        <img :src="x.image | imgurl"
+                             alt="clientPic"
+                             style="width: 100%;height: 100%;object-fit: contain;"
+                             v-on:error.once="loadDefault($event)">
                     </div>
                     <div>
-                        <div class="card-text" @click="upload(x)" v-if="x.timeLimit">
+                        <div class="card-text"
+                             @click="upload(x)"
+                             v-if="x.timeLimit">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.timeLimit}}:</span>
                             </div>
@@ -60,7 +87,8 @@
                                 <span>{{x.timeLimit}}</span>
                             </div>
                         </div>
-                        <div class="card-text" @click="upload(x)">
+                        <div class="card-text"
+                             @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.address}}:</span>
                             </div>
@@ -69,7 +97,8 @@
                             </div>
                         </div>
 
-                        <div class="card-text" @click="upload(x)">
+                        <div class="card-text"
+                             @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.contact}}: </span>
                             </div>
@@ -78,7 +107,8 @@
                             </div>
                         </div>
 
-                        <div class="card-text" @click="upload(x)">
+                        <div class="card-text"
+                             @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.postCode}}: </span>
                             </div>
@@ -87,7 +117,11 @@
                             </div>
                         </div>
 
-                        <div v-if="lang === 'ch'" v-show="x.note" class="card-text" @click="upload(x)" style="background: #ffff006e;">
+                        <div v-if="lang === 'ch'"
+                             v-show="x.note"
+                             class="card-text"
+                             @click="upload(x)"
+                             style="background: #ffff006e;">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.note}}: </span>
                             </div>
@@ -95,7 +129,11 @@
                                 <span>{{x.note}}</span>
                             </div>
                         </div>
-                        <div v-else v-show="x.noteEN" class="card-text" @click="upload(x)" style="background: #ffff006e;">
+                        <div v-else
+                             v-show="x.noteEN"
+                             class="card-text"
+                             @click="upload(x)"
+                             style="background: #ffff006e;">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.note}}: </span>
                             </div>
@@ -104,19 +142,28 @@
                             </div>
                         </div>
 
-                        <div class="card-text" style="padding:5px 20px 20px 20px" @click="upload(x)">
+                        <div class="card-text"
+                             style="padding:5px 20px 20px 20px"
+                             @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.state}}: </span>
                             </div>
                             <div class="card-text-right">
-                                <span style="color:#f9cf97" v-if="!x.finishdate">{{language.detailPage.shipping}}</span>
-                                <span style="color:#99cc33" v-else>{{language.detailPage.finish}}</span>
+                                <span style="color:#f9cf97"
+                                      v-if="!x.finishdate">{{language.detailPage.shipping}}</span>
+                                <span style="color:#99cc33"
+                                      v-else>{{language.detailPage.finish}}</span>
                             </div>
                         </div>
 
-                        <div class="card-camera" @click.prevent.self="upload(x)">
-                            <div v-if="x.isNeedPic" class="date_rangeicon" @click="upload(x)"></div>
-                            <div v-else class="date_done" @click="openConfirmBoxMethod(x)"></div>
+                        <div class="card-camera"
+                             @click.prevent.self="upload(x)">
+                            <div v-if="x.isNeedPic"
+                                 class="date_rangeicon"
+                                 @click="upload(x)"></div>
+                            <div v-else
+                                 class="date_done"
+                                 @click="openConfirmBoxMethod(x)"></div>
                         </div>
                     </div>
 
@@ -129,12 +176,18 @@
         </div>
 
         <!-- upload dialog start -->
-        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <md-dialog :md-active.sync="uploadDialog" @touchmove.prevent>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <md-dialog :md-active.sync="uploadDialog"
+                       @touchmove.prevent>
 
-                <div class="dialogtop" style="box-shadow: 0px 1px 5px;">
-                    <div class="dialogtop-left" @click="uploadDialog = false,cancel()">
-                        <img src="../../public/icons/left.png" alt="exit">
+                <div class="dialogtop"
+                     style="box-shadow: 0px 1px 5px;">
+                    <div class="dialogtop-left"
+                         @click="uploadDialog = false,cancel()">
+                        <img src="../../public/icons/left.png"
+                             alt="exit">
                         <span>{{language.detailPage.returnPage}}</span>
                     </div>
                     <div class="dialogtop-center">
@@ -148,12 +201,19 @@
                 </div>
 
                 <div style="padding-top:40px">
-                    <div class="photoarea" @click="uploadFile" v-if="!missionImage">
-                        <div v-if="!updateImagePreview" class="add_a_photo"></div>
-                        <img :src="updateImagePreview" alt="newimg" v-else>
+                    <div class="photoarea"
+                         @click="uploadFile"
+                         v-if="!missionImage">
+                        <div v-if="!updateImagePreview"
+                             class="add_a_photo"></div>
+                        <img :src="updateImagePreview"
+                             alt="newimg"
+                             v-else>
                     </div>
-                    <div class="photoarea" v-else>
-                        <img :src="missionImage | imgurl" alt="newimg">
+                    <div class="photoarea"
+                         v-else>
+                        <img :src="missionImage | imgurl"
+                             alt="newimg">
                     </div>
                 </div>
 
@@ -161,17 +221,25 @@
                     <span style="font-size:20px">{{dialogClientName}}</span>
                 </div>
 
-                <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+                <input type="file"
+                       style="display:none"
+                       id="upload_file"
+                       @change="fileChange($event)"
+                       accept="image/*">
 
-                <div class="bottombutton" v-if="!missionImage">
-                    <div class="bottombutton-left" @click="cancel">
+                <div class="bottombutton"
+                     v-if="!missionImage">
+                    <div class="bottombutton-left"
+                         @click="cancel">
                         <span>x</span>
                     </div>
-                    <div class="bottombutton-right" @click="confirm">
+                    <div class="bottombutton-right"
+                         @click="confirm">
                         <span>o</span>
                     </div>
                 </div>
-                <div v-else class="bottombutton">
+                <div v-else
+                     class="bottombutton">
                     <div class="bottombutton-center">
                         <span style="font-size:20px">{{language.detailPage.finish}}</span>
                         <br>
@@ -182,28 +250,46 @@
         </transition>
         <!-- upload dialog end -->
         <!-- image dialog start -->
-        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div v-if="imageDialog" class="imageDialog" @click="imageDialog= false">
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="imageDialog"
+                 class="imageDialog"
+                 @click="imageDialog= false">
                 <div>
-                    <img :src="imageSrc | imgurl" alt="detailimg" v-on:error.once="loadDefault($event)">
+                    <img :src="imageSrc | imgurl"
+                         alt="detailimg"
+                         v-on:error.once="loadDefault($event)">
                 </div>
 
             </div>
         </transition>
         <!-- image dialog end -->
         <!-- err info box -->
-        <transition name="custom-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
-            <div class="errinfo" v-if="showError" @click="closeErrorInfo">
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated bounceInDown"
+                    leave-active-class="animated bounceOutUp">
+            <div class="errinfo"
+                 v-if="showError"
+                 @click="closeErrorInfo">
                 <span>{{errorInfo}}</span>
             </div>
         </transition>
         <!-- err info box -->
         <!-- confirm box  -->
-        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div v-if="confirmBox" class="confirmBox"></div>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="confirmBox"
+                 class="confirmBox"></div>
         </transition>
-        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="confirmBox" class="confirmBox-back" @click.prevent.self="confirmBox = false" @touchmove.prevent>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="confirmBox"
+                 class="confirmBox-back"
+                 @click.prevent.self="confirmBox = false"
+                 @touchmove.prevent>
                 <div class="confirmBox-body">
                     <div class="confirmBox-body-title">
                         <span>{{language.detailPage.confirmBox_info}}</span>
@@ -211,15 +297,32 @@
                     <div class="confirmBox-body-center">
                         <span>{{tempShiping}}</span>
                     </div>
-                    <!-- <div class="confirmBox-body-center-input">
-                        <input type="text" placeholder="送货框数">
-                        <input type="text" placeholder="收回框数">
-                    </div> -->
+                    <div class="confirmBox-body-center-input">
+                        <div v-if="lang === 'ch'">
+                            <input type="number"
+                               placeholder="送货框数"
+                               v-model="outBasket">
+                            <input type="number"
+                                placeholder="收回框数"
+                                v-model="inBasket">
+                        </div>
+                        <div v-else>
+                            <input type="number"
+                               placeholder="Send out basket"
+                               v-model="outBasket">
+                            <input type="number"
+                                placeholder="Take back basket"
+                                v-model="inBasket">
+                        </div>
+                        
+                    </div>
                     <div class="confirmBox-body-bottom">
-                        <div class="confirmBox-body-bottom-left" @click="confirmBox = false">
+                        <div class="confirmBox-body-bottom-left"
+                             @click="confirmBox = false">
                             <span>{{language.detailPage.confirmBox_cancel}}</span>
                         </div>
-                        <div class="confirmBox-body-bottom-right" @click="noPicUpdate">
+                        <div class="confirmBox-body-bottom-right"
+                             @click="noPicUpdate">
                             <span>{{language.detailPage.confirmBox_confirm}}</span>
                         </div>
                     </div>
@@ -231,261 +334,285 @@
 </template>
 
 <script>
-import axios from 'axios'
-import config from '../assets/js/config'
-import lrz from 'lrz'
-import _ from 'lodash'
+import axios from "axios";
+import config from "../assets/js/config";
+import lrz from "lrz";
+import _ from "lodash";
 
 export default {
     created() {
-        this.drivername = localStorage.getItem('drivername')
+        this.drivername = localStorage.getItem("drivername");
     },
     mounted() {
-        this.missionGetOne()
+        this.missionGetOne();
     },
     data() {
         return {
             uploadDialog: false,
-            updateImagePreview: '',
-            updateImage: '',
-            _id: '',
-            missionImage: '',
-            dialogClientName: '',
-            finishDate: '',
+            updateImagePreview: "",
+            updateImage: "",
+            _id: "",
+            missionImage: "",
+            dialogClientName: "",
+            finishDate: "",
             imageDialog: false,
-            imageSrc: '',
+            imageSrc: "",
             needDoNum: 0,
             isClear: false,
-            imgDefault: '/img/ebuyLogo.png',
+            imgDefault: "/img/ebuyLogo.png",
             showError: false,
-            errorInfo: 'Get some error',
+            errorInfo: "Get some error",
             confirmBox: false,
-            tempShiping:''
-        }
+            tempShiping: "",
+            inBasket: null,
+            outBasket: null
+        };
     },
     computed: {
         language() {
-            return this.$store.getters.getLanguage
+            return this.$store.getters.getLanguage;
         },
         tempArr: function() {
-            return this.$store.state.tempArr
+            return this.$store.state.tempArr;
         },
         lang() {
-            return this.$store.state.lang
+            return this.$store.state.lang;
         }
     },
     methods: {
         getPositionMethod() {
-            if(navigator.geolocation){
+            if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    console.log(position)
+                    console.log(position);
                     let temp = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
-                    }
-                    console.log(temp)
-                })
-            }else {
+                    };
+                    console.log(temp);
+                });
+            } else {
                 // Browser doesn't support
-                alert('不支持定位功能')
-                console.log('browser doesnt support geolocation')
+                alert("不支持定位功能");
+                console.log("browser doesnt support geolocation");
             }
         },
         closeErrorInfo() {
-            this.showError = false
+            this.showError = false;
         },
-        openConfirmBoxMethod(x){
-            this.confirmBox = true
-            this.tempShiping = x.clientbname
+        openConfirmBoxMethod(x) {
+            this.confirmBox = true;
+            this.tempShiping = x.clientbname;
+            this.inBasket = null
+            this.outBasket = null
         },
         noPicUpdate() {
-            //获取用户位置
-            let tempPosition
-            if(navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    tempPosition = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    }
-                })
-            }else {
-                // Browser doesn't support
-                alert('不支持定位功能')
-                console.log('browser doesnt support geolocation')
+            if (!this.inBasket || !this.outBasket) {
+                this.showError = true;
+                if(this.lang === 'ch'){
+                    this.errorInfo = '请填写框数'
+                }else{
+                    this.errorInfo = 'Please input number'
+                }
+                setTimeout(() => {
+                    this.showError = false;
+                }, 3000);
+            } else {
+                //获取用户位置
+                let tempPosition;
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(
+                        position
+                    ) {
+                        tempPosition = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                    });
+                } else {
+                    // Browser doesn't support
+                    alert("不支持定位功能");
+                    console.log("browser doesnt support geolocation");
+                }
+                let tempDate = new Date().toISOString()
+                setTimeout(() => {
+                    axios
+                        .post(config.server + "/client-driver/exupdate", {
+                            _id: this.tempArr._id,
+                            clientName: this.tempShiping,
+                            position: tempPosition,
+                            outBasket: this.outBasket,
+                            inBasket: this.inBasket,
+                            date: tempDate,
+                            driverName:this.drivername,
+                            lineName:this.tempArr.missionline
+                        })
+                        .then(doc => {
+                            if (doc.data.code === 0) {
+                                this.missionGetOne();
+                                this.confirmBox = false;
+                                this.showError = true;
+                                this.errorInfo = this.language.detailPage.missionSuccess;
+                            } else {
+                                this.showError = true;
+                                this.errorInfo = this.language.detailPage.missionError;
+                            }
+                            setTimeout(() => {
+                                this.showError = false;
+                            }, 3000);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }, 200);
             }
-            setTimeout(() => {
-                axios
-                .post(config.server + '/client-driver/exupdate', {
-                    _id: this.tempArr._id,
-                    clientName: this.tempShiping,
-                    position:tempPosition
-                })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.missionGetOne()
-                        this.confirmBox = false
-                        this.showError = true
-                        this.errorInfo = this.language.detailPage.missionSuccess
-                    } else {
-                        this.showError = true
-                        this.errorInfo = this.language.detailPage.missionError
-                    }
-                    setTimeout(() => {
-                        this.showError = false
-                    }, 3000)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-            }, 200);
         },
         loadDefault(e) {
-            e.currentTarget.src = this.imgDefault
+            e.currentTarget.src = this.imgDefault;
         },
         openImage(item) {
-            if(item.image){
-                this.imageDialog = true
-                this.imageSrc = item.image
+            if (item.image) {
+                this.imageDialog = true;
+                this.imageSrc = item.image;
             }
         },
         missionGetOne() {
             axios
-                .post(config.server + '/mission/one/', {
+                .post(config.server + "/mission/one/", {
                     _id: this.tempArr._id
                 })
                 .then(doc => {
-                    let tempNum = 0
+                    let tempNum = 0;
                     doc.data.missionclient.forEach(element => {
                         if (!element.finishdate) {
-                            tempNum += 1
+                            tempNum += 1;
                         }
-                    })
+                    });
                     if (tempNum === 0) {
-                        this.isClear = true
+                        this.isClear = true;
                     } else {
-                        this.isClear = false
+                        this.isClear = false;
                     }
                     doc.data.missionclient = _.orderBy(
                         doc.data.missionclient,
-                        ['finishdate'],
-                        ['desc']
-                    )
-                    this.$store.dispatch('setTempArr', doc.data)
+                        ["finishdate"],
+                        ["desc"]
+                    );
+                    this.$store.dispatch("setTempArr", doc.data);
                 })
                 .catch(err => {
-                    console.log(err)
-                })
+                    console.log(err);
+                });
 
             axios
-                .post(config.server + '/client-driver/', {
+                .post(config.server + "/client-driver/", {
                     startdate: new Date().toLocaleDateString(),
                     drivername: this.drivername
                 })
                 .then(doc => {
-                    this.allMission = doc.data.doc
+                    this.allMission = doc.data.doc;
                     doc.data.doc.forEach(elementX => {
                         elementX.missionclient.forEach(elementY => {
                             if (!elementY.finishdate) {
-                                this.needDoNum += 1
+                                this.needDoNum += 1;
                             }
-                        })
-                    })
-                    this.$store.dispatch('setDoNum', this.needDoNum)
+                        });
+                    });
+                    this.$store.dispatch("setDoNum", this.needDoNum);
                 })
                 .catch(err => {
-                    console.log(err)
-                })
+                    console.log(err);
+                });
         },
         turnback() {
-            this.$store.dispatch('setShowButtom', true)
-            this.$router.push('/')
+            this.$store.dispatch("setShowButtom", true);
+            this.$router.push("/");
         },
         fileChange(el) {
-            if (typeof FileReader === 'undefined') {
-                return alert('浏览器不支持上传图片')
+            if (typeof FileReader === "undefined") {
+                return alert("浏览器不支持上传图片");
             }
-            if (!el.target.files[0].size) return //判断是否有文件数量
+            if (!el.target.files[0].size) return; //判断是否有文件数量
             this.updateImagePreview = window.URL.createObjectURL(
                 el.target.files[0]
-            )
-            this.updateImage = el.target.files[0]
-            el.target.value = ''
+            );
+            this.updateImage = el.target.files[0];
+            el.target.value = "";
         },
         uploadFile() {
-            document.getElementById('upload_file').click()
+            document.getElementById("upload_file").click();
         },
 
         upload(x) {
-            this.uploadDialog = true
-            this.dialogClientName = x.clientbname
-            this._id = this.tempArr._id
-            this.missionImage = x.finishphoto
-            this.finishDate = x.finishdate
+            this.uploadDialog = true;
+            this.dialogClientName = x.clientbname;
+            this._id = this.tempArr._id;
+            this.missionImage = x.finishphoto;
+            this.finishDate = x.finishdate;
         },
         cancel() {
-            this.updateImagePreview = null
+            this.updateImagePreview = null;
         },
         confirm() {
             if (!this.updateImagePreview) {
-                let arrow = document.querySelector('.photoarea')
-                arrow.style = 'border: 3px dashed red'
-                arrow.style.transition = '1s'
+                let arrow = document.querySelector(".photoarea");
+                arrow.style = "border: 3px dashed red";
+                arrow.style.transition = "1s";
                 setTimeout(() => {
-                    arrow.style = 'border: 3px dashed #696969'
-                    arrow.style.transition = '1s'
-                }, 2000)
+                    arrow.style = "border: 3px dashed #696969";
+                    arrow.style.transition = "1s";
+                }, 2000);
             } else {
-                let payload = new FormData()
-                let date = new Date()
-                let maxSize = 200 * 1024 //200KB
+                let payload = new FormData();
+                let date = new Date();
+                let maxSize = 200 * 1024; //200KB
                 lrz(this.updateImage, {
                     quality: 0.5
                 })
                     .then(res => {
                         if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file
+                            this.updateImage = res.file;
                         }
-                        payload.append('image', this.updateImage)
-                        payload.append('_id', this._id)
+                        payload.append("image", this.updateImage);
+                        payload.append("_id", this._id);
                         payload.append(
-                            'dialogClientName',
+                            "dialogClientName",
                             this.dialogClientName
-                        )
+                        );
                         axios({
-                            method: 'post',
-                            url: config.server + '/client-driver/update',
+                            method: "post",
+                            url: config.server + "/client-driver/update",
                             data: payload,
                             headers: {
-                                'Content-Type': 'multipart/form-data'
+                                "Content-Type": "multipart/form-data"
                             }
                         })
                             .then(doc => {
                                 if (doc.data.code == 0) {
-                                    this.uploadDialog = false
-                                    this.updateImagePreview = ''
-                                    this.showError = true
-                                    this.errorInfo = this.language.detailPage.missionSuccess
-                                    this.missionGetOne()
+                                    this.uploadDialog = false;
+                                    this.updateImagePreview = "";
+                                    this.showError = true;
+                                    this.errorInfo = this.language.detailPage.missionSuccess;
+                                    this.missionGetOne();
                                 } else {
-                                    this.showError = true
-                                    this.errorInfo = this.language.detailPage.missionError
+                                    this.showError = true;
+                                    this.errorInfo = this.language.detailPage.missionError;
                                 }
                                 setTimeout(() => {
-                                    this.showError = false
-                                }, 3000)
+                                    this.showError = false;
+                                }, 3000);
                             })
                             .catch(err => {
-                                console.log(err)
-                            })
+                                console.log(err);
+                            });
                     })
                     .catch(err => {
-                        console.log('lrz err')
-                        console.log(err)
-                    })
+                        console.log("lrz err");
+                        console.log(err);
+                    });
             }
         }
     }
-}
+};
 </script>
 
 <style scoped>
@@ -735,7 +862,7 @@ export default {
 
 .errinfo {
     position: fixed;
-    z-index: 19;
+    z-index: 24;
     top: 8px;
     background-color: rgba(255, 255, 0, 0.6);
     width: 100%;
@@ -794,11 +921,11 @@ export default {
     margin: 10px auto;
 }
 
-.confirmBox-body-center-input{
-    padding: 10px 0;
+.confirmBox-body-center-input {
+    padding-bottom: 10px;
 }
 
-.confirmBox-body-center-input input{
+.confirmBox-body-center-input input {
     height: 30px;
     border-radius: 10px;
     border: 1px solid #e0e0e0;
