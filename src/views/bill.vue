@@ -409,7 +409,7 @@ export default {
                 let tempDate = new Date().toISOString();
                 let tempStartNum
                 if(this.oldNum){
-                    tempStartNum = this.billNum + this.oldNum
+                    tempStartNum = parseInt(this.billNum) + parseInt(this.oldNum)
                 }else{
                     tempStartNum = this.billNum
                 }

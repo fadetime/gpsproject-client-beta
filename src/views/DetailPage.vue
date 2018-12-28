@@ -200,7 +200,7 @@
                     <!-- 顶部占位符 -->
                 </div>
 
-                <div style="padding-top:40px">
+                <div style="padding-top:12px">
                     <div class="photoarea"
                          @click="uploadFile"
                          v-if="!missionImage">
@@ -219,6 +219,24 @@
 
                 <div class="namearea">
                     <span style="font-size:20px">{{dialogClientName}}</span>
+                    <!-- <div class="confirmBox-body-center-input" >
+                        <div v-if="lang === 'ch'" style="display: flex;flex-direction: column;display:-webkit-flex;align-items: center;">
+                            <input type="number"
+                                placeholder="送货框数"
+                                v-model="outBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                            <input type="number"
+                                placeholder="收回框数"
+                                v-model="inBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                        </div>
+                        <div v-else style="display: flex;flex-direction: column;display:-webkit-flex;align-items: center;">
+                            <input type="number"
+                                placeholder="Send out basket"
+                                v-model="outBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                            <input type="number"
+                                placeholder="Take back basket"
+                                v-model="inBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                        </div>
+                    </div> -->
                 </div>
 
                 <input type="file"
@@ -297,25 +315,24 @@
                     <div class="confirmBox-body-center">
                         <span>{{tempShiping}}</span>
                     </div>
-                    <div class="confirmBox-body-center-input">
+                    <!-- <div class="confirmBox-body-center-input">
                         <div v-if="lang === 'ch'">
                             <input type="number"
-                               placeholder="送货框数"
-                               v-model="outBasket">
+                                   placeholder="送货框数"
+                                   v-model="outBasket">
                             <input type="number"
-                                placeholder="收回框数"
-                                v-model="inBasket">
+                                   placeholder="收回框数"
+                                   v-model="inBasket">
                         </div>
                         <div v-else>
                             <input type="number"
-                               placeholder="Send out basket"
-                               v-model="outBasket">
+                                   placeholder="Send out basket"
+                                   v-model="outBasket">
                             <input type="number"
-                                placeholder="Take back basket"
-                                v-model="inBasket">
+                                   placeholder="Take back basket"
+                                   v-model="inBasket">
                         </div>
-                        
-                    </div>
+                    </div> -->
                     <div class="confirmBox-body-bottom">
                         <div class="confirmBox-body-bottom-left"
                              @click="confirmBox = false">
@@ -364,8 +381,8 @@ export default {
             errorInfo: "Get some error",
             confirmBox: false,
             tempShiping: "",
-            inBasket: null,
-            outBasket: null
+            inBasket: 0,
+            outBasket: 0
         };
     },
     computed: {
@@ -402,21 +419,21 @@ export default {
         openConfirmBoxMethod(x) {
             this.confirmBox = true;
             this.tempShiping = x.clientbname;
-            this.inBasket = null
-            this.outBasket = null
+            this.inBasket = null;
+            this.outBasket = null;
         },
         noPicUpdate() {
-            if (!this.inBasket || !this.outBasket) {
-                this.showError = true;
-                if(this.lang === 'ch'){
-                    this.errorInfo = '请填写框数'
-                }else{
-                    this.errorInfo = 'Please input number'
-                }
-                setTimeout(() => {
-                    this.showError = false;
-                }, 3000);
-            } else {
+            // if (!this.inBasket || !this.outBasket) {
+            //     this.showError = true;
+            //     if (this.lang === "ch") {
+            //         this.errorInfo = "请填写框数";
+            //     } else {
+            //         this.errorInfo = "Please input number";
+            //     }
+            //     setTimeout(() => {
+            //         this.showError = false;
+            //     }, 3000);
+            // } else {
                 //获取用户位置
                 let tempPosition;
                 if (navigator.geolocation) {
@@ -433,18 +450,18 @@ export default {
                     alert("不支持定位功能");
                     console.log("browser doesnt support geolocation");
                 }
-                let tempDate = new Date().toISOString()
+                let tempDate = new Date().toISOString();
                 setTimeout(() => {
                     axios
                         .post(config.server + "/client-driver/exupdate", {
                             _id: this.tempArr._id,
                             clientName: this.tempShiping,
                             position: tempPosition,
-                            outBasket: this.outBasket,
-                            inBasket: this.inBasket,
+                            outBasket: 0,
+                            inBasket: 0,
                             date: tempDate,
-                            driverName:this.drivername,
-                            lineName:this.tempArr.missionline
+                            driverName: this.drivername,
+                            lineName: this.tempArr.missionline
                         })
                         .then(doc => {
                             if (doc.data.code === 0) {
@@ -464,7 +481,7 @@ export default {
                             console.log(err);
                         });
                 }, 200);
-            }
+            // }
         },
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault;
@@ -509,6 +526,7 @@ export default {
                     drivername: this.drivername
                 })
                 .then(doc => {
+                    this.needDoNum = 0
                     this.allMission = doc.data.doc;
                     doc.data.doc.forEach(elementX => {
                         elementX.missionclient.forEach(elementY => {
@@ -561,7 +579,7 @@ export default {
                     arrow.style = "border: 3px dashed #696969";
                     arrow.style.transition = "1s";
                 }, 2000);
-            } else {
+            }else {
                 let payload = new FormData();
                 let date = new Date();
                 let maxSize = 200 * 1024; //200KB
@@ -742,6 +760,7 @@ export default {
     width: 250px;
     height: 250px;
     background-color: #eee;
+    border-radius: 10px;
 }
 
 .photoarea img {
@@ -752,14 +771,14 @@ export default {
 
 .namearea {
     text-align: center;
-    padding-top: 30px;
-    height: 90px;
-    line-height: 58px;
+    padding-top: 67px;
+    height: 125px;
+    line-height: 40px;
     font-weight: bold;
-    background-image: url(../../public/img/wood.png);
+    background-image: url(/img/wood.9ee20abe.png);
     background-repeat: no-repeat;
     background-position: bottom;
-    background-size: 250px 74px;
+    background-size: 248px 88px;
 }
 
 .bottombutton {
