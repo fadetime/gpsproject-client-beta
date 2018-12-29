@@ -315,7 +315,7 @@
                     <div class="confirmBox-body-center">
                         <span>{{tempShiping}}</span>
                     </div>
-                    <!-- <div class="confirmBox-body-center-input">
+                    <div class="confirmBox-body-center-input">
                         <div v-if="lang === 'ch'">
                             <input type="number"
                                    placeholder="送货框数"
@@ -332,10 +332,59 @@
                                    placeholder="Take back basket"
                                    v-model="inBasket">
                         </div>
-                    </div> -->
+                    </div>
                     <div class="confirmBox-body-bottom">
                         <div class="confirmBox-body-bottom-left"
                              @click="confirmBox = false">
+                            <span>{{language.detailPage.confirmBox_cancel}}</span>
+                        </div>
+                        <div class="confirmBox-body-bottom-right"
+                             @click="confirmTwiceMethod()">
+                            <span>{{language.detailPage.confirmBox_confirm}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- confirm box  -->
+        
+        <!-- confirm box twice start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="confirmTwiceBox"
+                 class="confirmBox" style="z-index: 25;"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="confirmTwiceBox"
+                 class="confirmBox-back"
+                 style="z-index: 26;"
+                 @click.prevent.self="confirmTwiceBox = false"
+                 @touchmove.prevent>
+                <div class="confirmBox-body">
+                    <div class="confirmBox-body-title">
+                        <span v-if="lang === 'ch'">确认信息</span>
+                        <span v-else>Confirm Info</span>
+                    </div>
+                
+                <div class="confirmBox-body-center">
+                        <span>{{tempShiping}}</span>
+                </div>
+                <div>
+                    <div>
+                        <span>Send out basket:</span>
+                        <span>{{outBasket}}</span>
+                    </div>
+                    <div>
+                        <span>Take back basket:</span>
+                        <span>{{inBasket}}</span>
+                    </div>
+                </div>
+                <div class="confirmBox-body-bottom">
+                        <div class="confirmBox-body-bottom-left"
+                             @click="confirmTwiceBox = false">
                             <span>{{language.detailPage.confirmBox_cancel}}</span>
                         </div>
                         <div class="confirmBox-body-bottom-right"
@@ -345,8 +394,8 @@
                     </div>
                 </div>
             </div>
-        </transition>
-        <!-- confirm box  -->
+        </transition>`
+        <!-- confirm box twice end -->
     </div>
 </template>
 
@@ -380,9 +429,10 @@ export default {
             showError: false,
             errorInfo: "Get some error",
             confirmBox: false,
+            confirmTwiceBox: false,
             tempShiping: "",
-            inBasket: 0,
-            outBasket: 0
+            inBasket: null,
+            outBasket: null
         };
     },
     computed: {
@@ -397,6 +447,22 @@ export default {
         }
     },
     methods: {
+        confirmTwiceMethod(){
+            if (!this.inBasket || !this.outBasket) {
+                this.showError = true;
+                if (this.lang === "ch") {
+                    this.errorInfo = "请填写框数";
+                } else {
+                    this.errorInfo = "Please input number";
+                }
+                setTimeout(() => {
+                    this.showError = false;
+                }, 3000);
+            } else {
+                this.confirmTwiceBox =true
+            }
+        },
+
         getPositionMethod() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -423,17 +489,17 @@ export default {
             this.outBasket = null;
         },
         noPicUpdate() {
-            // if (!this.inBasket || !this.outBasket) {
-            //     this.showError = true;
-            //     if (this.lang === "ch") {
-            //         this.errorInfo = "请填写框数";
-            //     } else {
-            //         this.errorInfo = "Please input number";
-            //     }
-            //     setTimeout(() => {
-            //         this.showError = false;
-            //     }, 3000);
-            // } else {
+            if (!this.inBasket || !this.outBasket) {
+                this.showError = true;
+                if (this.lang === "ch") {
+                    this.errorInfo = "请填写框数";
+                } else {
+                    this.errorInfo = "Please input number";
+                }
+                setTimeout(() => {
+                    this.showError = false;
+                }, 3000);
+            } else {
                 //获取用户位置
                 let tempPosition;
                 if (navigator.geolocation) {
@@ -457,8 +523,8 @@ export default {
                             _id: this.tempArr._id,
                             clientName: this.tempShiping,
                             position: tempPosition,
-                            outBasket: 0,
-                            inBasket: 0,
+                            outBasket: this.outBasket,
+                            inBasket: this.inBasket,
                             date: tempDate,
                             driverName: this.drivername,
                             lineName: this.tempArr.missionline
@@ -469,6 +535,7 @@ export default {
                                 this.confirmBox = false;
                                 this.showError = true;
                                 this.errorInfo = this.language.detailPage.missionSuccess;
+                                this.confirmTwiceBox = false
                             } else {
                                 this.showError = true;
                                 this.errorInfo = this.language.detailPage.missionError;
@@ -481,7 +548,7 @@ export default {
                             console.log(err);
                         });
                 }, 200);
-            // }
+            }
         },
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault;
