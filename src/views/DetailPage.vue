@@ -312,7 +312,7 @@
                     <div class="confirmBox-body-title">
                         <span>{{language.detailPage.confirmBox_info}}</span>
                     </div>
-                    <div class="confirmBox-body-center">
+                    <div class="confirmBox-body-center" style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
                         <span>{{tempShiping}}</span>
                     </div>
                     <div class="confirmBox-body-center-input">
@@ -369,17 +369,27 @@
                         <span v-else>Confirm Info</span>
                     </div>
                 
-                <div class="confirmBox-body-center">
+                <div class="confirmBox-body-center" style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
                         <span>{{tempShiping}}</span>
                 </div>
-                <div>
-                    <div>
-                        <span>Send out basket:</span>
-                        <span>{{outBasket}}</span>
+                <div style="padding-bottom: 10px;font-size: 16px;padding-left:12px;padding-right:12px">
+                    <div style="display:flex;display:-webkit-flex">
+                        <div style="flex-basis: 70%;text-align: right;">
+                            <span v-if="lang === 'ch'">送货框数：</span>
+                            <span v-else>Send out basket:</span>
+                        </div>
+                        <div style="flex-basis: 30%;text-align: left;">
+                            <span style="padding-left: 12px;">{{outBasket}}</span>
+                        </div>
                     </div>
-                    <div>
-                        <span>Take back basket:</span>
-                        <span>{{inBasket}}</span>
+                    <div style="display:flex;display:-webkit-flex">
+                        <div style="flex-basis: 70%;text-align: right;">
+                            <span v-if="lang === 'ch'">收回框数：</span>
+                            <span v-else>Take back basket:</span>
+                        </div>
+                        <div style="flex-basis: 30%;text-align: left">
+                            <span style="padding-left: 12px;">{{inBasket}}</span>
+                        </div>
                     </div>
                 </div>
                 <div class="confirmBox-body-bottom">
@@ -432,7 +442,8 @@ export default {
             confirmTwiceBox: false,
             tempShiping: "",
             inBasket: null,
-            outBasket: null
+            outBasket: null,
+            clientName:null
         };
     },
     computed: {
@@ -447,7 +458,7 @@ export default {
         }
     },
     methods: {
-        confirmTwiceMethod(){
+        confirmTwiceMethod(clientInfo){
             if (!this.inBasket || !this.outBasket) {
                 this.showError = true;
                 if (this.lang === "ch") {
@@ -466,12 +477,10 @@ export default {
         getPositionMethod() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
-                    console.log(position);
                     let temp = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-                    console.log(temp);
                 });
             } else {
                 // Browser doesn't support
@@ -483,10 +492,15 @@ export default {
             this.showError = false;
         },
         openConfirmBoxMethod(x) {
-            this.confirmBox = true;
-            this.tempShiping = x.clientbname;
             this.inBasket = null;
             this.outBasket = null;
+            this.confirmBox = true;
+            this.clientName = x.clientbname
+            if(this.lang === 'ch'){
+                this.tempShiping = x.clientbname;
+            }else{
+                this.tempShiping = x.clientbnameEN;
+            }
         },
         noPicUpdate() {
             if (!this.inBasket || !this.outBasket) {
@@ -521,7 +535,7 @@ export default {
                     axios
                         .post(config.server + "/client-driver/exupdate", {
                             _id: this.tempArr._id,
-                            clientName: this.tempShiping,
+                            clientName: this.clientName,
                             position: tempPosition,
                             outBasket: this.outBasket,
                             inBasket: this.inBasket,
@@ -550,6 +564,7 @@ export default {
                 }, 200);
             }
         },
+
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault;
         },
