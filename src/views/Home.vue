@@ -22,6 +22,9 @@
             <div v-else ref="mainbox">
                 <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(item,index) in allMission" :key="index">
                     <md-ripple>
+                        <div v-if="lockArray[index] && lockCount != allMission.length" class="locklayer">
+                            <md-icon class="md-size-3x">lock</md-icon>
+                        </div>
                         <div @click="opendetail(item,index)" style="position: relative;">
                             <div v-if="item.complete">
                                 <div v-if="lang === 'en'" class="completediv">
@@ -564,7 +567,9 @@ export default {
             choiseCar:null,
             _id:null,
             removeReason:null,
-            isShowKeyTips:false
+            isShowKeyTips:false,
+            lockArray:[],
+            lockCount:0
         }
     },
     computed: {
@@ -840,7 +845,7 @@ export default {
                             // this.$router.push('/detailpage')
                             let tempHours = new Date().getHours()
                             console.log(tempHours)
-                            if(this.drivername === 'Vijay' || this.drivername === '钟兆雷' || this.drivername === 'Karan'){
+                            if(this.drivername === 'Vijay' || this.drivername === '钟兆雷' || this.drivername === 'Karan' || this.drivername === 'Velu'){
                                 if(tempHours > 10 && tempHours < 14){
                                     this.isShowKeyTips = true
                                 }
@@ -1095,7 +1100,9 @@ export default {
                 .then(doc => {
                     this.allMission = doc.data.doc
                     this.allMission = _.orderBy(this.allMission,['complete'],['asc'])
-                    // 计算完成
+                    console.log(this.allMission)
+                    this.lockCount = 0
+                    // 计算完成任务数 和 加锁任务
                     let startNum = -1
                     let countNum = 0
                     this.allMission.forEach(elementX => {
@@ -1109,7 +1116,20 @@ export default {
                         })
                         this.finishNumber[startNum] = countNum
                         countNum = 0
+
+                        if(elementX.complete){
+                            this.lockArray.push(false)
+                            this.lockCount ++
+                        }else{
+                            if(elementX.carCheckFirst){
+                                this.lockArray.push(false)
+                            }else{
+                                this.lockArray.push(true)
+                                this.lockCount ++
+                            }
+                        }
                     })
+                    console.log(this.lockCount)
                     this.$store.dispatch('setDoNum', this.needDoNum)
                 })
                 .catch(err => {
@@ -1544,5 +1564,14 @@ export default {
     display: -webkit-flex;
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.locklayer{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: #e0e0e080;
+    z-index: 24;
+    display: flex;
 }
 </style>
