@@ -55,6 +55,11 @@
             <md-button class="md-raised md-primary" style="width:80%" @click="isChangePSW = true,showDialog = true">{{language.setupPage.changePsw}}</md-button>
         </div>
         <div class="bottom">
+            <a href="http://18.136.155.152:7070">
+                <md-button class="md-raised md-primary " style="width:80%;" @click="changeOldVersion">{{language.setupPage.oldVersion}}</md-button>
+            </a>
+        </div>
+        <div class="bottom">
             <md-button class="md-raised " style="width:80%;background-color: yellow;" @click="isChangePSW = false,showDialog = true">{{language.setupPage.signOut}}</md-button>
         </div>
         <div style="padding-top:30px">
@@ -180,6 +185,9 @@ export default {
         this.driverimage = localStorage.getItem('image')
     },
     methods: {
+        changeOldVersion(){
+            router.replace()
+        },
         loadDefault(e){
           e.currentTarget.src=this.imgDefault
         },

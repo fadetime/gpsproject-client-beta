@@ -219,24 +219,30 @@
 
                 <div class="namearea">
                     <span style="font-size:20px">{{dialogClientName}}</span>
-                    <!-- <div class="confirmBox-body-center-input" >
-                        <div v-if="lang === 'ch'" style="display: flex;flex-direction: column;display:-webkit-flex;align-items: center;">
+                    <div class="confirmBox-body-center-input">
+                        <div v-if="lang === 'ch'"
+                             style="display: flex;flex-direction: column;display:-webkit-flex;align-items: center;">
                             <input type="number"
-                                placeholder="送货框数"
-                                v-model="outBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                                   placeholder="送货框数"
+                                   v-model="outBasket"
+                                   style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
                             <input type="number"
-                                placeholder="收回框数"
-                                v-model="inBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                                   placeholder="收回框数"
+                                   v-model="inBasket"
+                                   style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
                         </div>
-                        <div v-else style="display: flex;flex-direction: column;display:-webkit-flex;align-items: center;">
+                        <div v-else
+                             style="display: flex;flex-direction: column;display:-webkit-flex;align-items: center;">
                             <input type="number"
-                                placeholder="Send out basket"
-                                v-model="outBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                                   placeholder="Send out basket"
+                                   v-model="outBasket"
+                                   style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
                             <input type="number"
-                                placeholder="Take back basket"
-                                v-model="inBasket" style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
+                                   placeholder="Take back basket"
+                                   v-model="inBasket"
+                                   style="border: 1px solid #aa9d59;background-color: #ffffff8c;">
                         </div>
-                    </div> -->
+                    </div>
                 </div>
 
                 <input type="file"
@@ -312,7 +318,8 @@
                     <div class="confirmBox-body-title">
                         <span>{{language.detailPage.confirmBox_info}}</span>
                     </div>
-                    <div class="confirmBox-body-center" style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+                    <div class="confirmBox-body-center"
+                         style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
                         <span>{{tempShiping}}</span>
                     </div>
                     <div class="confirmBox-body-center-input">
@@ -347,13 +354,14 @@
             </div>
         </transition>
         <!-- confirm box  -->
-        
+
         <!-- confirm box twice start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
             <div v-if="confirmTwiceBox"
-                 class="confirmBox" style="z-index: 25;"></div>
+                 class="confirmBox"
+                 style="z-index: 25;"></div>
         </transition>
         <transition name="custom-classes-transition"
                     enter-active-class="animated zoomIn faster"
@@ -368,31 +376,32 @@
                         <span v-if="lang === 'ch'">确认信息</span>
                         <span v-else>Confirm Info</span>
                     </div>
-                
-                <div class="confirmBox-body-center" style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+
+                    <div class="confirmBox-body-center"
+                         style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
                         <span>{{tempShiping}}</span>
-                </div>
-                <div style="padding-bottom: 10px;font-size: 16px;padding-left:12px;padding-right:12px">
-                    <div style="display:flex;display:-webkit-flex">
-                        <div style="flex-basis: 70%;text-align: right;">
-                            <span v-if="lang === 'ch'">送货框数：</span>
-                            <span v-else>Send out basket:</span>
+                    </div>
+                    <div style="padding-bottom: 10px;font-size: 16px;padding-left:12px;padding-right:12px">
+                        <div style="display:flex;display:-webkit-flex">
+                            <div style="flex-basis: 70%;text-align: right;">
+                                <span v-if="lang === 'ch'">送货框数：</span>
+                                <span v-else>Send out basket:</span>
+                            </div>
+                            <div style="flex-basis: 30%;text-align: left;">
+                                <span style="padding-left: 12px;">{{outBasket}}</span>
+                            </div>
                         </div>
-                        <div style="flex-basis: 30%;text-align: left;">
-                            <span style="padding-left: 12px;">{{outBasket}}</span>
+                        <div style="display:flex;display:-webkit-flex">
+                            <div style="flex-basis: 70%;text-align: right;">
+                                <span v-if="lang === 'ch'">收回框数：</span>
+                                <span v-else>Take back basket:</span>
+                            </div>
+                            <div style="flex-basis: 30%;text-align: left">
+                                <span style="padding-left: 12px;">{{inBasket}}</span>
+                            </div>
                         </div>
                     </div>
-                    <div style="display:flex;display:-webkit-flex">
-                        <div style="flex-basis: 70%;text-align: right;">
-                            <span v-if="lang === 'ch'">收回框数：</span>
-                            <span v-else>Take back basket:</span>
-                        </div>
-                        <div style="flex-basis: 30%;text-align: left">
-                            <span style="padding-left: 12px;">{{inBasket}}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="confirmBox-body-bottom">
+                    <div class="confirmBox-body-bottom">
                         <div class="confirmBox-body-bottom-left"
                              @click="confirmTwiceBox = false">
                             <span>{{language.detailPage.confirmBox_cancel}}</span>
@@ -443,7 +452,7 @@ export default {
             tempShiping: "",
             inBasket: null,
             outBasket: null,
-            clientName:null
+            clientName: null
         };
     },
     computed: {
@@ -458,7 +467,7 @@ export default {
         }
     },
     methods: {
-        confirmTwiceMethod(clientInfo){
+        confirmTwiceMethod(clientInfo) {
             if (!this.inBasket || !this.outBasket) {
                 this.showError = true;
                 if (this.lang === "ch") {
@@ -470,7 +479,7 @@ export default {
                     this.showError = false;
                 }, 3000);
             } else {
-                this.confirmTwiceBox =true
+                this.confirmTwiceBox = true;
             }
         },
 
@@ -495,10 +504,10 @@ export default {
             this.inBasket = null;
             this.outBasket = null;
             this.confirmBox = true;
-            this.clientName = x.clientbname
-            if(this.lang === 'ch'){
+            this.clientName = x.clientbname;
+            if (this.lang === "ch") {
                 this.tempShiping = x.clientbname;
-            }else{
+            } else {
                 this.tempShiping = x.clientbnameEN;
             }
         },
@@ -549,7 +558,7 @@ export default {
                                 this.confirmBox = false;
                                 this.showError = true;
                                 this.errorInfo = this.language.detailPage.missionSuccess;
-                                this.confirmTwiceBox = false
+                                this.confirmTwiceBox = false;
                             } else {
                                 this.showError = true;
                                 this.errorInfo = this.language.detailPage.missionError;
@@ -608,7 +617,7 @@ export default {
                     drivername: this.drivername
                 })
                 .then(doc => {
-                    this.needDoNum = 0
+                    this.needDoNum = 0;
                     this.allMission = doc.data.doc;
                     doc.data.doc.forEach(elementX => {
                         elementX.missionclient.forEach(elementY => {
@@ -649,66 +658,79 @@ export default {
             this.missionImage = x.finishphoto;
             this.finishDate = x.finishdate;
         },
+
         cancel() {
             this.updateImagePreview = null;
         },
+
         confirm() {
-            if (!this.updateImagePreview) {
-                let arrow = document.querySelector(".photoarea");
-                arrow.style = "border: 3px dashed red";
-                arrow.style.transition = "1s";
-                setTimeout(() => {
-                    arrow.style = "border: 3px dashed #696969";
+            if (!this.outBasket || !this.inBasket) {
+                this.showError = true;
+                if (this.lang === "ch") {
+                    this.errorInfo = "请填写框数";
+                } else {
+                    this.errorInfo = "please input basket number";
+                }
+            } else {
+                if (!this.updateImagePreview) {
+                    let arrow = document.querySelector(".photoarea");
+                    arrow.style = "border: 3px dashed red";
                     arrow.style.transition = "1s";
-                }, 2000);
-            }else {
-                let payload = new FormData();
-                let date = new Date();
-                let maxSize = 200 * 1024; //200KB
-                lrz(this.updateImage, {
-                    quality: 0.5
-                })
-                    .then(res => {
-                        if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file;
-                        }
-                        payload.append("image", this.updateImage);
-                        payload.append("_id", this._id);
-                        payload.append(
-                            "dialogClientName",
-                            this.dialogClientName
-                        );
-                        axios({
-                            method: "post",
-                            url: config.server + "/client-driver/update",
-                            data: payload,
-                            headers: {
-                                "Content-Type": "multipart/form-data"
-                            }
-                        })
-                            .then(doc => {
-                                if (doc.data.code == 0) {
-                                    this.uploadDialog = false;
-                                    this.updateImagePreview = "";
-                                    this.showError = true;
-                                    this.errorInfo = this.language.detailPage.missionSuccess;
-                                    this.missionGetOne();
-                                } else {
-                                    this.showError = true;
-                                    this.errorInfo = this.language.detailPage.missionError;
-                                }
-                                setTimeout(() => {
-                                    this.showError = false;
-                                }, 3000);
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
+                    setTimeout(() => {
+                        arrow.style = "border: 3px dashed #696969";
+                        arrow.style.transition = "1s";
+                    }, 2000);
+                } else {
+                    let payload = new FormData();
+                    let date = new Date();
+                    let maxSize = 200 * 1024; //200KB
+                    lrz(this.updateImage, {
+                        quality: 0.5
                     })
-                    .catch(err => {
-                        console.log("lrz err");
-                        console.log(err);
-                    });
+                        .then(res => {
+                            if (this.updateImage.size > maxSize) {
+                                this.updateImage = res.file;
+                            }
+                            payload.append("image", this.updateImage);
+                            payload.append("outBasket", this.outBasket);
+                            payload.append("inBasket", this.inBasket);
+                            payload.append("_id", this._id);
+                            payload.append(
+                                "dialogClientName",
+                                this.dialogClientName
+                            );
+                            axios({
+                                method: "post",
+                                url: config.server + "/client-driver/update",
+                                data: payload,
+                                headers: {
+                                    "Content-Type": "multipart/form-data"
+                                }
+                            })
+                                .then(doc => {
+                                    if (doc.data.code == 0) {
+                                        this.uploadDialog = false;
+                                        this.updateImagePreview = "";
+                                        this.showError = true;
+                                        this.errorInfo = this.language.detailPage.missionSuccess;
+                                        this.missionGetOne();
+                                    } else {
+                                        this.showError = true;
+                                        this.errorInfo = this.language.detailPage.missionError;
+                                    }
+                                    setTimeout(() => {
+                                        this.showError = false;
+                                    }, 3000);
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        })
+                        .catch(err => {
+                            console.log("lrz err");
+                            console.log(err);
+                        });
+                }
             }
         }
     }
@@ -853,14 +875,14 @@ export default {
 
 .namearea {
     text-align: center;
-    padding-top: 67px;
-    height: 125px;
-    line-height: 40px;
+    padding-top: 50px;
+    height: 170px;
+    line-height: 30px;
     font-weight: bold;
     background-image: url(/img/wood.9ee20abe.png);
     background-repeat: no-repeat;
     background-position: bottom;
-    background-size: 248px 88px;
+    background-size: 250px 170px;
 }
 
 .bottombutton {

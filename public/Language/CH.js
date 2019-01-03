@@ -88,6 +88,7 @@ export default{
         cardNumber:'准证号码',
         lang:'切换语言',
         changePsw:'修改密码',
+        oldVersion:'上一版本',
         signOut:'退出登录',
         oldPsw:'原始密码',
         oldPswPlaceHolder:'请输入原始密码',

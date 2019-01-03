@@ -88,6 +88,7 @@ export default{
         cardNumber:'Card number',
         lang:'Language',
         changePsw:'change password',
+        oldVersion:'Change to old Version',
         signOut:'Sign out',
         oldPsw:'old',
         oldPswPlaceHolder:'Input old password',

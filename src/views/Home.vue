@@ -37,7 +37,27 @@
                             
                             <div class="card-text" style="padding:10px 0 10px 0px;border-bottom: 1px solid #eee;">
                                 <div style="margin: 0 auto;">
-                                    <span style="font-size:18px;">{{item.missionline}}</span>
+                                    <div v-if="item.missionLineEN">
+                                        <div v-if="lang === 'ch'">
+                                            <div>
+                                                <span style="font-size:18px;">{{item.missionline}}</span>
+                                            </div>
+                                            <div style="height:18px;line-height:18px;text-align: center;">
+                                                <span style="font-size:12px;color:#6a6a6a">{{item.missionLineEN}}</span>
+                                            </div>
+                                        </div>
+                                        <div v-else>
+                                            <div>
+                                                <span style="font-size:18px;">{{item.missionLineEN}}</span>
+                                            </div>
+                                            <div style="height:18px;line-height:18px;text-align: center;">
+                                                <span style="font-size:12px;color:#6a6a6a">{{item.missionline}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <span style="font-size:18px;">{{item.missionline}}</span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -87,7 +107,7 @@
                             </div>
 
                             <div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;padding: 0 0 10px 0;justify-content: center;">
-                                <div v-for="(x,n) in item.missionclient" :key="n" style="overflow:hidden;width:50px;height:50px;margin: 0 5px;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);" v-if="n < 5">
+                                <div v-for="(x,n) in item.missionclient" :key="n" v-show="n < 5" style="overflow:hidden;width:50px;height:50px;margin: 0 5px;box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);" >
                                     <img :src="x.image | imgurl" alt="x.clientbname" style="height:100%;width:100%;object-fit:contain" v-on:error.once="loadDefault($event)">
                                 </div>
                             </div>
