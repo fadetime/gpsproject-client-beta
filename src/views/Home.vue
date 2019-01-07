@@ -134,12 +134,12 @@
                         <img src="../../public/img/carwash.gif" alt="carWash">
                     </div>
                     <div class="carwashbox-footer">
-                        <div class="carwashbox-footer-button"
+                        <!-- <div class="carwashbox-footer-button"
                              style="width: 100px;margin-right:10px" 
                              @click="openCarWashConfrimBox('cancel')">
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>cancel</span>
-                        </div>
+                        </div> -->
                         <div class="carwashbox-footer-button"
                              style="width: 100px;"
                              @click="openCarWashConfrimBox('confirm')">

@@ -35,7 +35,7 @@
                      style="width:80%;margin:10px auto;"
                      v-for="(x,no) in tempArr.missionclient"
                      :key="no"
-                     v-if="!x.finishdate">
+                     v-show="!x.finishdate">
                 <md-ripple>
                     <!-- <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
                         <span style="font-size:20px;color:#fff;font-weight: 800;line-height: 40px;">{{no+1}}</span>
