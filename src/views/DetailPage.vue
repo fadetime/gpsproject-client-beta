@@ -18,7 +18,6 @@
         <div class="emptyarea-top">
             <!-- 顶部占位符 -->
         </div>
-
         <div v-if="isClear"
              style="padding-top: 20px;">
             <div>
@@ -68,6 +67,12 @@
                             </div>
                         </div>
                     </div>
+                    <div v-if="x.isReturn"
+                         class="return-icon">
+                        <span v-if="lang === 'ch'">退</span>
+                        <span v-else
+                              style="font-size: 50px">R</span>
+                    </div>
                     <div v-if="x.image"
                          style="width: 46px;height: 46px;box-shadow: 1px 1px 5px;position: absolute;right:14px;top:2px;border-radius: 100%;overflow: hidden;background: #fff;"
                          @click="openImage(x)">
@@ -116,32 +121,47 @@
                                 <span>{{x.clientbpostcode}}</span>
                             </div>
                         </div>
-
-                        <div v-if="lang === 'ch'"
-                             v-show="x.note"
-                             class="card-text"
-                             @click="upload(x)"
-                             style="background: #ffff006e;">
-                            <div class="card-text-left">
-                                <span>{{language.detailPage.note}}: </span>
+                        isReturn
+                        <div v-if="x.isReturn">
+                            <div v-if="lang === 'ch'"
+                                v-show="x.note"
+                                class="card-text"
+                                @click="upload(x)"
+                                style="background: #ffff006e;">
+                                <div class="card-text-left">
+                                    <span>{{language.detailPage.note}}: </span>
+                                </div>
+                                <div class="card-text-right">
+                                    <span>{{x.note}}</span>
+                                </div>
                             </div>
-                            <div class="card-text-right">
-                                <span>{{x.note}}</span>
+                            <div v-else
+                                v-show="x.noteEN"
+                                class="card-text"
+                                @click="upload(x)"
+                                style="background: #ffff006e;">
+                                <div class="card-text-left">
+                                    <span>{{language.detailPage.note}}: </span>
+                                </div>
+                                <div class="card-text-right">
+                                    <span>{{x.noteEN}}</span>
+                                </div>
                             </div>
                         </div>
-                        <div v-else
-                             v-show="x.noteEN"
-                             class="card-text"
-                             @click="upload(x)"
-                             style="background: #ffff006e;">
-                            <div class="card-text-left">
-                                <span>{{language.detailPage.note}}: </span>
-                            </div>
-                            <div class="card-text-right">
-                                <span>{{x.noteEN}}</span>
+                        <div v-else>
+                            <div v-show="x.note"
+                                class="card-text"
+                                @click="upload(x)"
+                                style="background: #ffff006e;">
+                                <div class="card-text-left">
+                                    <span>{{language.detailPage.note}}: </span>
+                                </div>
+                                <div class="card-text-right">
+                                    <span>{{x.note}}</span>
+                                </div>
                             </div>
                         </div>
-
+                        
                         <div class="card-text"
                              style="padding:5px 20px 20px 20px"
                              @click="upload(x)">
@@ -273,6 +293,7 @@
             </md-dialog>
         </transition>
         <!-- upload dialog end -->
+
         <!-- image dialog start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -289,6 +310,7 @@
             </div>
         </transition>
         <!-- image dialog end -->
+
         <!-- err info box -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated bounceInDown"
@@ -322,7 +344,8 @@
                          style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
                         <span>{{tempShiping}}</span>
                     </div>
-                    <div class="confirmBox-body-center-input">
+                    <div v-if="!isReturnItem"
+                         class="confirmBox-body-center-input">
                         <div v-if="lang === 'ch'">
                             <input type="number"
                                    placeholder="送货框数"
@@ -338,6 +361,39 @@
                             <input type="number"
                                    placeholder="Take back basket"
                                    v-model="inBasket">
+                        </div>
+                    </div>
+                    <div v-if="isReturnItem"
+                         class="returnbox">
+                        <div style="position:relative"
+                             @click="changeReturnAccessMethod('returnAccess')">
+                            <div class="returnbox-item">
+                                <span v-if="lang === 'ch'">退菜成功</span>
+                                <span v-else>Done</span>
+                            </div>
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated fadeIn faster"
+                                        leave-active-class="animated fadeOut faster">
+                                <div v-if="isReturnAccess"
+                                     style="position:absolute;right:0;width:0;height:0;border-bottom: 30px solid #e22525;border-left: 30px solid transparent;top: 0;">
+                                    <div class="returnbox-icon"></div>
+                                </div>
+                            </transition>
+                        </div>
+                        <div style="position:relative;margin-left:10px"
+                             @click="changeReturnAccessMethod('returnFail')">
+                            <div class="returnbox-item">
+                                <span v-if="lang === 'ch'">退菜失败</span>
+                                <span v-else>Fail</span>
+                            </div>
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated fadeIn faster"
+                                        leave-active-class="animated fadeOut faster">
+                                <div v-if="!isReturnAccess"
+                                     style="position:absolute;right:0;width:0;height:0;border-bottom: 30px solid #e22525;border-left: 30px solid transparent;top: 0;">
+                                    <div class="returnbox-icon"></div>
+                                </div>
+                            </transition>
                         </div>
                     </div>
                     <div class="confirmBox-body-bottom">
@@ -415,6 +471,69 @@
             </div>
         </transition>`
         <!-- confirm box twice end -->
+
+        <!-- return pic confirm box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showReturnPicBox"
+                 class="confirmBox"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showReturnPicBox"
+                 class="confirmBox-back"
+                 @click.prevent.self="showReturnPicBox = false">
+                <div class="confirmBox-body">
+                    <div class="confirmBox-body-title">
+                        <span v-if="lang === 'ch'">确认退货</span>
+                        <span v-else>Confirm Return</span>
+                    </div>
+                    <div class="confirmBox-body-center"
+                         style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+                        <span>{{tempShiping}}</span>
+                    </div>
+                    <div style="margin-top:20px;margin-bottom:20px">
+                        <div class="photoarea"
+                             style="width:120px;height:120px"
+                             @click="uploadReturnImg"
+                             v-if="!missionImage">
+                            <div v-if="!updateImagePreview"
+                                 class="add_a_photo"
+                                 style="margin-top:24px"></div>
+                            <img :src="updateImagePreview"
+                                 alt="newimg"
+                                 v-else>
+                        </div>
+                        <div class="photoarea"
+                             v-else>
+                            <img :src="missionImage | imgurl"
+                                 alt="newimg">
+                        </div>
+                    </div>
+
+                    <div class="confirmBox-body-bottom"
+                         style="margin-top: 10px;">
+                        <div class="confirmBox-body-bottom-left"
+                             @click="showReturnPicBox = false">
+                            <span>{{language.detailPage.confirmBox_cancel}}</span>
+                        </div>
+                        <div class="confirmBox-body-bottom-right"
+                             @click="uploadReturnImgAndFinishMethod">
+                            <span>{{language.detailPage.confirmBox_confirm}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <input type="file"
+               id="return_file"
+               style="display:none"
+               @change="changeReturnImg($event)"
+               accept="image/*">
+        <!-- return pic confirm box end -->
+
     </div>
 </template>
 
@@ -452,7 +571,10 @@ export default {
             tempShiping: "",
             inBasket: null,
             outBasket: null,
-            clientName: null
+            clientName: null,
+            isReturnAccess: true,
+            isReturnItem: false,
+            showReturnPicBox: false
         };
     },
     computed: {
@@ -467,19 +589,217 @@ export default {
         }
     },
     methods: {
-        confirmTwiceMethod(clientInfo) {
-            if (!this.inBasket || !this.outBasket) {
-                this.showError = true;
+        uploadReturnImgAndFinishMethod() {
+            console.log("345");
+            //
+            if (!this.updateImagePreview) {
                 if (this.lang === "ch") {
-                    this.errorInfo = "请填写框数";
+                    this.errorInfo = "请上传照片";
                 } else {
-                    this.errorInfo = "Please input number";
+                    this.errorInfo = "please upload photo";
                 }
+                this.showError = true;
                 setTimeout(() => {
                     this.showError = false;
                 }, 3000);
             } else {
-                this.confirmTwiceBox = true;
+                let payload = new FormData();
+                let date = new Date();
+                let maxSize = 200 * 1024; //200KB
+                lrz(this.updateImage, {
+                    quality: 0.5
+                })
+                    .then(res => {
+                        if (this.updateImage.size > maxSize) {
+                            this.updateImage = res.file;
+                        }
+
+                        // _id: this.tempArr._id,
+                        // clientName: this.clientName,
+                        // position: tempPosition,
+                        // outBasket: this.outBasket,
+                        // inBasket: this.inBasket,
+                        // date: tempDate,
+                        // driverName: this.drivername,
+                        // lineName: this.tempArr.missionline
+
+                        payload.append("image", this.updateImage);
+                        payload.append("outBasket", 0);
+                        payload.append("inBasket", 0);
+                        payload.append("_id", this.tempArr._id);
+                        payload.append("dialogClientName", this.clientName);
+                        axios({
+                            method: "post",
+                            url: config.server + "/client-driver/update",
+                            data: payload,
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        })
+                            .then(doc => {
+                                if (doc.data.code == 0) {
+                                    this.showReturnPicBox = false;
+                                    this.updateImagePreview = "";
+                                    this.showError = true;
+                                    this.errorInfo = this.language.detailPage.missionSuccess;
+                                    this.missionGetOne();
+                                    //修改夜班加单状态
+                                    let tempDate = new Date().toISOString();
+                                    axios
+                                        .post(config.server + "/customerService/finish", {
+                                            clientName: this.clientName,
+                                            mission_id: this.tempArr._id,
+                                            finishiDate: tempDate,
+                                            isReturnDone: this.isReturnAccess
+                                        })
+                                        .then(doc => {
+                                            console.log('修改夜班加单状态')
+                                            console.log(doc)
+                                        })
+                                        .catch(err => {
+                                            console.log(err)
+                                        })
+                                    //修改夜班加单状态
+                                } else {
+                                    this.showError = true;
+                                    this.errorInfo = this.language.detailPage.missionError;
+                                }
+                                setTimeout(() => {
+                                    this.showError = false;
+                                }, 3000);
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+                    })
+                    .catch(err => {
+                        console.log("lrz err");
+                        console.log(err);
+                    });
+            }
+            //
+        },
+
+        changeReturnImg(el) {
+            if (typeof FileReader === "undefined") {
+                return alert("浏览器不支持上传图片");
+            }
+            if (!el.target.files[0].size) return; //判断是否有文件数量
+            this.updateImagePreview = window.URL.createObjectURL(
+                el.target.files[0]
+            );
+            this.updateImage = el.target.files[0];
+            el.target.value = "";
+        },
+
+        uploadReturnImg() {
+            document.getElementById("return_file").click();
+        },
+
+        changeReturnAccessMethod(item) {
+            if (item === "returnAccess") {
+                this.isReturnAccess = true;
+            } else {
+                this.isReturnAccess = false;
+            }
+        },
+
+        confirmTwiceMethod() {
+            if (this.isReturnItem) {
+                if (this.isReturnAccess) {
+                    this.showReturnPicBox = true
+                    this.confirmBox = false
+                } else {
+                    let tempDate = new Date().toISOString();
+                    axios
+                        .post(config.server + "/customerService/finish", {
+                            clientName: this.clientName,
+                            mission_id: this.tempArr._id,
+                            finishiDate: tempDate,
+                            isReturnDone: this.isReturnAccess
+                        })
+                        .then(doc => {
+                            console.log(doc);
+                            let tempKey = true;
+
+                            //
+                            this.outBasket = 0;
+                            this.inBasket = 0;
+                            //获取用户位置
+                            let tempPosition;
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(
+                                    function(position) {
+                                        tempPosition = {
+                                            lat: position.coords.latitude,
+                                            lng: position.coords.longitude
+                                        };
+                                    }
+                                );
+                            } else {
+                                // Browser doesn't support
+                                alert("不支持定位功能");
+                                console.log(
+                                    "browser doesnt support geolocation"
+                                );
+                            }
+                            let tempDate = new Date().toISOString();
+
+                            setTimeout(() => {
+                                axios
+                                    .post(
+                                        config.server +
+                                            "/client-driver/exupdate",
+                                        {
+                                            _id: this.tempArr._id,
+                                            clientName: this.clientName,
+                                            position: tempPosition,
+                                            outBasket: this.outBasket,
+                                            inBasket: this.inBasket,
+                                            date: tempDate,
+                                            driverName: this.drivername,
+                                            lineName: this.tempArr.missionline
+                                        }
+                                    )
+                                    .then(doc => {
+                                        if (doc.data.code === 0) {
+                                            this.missionGetOne();
+                                            this.confirmBox = false;
+                                            this.showError = true;
+                                            this.errorInfo = this.language.detailPage.missionSuccess;
+                                            this.confirmTwiceBox = false;
+                                        } else {
+                                            this.showError = true;
+                                            this.errorInfo = this.language.detailPage.missionError;
+                                        }
+                                        setTimeout(() => {
+                                            this.showError = false;
+                                        }, 3000);
+                                    })
+                                    .catch(err => {
+                                        console.log(err);
+                                    });
+                            }, 200);
+                            //
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+            } else {
+                if (!this.inBasket || !this.outBasket) {
+                    this.showError = true;
+                    if (this.lang === "ch") {
+                        this.errorInfo = "请填写框数";
+                    } else {
+                        this.errorInfo = "Please input number";
+                    }
+                    setTimeout(() => {
+                        this.showError = false;
+                    }, 3000);
+                } else {
+                    this.confirmTwiceBox = true;
+                }
             }
         },
 
@@ -501,6 +821,8 @@ export default {
             this.showError = false;
         },
         openConfirmBoxMethod(x) {
+            console.log(x);
+            this.isReturnItem = x.isReturn;
             this.inBasket = null;
             this.outBasket = null;
             this.confirmBox = true;
@@ -513,6 +835,7 @@ export default {
         },
         noPicUpdate() {
             if (!this.inBasket || !this.outBasket) {
+                console.log("into wrong");
                 this.showError = true;
                 if (this.lang === "ch") {
                     this.errorInfo = "请填写框数";
@@ -540,6 +863,7 @@ export default {
                     console.log("browser doesnt support geolocation");
                 }
                 let tempDate = new Date().toISOString();
+
                 setTimeout(() => {
                     axios
                         .post(config.server + "/client-driver/exupdate", {
@@ -1085,5 +1409,56 @@ export default {
     line-height: 32px;
     color: #fff;
     margin-left: 10px;
+}
+
+.returnbox {
+    display: flex;
+    display: -webkit-flex;
+    font-size: 16px;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.returnbox-item {
+    border: 1px solid #e0e0e0;
+    height: 30px;
+    line-height: 30px;
+    width: 80px;
+    position: relative;
+}
+
+.returnbox-icon {
+    border: none;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    position: relative;
+    height: 8px;
+    width: 12px;
+    z-index: 26;
+    left: -15px;
+    right: 12px;
+    top: 14px;
+    transform: rotate(-57deg);
+}
+
+.return-icon {
+    background-image: url(../../public/img/return-icon.png);
+    position: absolute;
+    font-size: 40px;
+    color: #fff;
+    border-radius: 100%;
+    height: 80px;
+    width: 80px;
+    line-height: 80px;
+    transform: rotate(-16deg);
+    top: 60px;
+    left: 4px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80px 80px;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 </style>

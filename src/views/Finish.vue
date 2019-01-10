@@ -9,7 +9,7 @@
                         </div>
                     </md-card>
 
-                    <md-card style="width:80%;margin:10px auto" v-for="(x,n) in item.missionclient" :key="n" v-if="x.finishdate">
+                    <md-card style="width:80%;margin:10px auto" v-for="(x,n) in item.missionclient" :key="n" v-show="x.finishdate">
                         <!-- <div @click="opendetail(x)"> -->
                         <div>
                             <md-card-header>

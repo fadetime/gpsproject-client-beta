@@ -537,7 +537,7 @@ export default {
         this.getChoiceDayMethod()
         this.getDriverMission()
         let today = new Date().getDay()
-        if(today === 0){
+        if(today === 1){
             this.findCarWashMethod()
         }
     },
