@@ -1,6 +1,6 @@
 {
   "name": "driver",
-  "version": "0.14.0",
+  "version": "0.15.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "animate.css": "^3.7.0",
+    "async": "^2.6.1",
     "axios": "^0.18.0",
     "lodash": "^4.17.10",
     "lrz": "^4.9.40",

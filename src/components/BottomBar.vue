@@ -72,12 +72,6 @@
                            v-if="newPosts"
                            style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
                     </md-bottom-bar-item>
-                    <md-bottom-bar-item id="bottom-bar-item-search"
-                                        @click="gosearch">
-                        <div class="md-bottom-bar-icon search_white"
-                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
-                        <span class="md-bottom-bar-label">{{language.bottomBar.search}}</span>
-                    </md-bottom-bar-item>
                     <md-bottom-bar-item v-if="driverRole != 'dayshift'"
                                         id="bottom-bar-item-home"
                                         @click="gohome">

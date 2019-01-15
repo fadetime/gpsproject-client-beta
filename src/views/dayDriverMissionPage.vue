@@ -93,12 +93,15 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="item.backTime && item.missionFinish" style="position: absolute;transform:rotate(-30deg);top:30px">
+                    <div v-if="item.backTime && item.missionFinish"
+                         style="position: absolute;transform:rotate(-30deg);top:30px">
                         <div v-if="lang === 'ch'">
-                            <img src="../../public/img/missionCompleteCH.png" style="height:100px">
+                            <img src="../../public/img/missionCompleteCH.png"
+                                 style="height:100px">
                         </div>
                         <div v-else>
-                            <img src="../../public/img/missionComplete.png" style="height:100px">
+                            <img src="../../public/img/missionComplete.png"
+                                 style="height:100px">
                         </div>
                     </div>
                     <div class="missioncard-bottom">
@@ -107,6 +110,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div style="height:70px">
+            <!-- 底部占位符 -->
         </div>
 
         <!-- check car box start -->
@@ -336,11 +343,19 @@
         <!-- check car box end -->
 
         <!-- check again box start -->
-        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div v-if="showCheckAgainBox" class="checkcar-back"></div>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showCheckAgainBox"
+                 class="checkcar-back"></div>
         </transition>
-        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="showCheckAgainBox" class="checkcar-front" @click.self.prevent="showCheckAgainBox = false" @touchmove.prevent>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showCheckAgainBox"
+                 class="checkcar-front"
+                 @click.self.prevent="showCheckAgainBox = false"
+                 @touchmove.prevent>
                 <div class="checkcar-body">
                     <div class="checkcar-body-top">
                         <span>{{language.homePage.checkCarTitle}}</span>
@@ -350,15 +365,20 @@
                             <span>{{carNum}}</span>
                         </div>
                         <div class="checkcar-body-center-item">
-                            <label for="checkwiper" class="checkcar-body-center-item-left">
+                            <label for="checkwiper"
+                                   class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.clean}}</span>
                             </label>
                             <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checkwiper" v-model="clean" style="margin:0"></md-checkbox>
+                                <md-checkbox id="checkwiper"
+                                             v-model="clean"
+                                             style="margin:0"></md-checkbox>
                             </div>
                             <div class="checkcar-body-center-item-right">
-                                <span v-if="clean" style="color:green">{{language.homePage.ok}}</span>
-                                <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                <span v-if="clean"
+                                      style="color:green">{{language.homePage.ok}}</span>
+                                <span v-else
+                                      style="color:#c3c304">{{language.homePage.error}}</span>
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
@@ -366,27 +386,42 @@
                                 <span>{{language.homePage.box}}</span>
                             </div>
                             <div class="checkcar-body-center-item-right">
-                                <input type="number" style="width:160%;margin-left:10px;" v-model="boxNumAgain">
+                                <input type="number"
+                                       style="width:160%;margin-left:10px;"
+                                       v-model="boxNumAgain">
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
-                            <label for="checkbrake" class="checkcar-body-center-item-left">
+                            <label for="checkbrake"
+                                   class="checkcar-body-center-item-left">
                                 <span>{{language.homePage.otherOk}}</span>
                             </label>
                             <div class="checkcar-body-center-item-middle">
-                                <md-checkbox id="checkbrake" v-model="otherErrorAgain" style="margin:0"></md-checkbox>
+                                <md-checkbox id="checkbrake"
+                                             v-model="otherErrorAgain"
+                                             style="margin:0"></md-checkbox>
                             </div>
                             <div class="checkcar-body-center-item-right">
-                                <span v-if="otherErrorAgain" style="color:green">{{language.homePage.ok}}</span>
-                                <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                <span v-if="otherErrorAgain"
+                                      style="color:green">{{language.homePage.ok}}</span>
+                                <span v-else
+                                      style="color:#c3c304">{{language.homePage.error}}</span>
                             </div>
                         </div>
                         <div>
-                            <textarea name="othererror" id="othererror" rows="5" style="width:100%" :disabled="otherErrorAgain" :placeholder="language.homePage.description" v-model="otherErrorTextAgain"></textarea>
+                            <textarea name="othererror"
+                                      id="othererror"
+                                      rows="5"
+                                      style="width:100%"
+                                      :disabled="otherErrorAgain"
+                                      :placeholder="language.homePage.description"
+                                      v-model="otherErrorTextAgain"></textarea>
                         </div>
                     </div>
                     <div>
-                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="confirmCheckAgain">
+                        <md-button class="md-raised"
+                                   style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);"
+                                   @click="confirmCheckAgain">
                             {{language.homePage.confirmCheck}}
                         </md-button>
                     </div>
@@ -452,7 +487,8 @@
             <div v-if="showMissionDetail"
                  class="missiondetail">
                 <div class="missiondetail-title">
-                    <div style="flex-basis:15%" @click="trunBackMethod">
+                    <div style="flex-basis:15%"
+                         @click="trunBackMethod">
                         <span style="font-size:16px">《 返回</span>
                         <span style="font-size:16px">《 Back</span>
                     </div>
@@ -463,7 +499,9 @@
                     <div style="flex-basis:15%"></div>
                 </div>
                 <div class="missiondetail-body">
-                    <div v-for="(item,index) in detailDate" :key="index" class="missiondetail-body-item">
+                    <div v-for="(item,index) in detailDate"
+                         :key="index"
+                         class="missiondetail-body-item">
                         <div class="missiondetail-body-item-title">
                             <span>{{item.clientName}}</span>
                         </div>
@@ -483,7 +521,8 @@
                                 <span>{{item.clientPostcode}}</span>
                             </div>
                         </div>
-                        <div class="missiondetail-body-item-body" style="padding-bottom: 12px;">
+                        <div class="missiondetail-body-item-body"
+                             style="padding-bottom: 12px;">
                             <div class="missiondetail-body-item-body-left">
                                 <span>客户地址</span>
                             </div>
@@ -491,25 +530,29 @@
                                 <span>{{item.clientAddress}}</span>
                             </div>
                         </div>
-                        <div v-if="item.finisDate" style="position: absolute;transform:rotate(-30deg);top:30px">
+                        <div v-if="item.finisDate"
+                             style="position: absolute;transform:rotate(-30deg);top:30px">
                             <div v-if="lang === 'ch'">
-                                <img src="../../public/img/missionCompleteCH.png" style="height:100px">
+                                <img src="../../public/img/missionCompleteCH.png"
+                                     style="height:100px">
                             </div>
                             <div v-else>
-                                <img src="../../public/img/missionComplete.png" style="height:100px">
+                                <img src="../../public/img/missionComplete.png"
+                                     style="height:100px">
                             </div>
                         </div>
                         <div v-else>
-                            <div class="findcar-bottom" style="padding-bottom: 10px;">
+                            <div class="findcar-bottom"
+                                 style="padding-bottom: 10px;">
                                 <div class="removebox-body-center-button"
-                                    style="width: 80px;margin-right:10px"
-                                    @click="removeClientMethod(item)">
+                                     style="width: 80px;margin-right:10px"
+                                     @click="removeClientMethod(item)">
                                     <span v-if="lang === 'ch'">删除</span>
                                     <span v-else>chancel</span>
                                 </div>
                                 <div class="removebox-body-center-button"
-                                    style="width: 80px;"
-                                    @click="finishClientMethod(item)">
+                                     style="width: 80px;"
+                                     @click="finishClientMethod(item)">
                                     <span v-if="lang === 'ch'">完成</span>
                                     <span v-else>confirm</span>
                                 </div>
@@ -517,7 +560,7 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </transition>
         <!-- mission detail page end -->
@@ -546,8 +589,9 @@
                             <span v-else>Confirm remove</span>
                         </div>
                     </div>
-                    <div class="findcar-body" style="border: 1px solid #e6e6e6;">
-                        <div style="font-size:16px;height:30px;line-height:30px">
+                    <div class="findcar-body"
+                         style="border: 1px solid #e6e6e6;">
+                        <div style="font-size:16px;height:30px;line-height:30px;overflow: hidden;">
                             <span>{{shippingClient.clientName}}</span>
                         </div>
                     </div>
@@ -560,21 +604,21 @@
                         </div>
                         <div v-if="boxShowFace === 'finish'">
                             <div class="removebox-body-center-button"
-                                style="width: 80px;"
-                                @click="confirmFinishClientMethod()">
+                                 style="width: 80px;"
+                                 @click="confirmFinishClientMethod()">
                                 <span v-if="lang === 'ch'">确定</span>
                                 <span v-else>confirm</span>
                             </div>
                         </div>
                         <div v-else>
                             <div class="removebox-body-center-button"
-                                style="width: 80px;background:#d74342;border: none;color:#fff"
-                                @click="confirmRemoveClientMethod()">
+                                 style="width: 80px;background:#d74342;border: none;color:#fff"
+                                 @click="confirmRemoveClientMethod()">
                                 <span v-if="lang === 'ch'">确定</span>
                                 <span v-else>confirm</span>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -598,6 +642,7 @@
 <script>
 import axios from "axios";
 import config from "../assets/js/config";
+import async from "async";
 
 export default {
     mounted() {
@@ -618,7 +663,7 @@ export default {
     data() {
         return {
             _id: null,
-            carCheck_id:null,
+            carCheck_id: null,
             driverName: null,
             showError: false,
             errorInfo: "未知错误",
@@ -642,135 +687,140 @@ export default {
             carInfoArray: null,
             choiseCarNum: null,
             showMissionDetail: false,
-            detailDate:null,
-            showCRbox:false,
-            shippingClient:null,
-            boxShowFace:'finish',
-            showCheckAgainBox:false,
-            clean:true,
-            otherErrorAgain:true,
-            boxNumAgain:null,
-            otherErrorTextAgain:null
+            detailDate: null,
+            showCRbox: false,
+            shippingClient: null,
+            boxShowFace: "finish",
+            showCheckAgainBox: false,
+            clean: true,
+            otherErrorAgain: true,
+            boxNumAgain: null,
+            otherErrorTextAgain: null
         };
     },
 
     methods: {
         confirmCheckAgain() {
             if (!this.boxNumAgain) {
-                this.showError = true
-                this.errorInfo = this.language.homePage.boxNumErr
+                this.showError = true;
+                this.errorInfo = this.language.homePage.boxNumErr;
                 setTimeout(() => {
-                    this.showError = false
-                }, 2000)
+                    this.showError = false;
+                }, 2000);
             } else {
                 axios
-                    .post(config.server + '/checkcar/editByday', {
+                    .post(config.server + "/checkcar/editByday", {
                         carCheck_id: this.carCheck_id,
                         boxNumAgain: this.boxNumAgain,
-                        mission_id:this._id,
+                        mission_id: this._id,
                         clean: this.clean,
-                        finishDate:new Date().toISOString()
+                        finishDate: new Date().toISOString()
                     })
                     .then(doc => {
                         if (doc.data.code === 0) {
-                            this.showCheckAgainBox = false
-                            this.getDayShiftDriverMission()
+                            this.showCheckAgainBox = false;
+                            this.getDayShiftDriverMission();
                         } else {
-                            console.log(doc)
+                            console.log(doc);
                         }
                     })
                     .catch(err => {
-                        console.log(err)
-                    })
+                        console.log(err);
+                    });
 
-                axios.post(config.server + '/client-driver/complete',{
-                    mission_id: this.$store.state.tempArr._id,
-                })
-                .then(item => {
-                    console.log(item)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                axios
+                    .post(config.server + "/client-driver/complete", {
+                        mission_id: this.$store.state.tempArr._id
+                    })
+                    .then(item => {
+                        console.log(item);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
                 if (!this.otherErrorAgain) {
-                    let errData = {}
+                    let errData = {};
                     this.$set(
                         errData,
-                        'car_id',
+                        "car_id",
                         this.$store.state.tempArr.Car_id
-                    ) //车辆_id
-                    this.$set(errData, 'driver', this.drivername) //司机
-                    this.$set(errData, 'other', 1)
-                    this.$set(errData, 'note', this.otherErrorTextAgain)
+                    ); //车辆_id
+                    this.$set(errData, "driver", this.drivername); //司机
+                    this.$set(errData, "other", 1);
+                    this.$set(errData, "note", this.otherErrorTextAgain);
                     axios
-                        .post(config.server + '/fixcar/', errData)
+                        .post(config.server + "/fixcar/", errData)
                         .then(doc => {
                             if (doc.data.code === 0) {
-                                console.log('货后报损成功')
+                                console.log("货后报损成功");
                             } else {
-                                console.log(doc)
+                                console.log(doc);
                             }
                         })
                         .catch(err => {
-                            console.log(err)
-                        })
+                            console.log(err);
+                        });
                 }
             }
         },
 
-        changeMissionState(){
+        changeMissionState() {
             axios
-                .post(config.server + "/dsdriver/finishMission",{
+                .post(config.server + "/dsdriver/finishMission", {
                     mission_id: this._id
                 })
                 .then(doc => {
-                    console.log(doc)
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        },
-
-        findMissionByID(){
-            axios
-                .post(config.server + "/dsdriver/findById",{
-                    mission_id: this._id
-                })
-                .then(doc => {
+                    console.log(doc);
                     if(doc.data.code === 0){
-                        console.log(doc)
-                        this.detailDate = doc.data.doc.clientArray
-                    }else{
-                        console.log(doc)
+                        this.getDayShiftDriverMission()
                     }
                 })
                 .catch(err => {
-                    console.log(err)
-                })
+                    console.log(err);
+                });
         },
 
-        confirmRemoveClientMethod(){
-            console.log('remove client')
-            let tempDate = new Date().toISOString()
+        findMissionByID() {
             axios
-                .post(config.server + "/dsdriver/remove",{
-                    mission_id: this._id,
-                    clientName:this.shippingClient.clientName
+                .post(config.server + "/dsdriver/findById", {
+                    mission_id: this._id
                 })
-                .then( doc => {
-                    console.log(doc)
-                    if(doc.data.code === 0){
-                        this.showCRbox = false
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        console.log(doc);
+                        this.detailDate = doc.data.doc.clientArray;
+                    } else {
+                        console.log(doc);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        confirmRemoveClientMethod() {
+            console.log("remove client");
+            let tempDate = new Date().toISOString();
+            axios
+                .post(config.server + "/dsdriver/remove", {
+                    mission_id: this._id,
+                    clientName: this.shippingClient.clientName
+                })
+                .then(doc => {
+                    console.log(doc);
+                    if (doc.data.code === 0) {
+                        this.showCRbox = false;
                         if (this.lang === "ch") {
                             this.errorInfo = "删除任务客户成功";
                         } else {
-                            this.errorInfo = "Remove client from mission success";
+                            this.errorInfo =
+                                "Remove client from mission success";
                         }
                         this.showError = true;
                         setTimeout(() => {
                             this.showError = false;
                         }, 3000);
-                    }else{
+                    } else {
                         if (this.lang === "ch") {
                             this.errorInfo = "删除任务客户失败";
                         } else {
@@ -782,24 +832,24 @@ export default {
                         }, 3000);
                     }
                 })
-                .catch( err => {
-                    console.log(err)
-                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
-        confirmFinishClientMethod(){
-            let tempDate = new Date().toISOString()
+        confirmFinishClientMethod() {
+            let tempDate = new Date().toISOString();
             axios
-                .post(config.server + "/dsdriver/finish",{
+                .post(config.server + "/dsdriver/finish", {
                     mission_id: this._id,
-                    clientName:this.shippingClient.clientName,
-                    finisDate:tempDate
+                    clientName: this.shippingClient.clientName,
+                    finisDate: tempDate
                 })
-                .then( doc => {
-                    console.log(doc)
-                    if(doc.data.code === 0){
-                        this.findMissionByID()
+                .then(doc => {
+                    console.log(doc);
+                    if (doc.data.code === 0) {
+                        this.findMissionByID();
                         this.getDayShiftDriverMission();
-                        this.showCRbox = false
+                        this.showCRbox = false;
                         if (this.lang === "ch") {
                             this.errorInfo = "任务提交成功";
                         } else {
@@ -810,22 +860,47 @@ export default {
                             this.showError = false;
                         }, 3000);
 
-                        //判断所有客户是否完成
-                        let notFinishMissionFlag = false
-                        this.detailDate.some(element => {
-                            if(!finisDate){
-                                notFinishMissionFlag = true
+                        //判断所有客户是否完成 start
+                        //new method
+                        let count = 0;
+                        let notFinishMissionFlag = false;
+                        async.whilst(
+                            function() {
+                                return count < 1;
+                            },
+                            (callback) => {
+                                this.detailDate.some(element => {
+                                    count++;
+                                    console.log(count);
+                                    if (!element.finisDate) {
+                                        notFinishMissionFlag = true;
+                                    }
+                                    return notFinishMissionFlag;
+                                });
+                                callback(null, notFinishMissionFlag);
+                            },
+                            (err, n) => {
+                                // 5 seconds have passed, n = 5
+                                if (!n) {
+                                    this.changeMissionState();
+                                }
                             }
-                            return notFinishMissionFlag
-                        });
-                        if(!notFinishMissionFlag){
-                            setTimeout(() => {
-                                this.changeMissionState()
-                            }, 1000);
-                        }
-                        
-
-                    }else{
+                        );
+                        //old method
+                        // let notFinishMissionFlag = false
+                        // this.detailDate.some(element => {
+                        //     if(!finisDate){
+                        //         notFinishMissionFlag = true
+                        //     }
+                        //     return notFinishMissionFlag
+                        // });
+                        // if(!notFinishMissionFlag){
+                        //     setTimeout(() => {
+                        //         this.changeMissionState()
+                        //     }, 1000);
+                        // }
+                        //判断所有客户是否完成 end
+                    } else {
                         if (this.lang === "ch") {
                             this.errorInfo = "任务提交失败";
                         } else {
@@ -837,31 +912,31 @@ export default {
                         }, 3000);
                     }
                 })
-                .catch( err => {
-                    console.log(err)
-                })
+                .catch(err => {
+                    console.log(err);
+                });
         },
 
-        finishClientMethod(clientInfo){
-            console.log(this._id)
-            this.shippingClient = clientInfo
-            this.boxShowFace = 'finish'
-            this.showCRbox = true
+        finishClientMethod(clientInfo) {
+            console.log(this._id);
+            this.shippingClient = clientInfo;
+            this.boxShowFace = "finish";
+            this.showCRbox = true;
         },
 
-        removeClientMethod(clientInfo){
-            console.log(clientInfo)
-            this.shippingClient = clientInfo
-            this.boxShowFace = 'remove'
-            this.showCRbox = true
+        removeClientMethod(clientInfo) {
+            console.log(clientInfo);
+            this.shippingClient = clientInfo;
+            this.boxShowFace = "remove";
+            this.showCRbox = true;
         },
 
-        finishClientMethodclient(client){
-            console.log(client)
+        finishClientMethodclient(client) {
+            console.log(client);
         },
 
-        trunBackMethod(){
-            this.showMissionDetail = false
+        trunBackMethod() {
+            this.showMissionDetail = false;
         },
 
         confirmChoiseCar() {
@@ -918,7 +993,6 @@ export default {
                 .then(doc => {
                     if (doc.data.code === 0) {
                         this.carInfoArray = doc.data.doc;
-                        console.log(this.carInfoArray);
                     } else {
                         if (this.lang === "ch") {
                             this.errorInfo = "查找车辆出错";
@@ -1060,9 +1134,7 @@ export default {
                 axios
                     .post(config.server + "/checkcar/day", tempData)
                     .then(doc => {
-                        console.log(doc);
                         if (doc.data.code === 0) {
-                            console.log("check done");
                             this.getDayShiftDriverMission();
                         } else {
                             console.log(doc);
@@ -1084,8 +1156,7 @@ export default {
         },
 
         startMission(missionInfo) {
-            console.log(missionInfo)
-            this._id = missionInfo._id
+            this._id = missionInfo._id;
             if (!missionInfo.goTime) {
                 this._id = missionInfo._id;
                 this.findAllCarPlate();
@@ -1093,19 +1164,43 @@ export default {
             } else if (!missionInfo.carCheck_id) {
                 this._id = missionInfo._id;
                 this.showCheckCarBox = true;
-            } else if(missionInfo.missionFinish){
-                if(!missionInfo.backTime){
-                    console.log('write backtime')
-                    this.carCheck_id = missionInfo.carCheck_id
-                    this._id = missionInfo._id
-                    this.showCheckAgainBox = true
-                }else{
-                    this.detailDate = missionInfo.clientArray
-                    this.showMissionDetail = true
+            } else if (missionInfo.missionFinish) {
+                if (!missionInfo.backTime) {
+                    this.carCheck_id = missionInfo.carCheck_id;
+                    this._id = missionInfo._id;
+                    this.showCheckAgainBox = true;
+                } else {
+                    this.detailDate = missionInfo.clientArray;
+                    this.showMissionDetail = true;
                 }
-            }else {
-                this.detailDate = missionInfo.clientArray
-                this.showMissionDetail = true
+            } else {
+                this.detailDate = missionInfo.clientArray;
+                this.showMissionDetail = true;
+                //
+                let count = 0;
+                let notFinishMissionFlag = false;
+                async.whilst(
+                    function() {
+                        return count < 1;
+                    },
+                    function(callback) {
+                        missionInfo.clientArray.some(element => {
+                            count++;
+                            console.log(count);
+                            if (!element.finisDate) {
+                                notFinishMissionFlag = true;
+                            }
+                            return notFinishMissionFlag;
+                        });
+                        callback(null, notFinishMissionFlag);
+                    },
+                    (err, n) => {
+                        if (!n) {
+                            this.changeMissionState();
+                        }
+                    }
+                );
+                //
             }
         },
 
@@ -1117,17 +1212,14 @@ export default {
                     driverName: this.driverName
                 })
                 .then(doc => {
-                    console.log(doc);
                     if (doc.data.code === 0) {
                         this.missionArray = doc.data.doc;
-                        console.log(this.missionArray);
                     } else {
                         if (this.lang === "ch") {
                             this.errorInfo = "未找到任务数据";
                         } else {
                             this.errorInfo = "Mission not found";
                         }
-
                         setTimeout(() => {
                             this.showError = false;
                         }, 3000);
@@ -1136,7 +1228,6 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
-            console.log("done");
         }
     }
 };
@@ -1428,7 +1519,7 @@ export default {
     display: -webkit-flex;
 }
 
-.missiondetail-body-item{
+.missiondetail-body-item {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     margin-top: 10px;
@@ -1438,7 +1529,7 @@ export default {
     position: relative;
 }
 
-.missiondetail-body-item-title{
+.missiondetail-body-item-title {
     height: 30px;
     line-height: 30px;
     font-size: 16px;
@@ -1447,22 +1538,21 @@ export default {
     margin-right: 10px;
 }
 
-.missiondetail-body-item-body{
+.missiondetail-body-item-body {
     display: flex;
     display: -webkit-flex;
     justify-content: center;
     font-size: 16px;
     margin-top: 10px;
-
 }
 
-.missiondetail-body-item-body-left{
+.missiondetail-body-item-body-left {
     width: 100px;
     margin-right: 10px;
     text-align: right;
 }
 
-.missiondetail-body-item-body-right{
+.missiondetail-body-item-body-right {
     width: 200px;
     margin-left: 10px;
     text-align: left;
