@@ -3,7 +3,7 @@
         
         <div>
             <md-card style="width:320px;margin:10px auto;padding-bottom:5px">
-                <md-datepicker v-model="selectedDate" md-immediately style="width:300px;margin:0 auto">
+                <md-datepicker v-model="selectedDate" :md-open-on-focus="false" md-immediately style="width:300px;margin:0 auto">
                     <label>{{language.historyPage.selectDate}}</label>
                 </md-datepicker>
             </md-card>
@@ -52,7 +52,7 @@
                         </div>
 
                         <div style="display: -webkit-flex;display: flex;-webkit-flex-flow: row;flex-flow: row;padding: 0 0 10px 0;justify-content: center;">
-                            <div v-for="(x,n) in item.missionclient" :key="n" style="overflow:hidden;width:50px;height:50px;margin: 0 5px;box-shadow: 1px 1px 5px;" v-if="n < 5">
+                            <div v-for="(x,n) in item.missionclient" :key="n" style="overflow:hidden;width:50px;height:50px;margin: 0 5px;box-shadow: 1px 1px 5px;" v-show="n < 5">
                                 <img :src="x.image | imgurl" alt="x.clientbname" style="height:100%;width:100%;object-fit:contain" v-on:error.once="loadDefault($event)">
                             </div>
                         </div>

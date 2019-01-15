@@ -12,10 +12,13 @@ import search from './views/Search.vue'
 import dayShiftHome from './views/dayShiftHome.vue'
 import billPage from './views/bill.vue'
 import checkPage from './views/checker.vue'
+import dayMissionPool from './views/dayMissionPool.vue'
+import dayDriverMissionPage from './views/dayDriverMissionPage.vue'
 
 import AuthGuard from './auth-guard'
 import fixCarGuard from './fixCar-guard'
 import searchGuard from './search-guard'
+import dayShiftGuard from './dayShift-guard'
 
 Vue.use(Router)
 
@@ -90,7 +93,18 @@ export default new Router({
       path: '/dayshifthome',
       name: 'dayShiftHome',
       component: dayShiftHome,
-      beforeEnter: searchGuard
+      beforeEnter: dayShiftGuard
+    },
+    {
+      path: '/dayPool',
+      name: 'dayMissionPool',
+      component: dayMissionPool
+    },
+    {
+      path: '/ddmpage',
+      name: 'dayDriverMissionPage',
+      component: dayDriverMissionPage
     }
+    
   ]
 })

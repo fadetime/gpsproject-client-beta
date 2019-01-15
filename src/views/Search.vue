@@ -93,6 +93,13 @@
                                     <span v-else :class="choiseLeftText">Increase</span>
                                 </div>
                             </div>
+                            <div :class="choiseCenter" style="margin-right:10px" @click="choiseOrderModeMethod('center')">
+                                <div :class="choiseCenterImg"></div>
+                                <div>
+                                    <span v-if="lang === 'ch'" :class="choiseCenterText">退菜</span>
+                                    <span v-else :class="choiseCenterText">Return</span>
+                                </div>
+                            </div>
                             <div :class="choiseRight" @click="choiseOrderModeMethod('right')">
                                 <div :class="choiseRightImg"></div>
                                 <div>
@@ -142,11 +149,14 @@ export default {
             showIncreaseOrderBox:false,
             clientShipping:null,
             choiseLift:'increaseorder-box-body-center-item',
+            choiseCenter:'increaseorder-box-body-center-item',
             choiseRight:'increaseorder-box-body-center-item',
             isIncreaseOrder:null,
             choiseLeftImg:'increaseorderimg1',
+            choiseCenterImg:'increaseorderimg3',
             choiseRightImg:'increaseorderimg2',
             choiseLeftText:'textcolor',
+            choiseCenterText:'textcolor',
             choiseRightText:'textcolor',
             showError:false,
             errorInfo:'未知错误',
@@ -226,23 +236,41 @@ export default {
 
         choiseOrderModeMethod(mode){
             if(mode === 'left'){
-                this.isIncreaseOrder = true
+                this.isIncreaseOrder = 'true'
                 this.choiseLift = 'increaseorder-box-body-center-item-red'
+                this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseRight = 'increaseorder-box-body-center-item'
                 this.choiseLeftImg = 'increaseorderimg1-red'
+                this.choiseCenterImg = 'increaseorderimg3'
                 this.choiseRightImg = 'increaseorderimg2'
                 this.choiseLeftText = 'textcolor-red'
+                this.choiseCenterText = 'textcolor'
                 this.choiseRightText = 'textcolor'
+            }else if(mode === 'center'){
+                this.isIncreaseOrder = 'return'
+                this.choiseRight = 'increaseorder-box-body-center-item'
+                this.choiseCenter = 'increaseorder-box-body-center-item-red'
+                this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseRightImg = 'increaseorderimg2'
+                this.choiseCenterImg = 'increaseorderimg3-red'
+                this.choiseLeftImg = 'increaseorderimg1'
+                this.choiseRightText = 'textcolor'
+                this.choiseCenterText = 'textcolor-red'
+                this.choiseLeftText = 'textcolor'
             }else{
-                this.isIncreaseOrder = false
+                this.isIncreaseOrder = 'false'
                 this.choiseRight = 'increaseorder-box-body-center-item-red'
+                this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseLift = 'increaseorder-box-body-center-item'
                 this.choiseRightImg = 'increaseorderimg2-red'
+                this.choiseCenterImg = 'increaseorderimg3'
                 this.choiseLeftImg = 'increaseorderimg1'
                 this.choiseRightText = 'textcolor-red'
+                this.choiseCenterText = 'textcolor'
                 this.choiseLeftText = 'textcolor'
             }
         },
+
         showIncreaseOrderBoxMethod(client){
             this.choiseLift = 'increaseorder-box-body-center-item'
             this.choiseRight = 'increaseorder-box-body-center-item'
@@ -490,6 +518,28 @@ export default {
     background: #d74342;
     mask-image: url(../../public/icons/increaseOrder2.svg);
     -webkit-mask-image: url(../../public/icons/increaseOrder2.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.increaseorderimg3 {
+    background: #e0e0e0;
+    mask-image: url(../../public/icons/baseline-reply_all-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-reply_all-24px.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.increaseorderimg3-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/baseline-reply_all-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-reply_all-24px.svg);
     width: 32px;
     height: 32px;
     margin: 0 auto;
