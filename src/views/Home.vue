@@ -1264,8 +1264,8 @@ export default {
 
 .date_rangeicon {
     background: #d74342;
-    mask-image: url(../../public/icons/baseline-date_range-24px.svg);
-    -webkit-mask-image: url(../../public/icons/baseline-date_range-24px.svg);
+    mask-image: url(../../public/icons/baseline-date_range-24px24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-date_range-24px24px.svg);
     width: 24px;
     height: 24px;
 }

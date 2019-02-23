@@ -308,7 +308,6 @@ export default {
         getMissionPool() {
             console.log(this.selectedDate)
             let b = new Date(this.selectedDate).toISOString();
-            console.log(this.selectedDate)
             this.needDoNum = 0;
             this.$store.dispatch("setDoNum", this.needDoNum);
             axios
