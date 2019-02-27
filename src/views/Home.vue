@@ -134,12 +134,6 @@
                         <img src="../../public/img/carwash.gif" alt="carWash">
                     </div>
                     <div class="carwashbox-footer">
-                        <!-- <div class="carwashbox-footer-button"
-                             style="width: 100px;margin-right:10px" 
-                             @click="openCarWashConfrimBox('cancel')">
-                            <span v-if="lang === 'ch'">取消</span>
-                            <span v-else>cancel</span>
-                        </div> -->
                         <div class="carwashbox-footer-button"
                              style="width: 100px;"
                              @click="openCarWashConfrimBox('confirm')">
@@ -534,10 +528,11 @@ export default {
 
     mounted() {
         this.drivername = localStorage.getItem('drivername')
+        let driverRole = localStorage.getItem('driverRole')
         this.getChoiceDayMethod()
         this.getDriverMission()
         let today = new Date().getDay()
-        if(today === 1){
+        if(today === 1 && driverRole === 'user'){
             this.findCarWashMethod()
         }
     },
@@ -685,12 +680,8 @@ export default {
         },
 
         openCarWashConfrimBox(mode){
-            if(mode === 'confirm'){
-                this.findAllCarPlate()
-                this.isComfirmCarWashMode = true
-            }else{
-                this.isComfirmCarWashMode = false
-            }
+            this.findAllCarPlate()
+            this.isComfirmCarWashMode = true
             this.isShowCarWashComfirmBox = true
         },
 
