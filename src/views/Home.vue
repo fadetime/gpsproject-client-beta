@@ -20,7 +20,7 @@
                 <span>~{{language.homePage.whenEmpty}}~</span>
             </div>
             <div v-else ref="mainbox">
-                <md-card md-with-hover style="width:80%;margin:10px auto;" v-for="(item,index) in allMission" :key="index">
+                <md-card md-with-hover style="width:80%;margin:10px auto;border-radius: 10px;" v-for="(item,index) in allMission" :key="index">
                     <md-ripple>
                         <div v-if="lockArray[index] && lockCount != allMission.length" class="locklayer">
                             <md-icon class="md-size-3x">lock</md-icon>
@@ -509,6 +509,47 @@
             </div>
         </transition>
         <!-- key tips box end -->
+
+        <!-- first page notice start -->
+        <transition name="remove-client-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowFirstPageNotice"
+                 class="first_notic_back">
+                <div class="first_notic_back_close" @click="isShowFirstPageNotice = false">
+                    <span>x</span>
+                </div>
+                <div class="first_notic_back_top">
+                    <img src="../../public/img/handshake.png" alt="handshake"> 
+                </div> 
+                <div class="first_notic_back_center">
+                    <div class="first_notic_back_center_frame" @click="isShowBigImageDialog = true">
+                        <img :src="firstPageImage | imgurl" alt="notice_pic">
+                    </div>
+                </div>
+                <div class="first_notic_back_bottom">
+                    <div class="first_notic_back_bottom_frame">
+                        <span>{{firstPageText}}</span>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- first page notice end -->
+
+        <!-- big image dialog start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowBigImageDialog" class="bigimg_dialog">
+                <div class="first_notic_back_close" @click="isShowBigImageDialog = false">
+                    <span>x</span>
+                </div>
+                <div class="bigimg_dialog_frame">
+                    <img :src="firstPageImage | imgurl" alt="notice_pic">
+                </div>
+            </div>
+        </transition>
+        <!-- big image dialog end -->
     </div>
 </template>
 
@@ -523,6 +564,18 @@ export default {
     beforeCreate() {
         if(localStorage.getItem('driverRole') === 'dayshift'){
             this.$router.push('/dayShiftHome')
+        }else if(localStorage.getItem('driverRole') === 'breakbox'){
+            this.$router.push('/brokeboxreport')
+        }else if(localStorage.getItem('driverRole') === 'leader'){
+            this.$router.push('/brokeboxreportcheck')
+        }else if(localStorage.getItem('driverRole') === 'countBox'){
+            this.$router.push('/countbox')
+        }else if(localStorage.getItem('driverRole') === 'checker'){
+            this.$router.push('/check')
+        }else if(localStorage.getItem('driverRole') === 'bill'){
+            this.$router.push('/bill')
+        }else if(localStorage.getItem('driverRole') === 'dayshiftLeader'){
+            this.$router.push('/daypool')
         }
     },
 
@@ -532,6 +585,7 @@ export default {
         this.getChoiceDayMethod()
         this.getDriverMission()
         let today = new Date().getDay()
+        this.findFirstPageNotice()
         if(today === 1 && driverRole === 'user'){
             this.findCarWashMethod()
         }
@@ -584,7 +638,9 @@ export default {
             removeReason:null,
             isShowKeyTips:false,
             lockArray:[],
-            lockCount:0
+            lockCount:0,
+            isShowFirstPageNotice:false,
+            isShowBigImageDialog:false
         }
     },
     computed: {
@@ -599,6 +655,64 @@ export default {
         }
     },
     methods: {
+        findFirstPageNotice(){
+            let noticeOldTime = localStorage.getItem('noticeOldTime')
+            if(noticeOldTime){
+                let tempdate = new Date().toLocaleDateString()
+                tempdate = new Date(tempdate).getTime()
+                if(noticeOldTime < tempdate){
+                    axios
+                    .get(config.server + '/announcement/find')
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.firstPageText = doc.data.text
+                            this.firstPageImage = doc.data.image
+                            this.isShowFirstPageNotice = true
+                            localStorage.noticeOldTime = tempdate
+                        }else{
+                            if(this.lang === 'ch'){
+                                this.errorInfo = '获取首页通知失败'
+                            }else{
+                                this.errorInfo = 'Get first page notice failed'
+                            }
+                            this.showErrorTips = true
+                            setTimeout(() => {
+                                this.showErrorTips = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }
+            }else{
+                noticeOldTime = new Date().toLocaleDateString()
+                noticeOldTime = new Date(noticeOldTime).getTime()
+                axios
+                    .get(config.server + '/announcement/find')
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.firstPageText = doc.data.text
+                            this.firstPageImage = doc.data.image
+                            this.isShowFirstPageNotice = true
+                            localStorage.noticeOldTime = noticeOldTime
+                        }else{
+                            if(this.lang === 'ch'){
+                                this.errorInfo = '获取首页通知失败'
+                            }else{
+                                this.errorInfo = 'Get first page notice failed'
+                            }
+                            this.showErrorTips = true
+                            setTimeout(() => {
+                                this.showErrorTips = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    }) 
+           }          
+        },
         //car wash start
         cancelCarWashMethod(){
             let tempDate = new Date().toISOString()
@@ -1585,5 +1699,99 @@ export default {
     background-color: #e0e0e080;
     z-index: 24;
     display: flex;
+}
+
+.first_notic_back{
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f7f7f7;
+    overflow-y: auto;
+}
+
+.first_notic_back_close{
+    position: fixed;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    z-index: 143;
+    top: 10px;
+    color: #000;
+    background-color: #fff;
+    font-size: 20px;
+    line-height: 26px;
+    right: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.first_notic_back_center{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.first_notic_back_center_frame{
+    background-color: #fff;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 220px;
+    height: 260px;
+}
+
+.first_notic_back_center_frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.first_notic_back_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.first_notic_back_bottom_frame{
+    width: 320px;
+    text-align: left;
+    background-color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    padding: 12px;
+    /* white-space: pre-wrap; */
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    line-height: 25px;
+}
+
+.bigimg_dialog{
+    position: fixed;
+    z-index: 103;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bigimg_dialog_frame{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

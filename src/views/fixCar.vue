@@ -104,6 +104,47 @@
             </div>
         </transition>
         <!-- confirm info box end -->
+
+        <!-- first page notice start -->
+        <transition name="remove-client-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowFirstPageNotice"
+                 class="first_notic_back">
+                <div class="first_notic_back_close" @click="isShowFirstPageNotice = false">
+                    <span>x</span>
+                </div>
+                <div class="first_notic_back_top">
+                    <img src="../../public/img/handshake.png" alt="handshake"> 
+                </div> 
+                <div class="first_notic_back_center">
+                    <div class="first_notic_back_center_frame" @click="isShowBigImageDialog = true">
+                        <img :src="firstPageImage | imgurl" alt="notice_pic">
+                    </div>
+                </div>
+                <div class="first_notic_back_bottom">
+                    <div class="first_notic_back_bottom_frame">
+                        <span>{{firstPageText}}</span>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- first page notice end -->
+
+        <!-- big image dialog start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowBigImageDialog" class="bigimg_dialog">
+                <div class="first_notic_back_close" @click="isShowBigImageDialog = false">
+                    <span>x</span>
+                </div>
+                <div class="bigimg_dialog_frame">
+                    <img :src="firstPageImage | imgurl" alt="notice_pic">
+                </div>
+            </div>
+        </transition>
+        <!-- big image dialog end -->
     </div>
 </template>
 
@@ -117,13 +158,75 @@ export default {
             allFixMission: null,
             showInfoBox: false,
             shippingDara: null,
-            showEmptyGIF:false
+            showEmptyGIF:false,
+            isShowFirstPageNotice:false,
+            isShowBigImageDialog:false
         }
     },
     mounted() {
         this.getFixMissionMethod()
+        this.findFirstPageNotice()
     },
     methods: {
+        findFirstPageNotice(){
+            let noticeOldTime = localStorage.getItem('noticeOldTime')
+            if(noticeOldTime){
+                let tempdate = new Date().toLocaleDateString()
+                tempdate = new Date(tempdate).getTime()
+                if(noticeOldTime < tempdate){
+                    axios
+                    .get(config.server + '/announcement/find')
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.firstPageText = doc.data.text
+                            this.firstPageImage = doc.data.image
+                            this.isShowFirstPageNotice = true
+                            localStorage.noticeOldTime = tempdate
+                        }else{
+                            if(this.lang === 'ch'){
+                                this.errorInfo = '获取首页通知失败'
+                            }else{
+                                this.errorInfo = 'Get first page notice failed'
+                            }
+                            this.showErrorTips = true
+                            setTimeout(() => {
+                                this.showErrorTips = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }
+            }else{
+                noticeOldTime = new Date().toLocaleDateString()
+                noticeOldTime = new Date(noticeOldTime).getTime()
+                axios
+                    .get(config.server + '/announcement/find')
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.firstPageText = doc.data.text
+                            this.firstPageImage = doc.data.image
+                            this.isShowFirstPageNotice = true
+                            localStorage.noticeOldTime = noticeOldTime
+                        }else{
+                            if(this.lang === 'ch'){
+                                this.errorInfo = '获取首页通知失败'
+                            }else{
+                                this.errorInfo = 'Get first page notice failed'
+                            }
+                            this.showErrorTips = true
+                            setTimeout(() => {
+                                this.showErrorTips = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    }) 
+           }          
+        },
+
         comfirmFinishMethod() {
             axios
                 .post(config.server + '/fixcar/edit', {
@@ -277,6 +380,100 @@ export default {
 
 .empty-body img{
     width: 200px;
+}
+
+.first_notic_back{
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #f7f7f7;
+    overflow-y: auto;
+}
+
+.first_notic_back_close{
+    position: fixed;
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    z-index: 143;
+    top: 10px;
+    color: #000;
+    background-color: #fff;
+    font-size: 20px;
+    line-height: 26px;
+    right: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.first_notic_back_center{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.first_notic_back_center_frame{
+    background-color: #fff;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 220px;
+    height: 260px;
+}
+
+.first_notic_back_center_frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.first_notic_back_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.first_notic_back_bottom_frame{
+    width: 320px;
+    text-align: left;
+    background-color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    padding: 12px;
+    /* white-space: pre-wrap; */
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    line-height: 25px;
+}
+
+.bigimg_dialog{
+    position: fixed;
+    z-index: 103;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bigimg_dialog_frame{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>
 

@@ -960,6 +960,7 @@ export default {
             this.$store.dispatch("setShowButtom", true);
             this.$router.push("/");
         },
+
         fileChange(el) {
             if (typeof FileReader === "undefined") {
                 return alert("浏览器不支持上传图片");
@@ -971,6 +972,7 @@ export default {
             this.updateImage = el.target.files[0];
             el.target.value = "";
         },
+        
         uploadFile() {
             document.getElementById("upload_file").click();
         },

@@ -14,11 +14,16 @@ import billPage from './views/bill.vue'
 import checkPage from './views/checker.vue'
 import dayMissionPool from './views/dayMissionPool.vue'
 import dayDriverMissionPage from './views/dayDriverMissionPage.vue'
+import brokeBoxReport from './views/brokeBoxReport.vue'
+import brokeBoxReportCheck from './views/brokeBoxReport_check.vue'
+import noticePage from './views/notice.vue'
+import countBox from './views/countBox.vue'
 
 import AuthGuard from './auth-guard'
 import fixCarGuard from './fixCar-guard'
 import searchGuard from './search-guard'
 import dayShiftGuard from './dayShift-guard'
+import breakBoxGuard from './breakBoxReport-guard'
 
 Vue.use(Router)
 
@@ -104,6 +109,27 @@ export default new Router({
       path: '/ddmpage',
       name: 'dayDriverMissionPage',
       component: dayDriverMissionPage
+    },
+    {
+      path: '/brokeboxreport',
+      name: 'brokeboxreport',
+      component: brokeBoxReport,
+      beforeEnter: breakBoxGuard
+    },
+    {
+      path: '/brokeboxreportcheck',
+      name: 'brokeboxreportcheck',
+      component: brokeBoxReportCheck
+    },
+    {
+      path: '/notice',
+      name: 'noticePage',
+      component: noticePage
+    },
+    {
+      path: '/countbox',
+      name: 'countBox',
+      component: countBox
     }
     
   ]
