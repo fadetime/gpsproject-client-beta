@@ -112,7 +112,8 @@
             <div v-if="isShowFirstPageNotice"
                  class="first_notic_back">
                 <div class="first_notic_back_close" @click="isShowFirstPageNotice = false">
-                    <span>x</span>
+                    <span v-if="lang === 'ch'" style="font-size:14px;line-height: 38px;">已读</span>
+                    <span v-else style="font-size:13px;line-height: 42px;">READ</span>
                 </div>
                 <div class="first_notic_back_top">
                     <img src="../../public/img/handshake.png" alt="handshake"> 
@@ -137,7 +138,7 @@
                     leave-active-class="animated fadeOut faster">
             <div v-if="isShowBigImageDialog" class="bigimg_dialog">
                 <div class="first_notic_back_close" @click="isShowBigImageDialog = false">
-                    <span>x</span>
+                    <span style="font-size: 24px;line-height: 36px;">x</span>
                 </div>
                 <div class="bigimg_dialog_frame">
                     <img :src="firstPageImage | imgurl" alt="notice_pic">

@@ -111,7 +111,8 @@
                              style="width:175px">
                             <div class="checkbox-box-body-top-title">
                                 <div>
-                                    <span>状态检查</span>
+                                    <span v-if="lang === 'ch'">状态检查</span>
+                                    <span v-else>State check</span>
                                 </div>
                             </div>
                             <div>
@@ -193,15 +194,33 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="checkbox-box-body-top"
                              style="width:175px">
                             <div class="checkbox-box-body-top-title">
                                 <div>
-                                    <span>其他问题</span>
+                                    <span v-if="lang === 'ch'">里程检查</span>
+                                    <span v-else>kilometers</span>
+                                </div>
+                            </div>
+                            <div style="display:flex;display: -webkit-flex;justify-content: center;">
+                                <div class="kilometers-icon"></div>
+                            </div>
+                            <div style="margin-top:4px">
+                                <input type="number" style="border: 1px solid #eee;height: 30px;text-align:center;width: 148px;" v-model="tempData.kilometer">
+                            </div>
+                        </div>
+
+                        <div class="checkbox-box-body-top"
+                             style="width:175px">
+                            <div class="checkbox-box-body-top-title">
+                                <div>
+                                    <span v-if="lang ==='ch'">其他问题</span>
+                                    <span v-else>Other</span>
                                 </div>
                             </div>
                             <div>
-                                <input type="text" style="border: none;height: 30px;text-align:center" v-model="tempData.note">
+                                <input type="text" style="border: 1px solid #eee;height: 30px;text-align:center;width: 148px;" v-model="tempData.note">
                             </div>
                         </div>
                     </div>
@@ -231,7 +250,8 @@
             <div v-if="isShowFirstPageNotice"
                  class="first_notic_back">
                 <div class="first_notic_back_close" @click="isShowFirstPageNotice = false">
-                    <span>x</span>
+                    <span v-if="lang === 'ch'" style="font-size:14px;line-height: 38px;">已读</span>
+                    <span v-else style="font-size:13px;line-height: 42px;">READ</span>
                 </div>
                 <div class="first_notic_back_top">
                     <img src="../../public/img/handshake.png" alt="handshake"> 
@@ -256,7 +276,7 @@
                     leave-active-class="animated fadeOut faster">
             <div v-if="isShowBigImageDialog" class="bigimg_dialog">
                 <div class="first_notic_back_close" @click="isShowBigImageDialog = false">
-                    <span>x</span>
+                    <span style="font-size: 24px;line-height: 36px;">x</span>
                 </div>
                 <div class="bigimg_dialog_frame">
                     <img :src="firstPageImage | imgurl" alt="notice_pic">
@@ -610,6 +630,14 @@ export default {
     height: 46px;
 }
 
+.kilometers-icon {
+    background: #2f9514;
+    mask-image: url(../../public/icons/icon_kilometers.svg);
+    -webkit-mask-image: url(../../public/icons/icon_kilometers.svg);
+    width: 46px;
+    height: 46px;
+}
+
 .check-body {
     font-size: 18px;
 }
@@ -712,6 +740,8 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .checkbox-box-top {
@@ -819,8 +849,8 @@ export default {
 .first_notic_back_close{
     position: fixed;
     border-radius: 100%;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     z-index: 143;
     top: 10px;
     color: #000;
