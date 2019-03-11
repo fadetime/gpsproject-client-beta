@@ -15,10 +15,12 @@
         </div>
         <div class="break_top_button">
             <div class="break_top_button_item break_top_button_item_left" @click="buttonChangeModeMethod('left')" ref="break_top_button_left">
-                <span>未审批</span>
+                <span v-if="lang === 'ch'">未审批</span>
+                <span v-else>NEW</span>
             </div>
             <div class="break_top_button_item break_top_button_item_right" @click="buttonChangeModeMethod('right')" ref="break_top_button_right">
-                <span>已审批</span>
+                <span v-if="lang === 'ch'">已审批</span>
+                <span v-else>OLD</span>
             </div>
         </div>
         <div class="break_body" ref="break_body">
@@ -34,14 +36,9 @@
                         <div class="page_body_item_right_box">
                             <div>
                                 <span>{{item.submitter}}</span>
-                                
-                            </div>
-                            <div style="padding-right:8px">
-                                <span>{{item.basketNum}}pic</span>
                             </div>
                         </div>
                         <div class="page_body_item_right_note">
-                            <span>{{item.note}}</span>
                             <span>{{item.date | dateFilter}}{{item.date | timefilter}}</span>
                         </div>
                     </div>
@@ -61,7 +58,7 @@
                     <div class="page_body_item_bottom_button">
                         <div class="page_body_item_bottom_button_left" @click="approvalMethod('agree',item)">
                             <span v-if="lang === 'ch'">同意</span>
-                            <span v-else>Delete</span>
+                            <span v-else>Confirm</span>
                         </div>
                         <div class="page_body_item_bottom_button_right" @click="approvalMethod('deny',item)">
                             <span v-if="lang === 'ch'">拒绝</span>
@@ -82,14 +79,9 @@
                         <div class="page_body_item_right_box">
                             <div>
                                 <span>{{item.submitter}}</span>
-                                
-                            </div>
-                            <div style="padding-right:8px">
-                                <span>{{item.basketNum}}pic</span>
                             </div>
                         </div>
                         <div class="page_body_item_right_note">
-                            <span>{{item.note}}</span>
                             <span>{{item.date | dateFilter}}{{item.date | timefilter}}</span>
                         </div>
                     </div>
@@ -100,12 +92,12 @@
                     </div>
                     <div class="page_body_item_bottom_Info">
                         <div>
-                            <span style="color:#6a6a6a">审批:</span>
+                            <span style="color:#6a6a6a">审批人员:</span>
                             <span>{{item.approver}}</span>
                         </div>
                         <div>
-                            <span style="color:#6a6a6a">时间:</span>
-                            <span>{{item.finishDate | dateFilter}}{{item.finishDate | timefilter}}</span>
+                            <span style="color:#6a6a6a">审批时间:</span>
+                            <span>{{item.finishDate | dateFilter}}</span>
                         </div>
                     </div>
                     <div class="page_body_item_bottom_content">
@@ -244,7 +236,7 @@ export default {
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
-                        this.breakBasketArray_old = doc.data.doc
+                        this.breakBasketArray_old = this.breakBasketArray_old.concat(doc.data.doc)
                         if(doc.data.doc.length < 10){
                             this.isShowNextButton = false
                         }else{

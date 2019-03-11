@@ -26,17 +26,19 @@
                             <div class="icon_mail"></div>
                         </div>
                     </div>
-                    <div class="page_body_item_right">
+                    <div class="page_body_item_center">
                         <div class="page_body_item_right_box">
                             <div>
                                 <span>{{item.date | dateFilter}}{{item.date | timefilter}}</span>
                             </div>
-                            <div style="padding-right:8px">
-                                <span>{{item.basketNum}}pic</span>
-                            </div>
                         </div>
                         <div class="page_body_item_right_note">
                             <span>{{item.note}}</span>
+                        </div>
+                    </div>
+                    <div class="page_body_item_right">
+                        <div>
+                            <img :src="item.image | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
                         </div>
                     </div>
                 </div>
@@ -127,23 +129,13 @@
                  class="addreport-front"
                  @click.self.prevent="isShowAddReportDialog = false">
                 <div class="addreport-box">
-                    <div class="page_body_box_item" style="padding-top:12px;height:30px;line-height:30px">
-                        <div class="page_body_box_item_left">
-                            <span v-if="lang === 'ch'">损坏数量</span>
-                            <span v-else>Basket number</span>
-                        </div>
-                        <div class="page_body_box_item_right">
-                            <input type="number" style="width:100%;text-align:center" v-model="number">
-                        </div>
+                    <div class="page_body_box_title">
+                        <span v-if="lang === 'ch'">添加坏框申请</span>
+                        <span v-else>New break basket</span>
                     </div>
-                    <div class="page_body_box_item" style="height:60px;line-height:30px;margin-top:24px">
-                        <div class="page_body_box_item_left">
-                            <span v-if="lang === 'ch'">申报备注</span>
-                            <span v-else>Report note</span>
-                        </div>
-                        <div class="page_body_box_item_right">
-                            <textarea style="width:100%;height:70px" v-model="note"></textarea>
-                        </div>
+                    <div class="page_body_box_item_title">
+                        <span v-if="lang === 'ch'">添加照片</span>
+                        <span v-else>Add image</span>
                     </div>
                     <div class="page_body_box_item" style="height:162px">
                         <div class="photo_frame" @click="uploadFile" ref="photoFrame">
@@ -151,6 +143,16 @@
                             <img v-else :src="updateImagePreview" alt="newimg">
                         </div>
                     </div>
+                    <div class="page_body_box_item_title">
+                        <span v-if="lang === 'ch'">添加描述</span>
+                        <span v-else>Add description</span>
+                    </div>
+                    <div class="page_body_box_item" style="margin-top:8px">
+                        <div class="page_body_box_item_right">
+                            <textarea style="width:100%;height:70px" v-model="note"></textarea>
+                        </div>
+                    </div>
+                    
                     <div class="page_body_box_item" style="height:30px;line-height:30px;margin-top:8px">
                         <div class="page_body_box_item_button" @click="clearMethod">
                             <span v-if="lang === 'ch'">取消</span>
@@ -231,7 +233,6 @@ export default {
             errorInfo:null,
             isShowSmallDialog:false,
             isShowAddReportDialog:false,
-            number:null,
             note:null,
             updateImagePreview:null,
             tempDelData:null,
@@ -348,17 +349,7 @@ export default {
 
         confirmMethod(){
             //
-            if (!this.number) {
-                if (this.lang === "ch") {
-                    this.errorInfo = "请填写框数";
-                } else {
-                    this.errorInfo = "please input basket number";
-                }
-                this.showErrorTips = true;
-                setTimeout(() => {
-                    this.showErrorTips = false;
-                }, 2000);
-            } else if(!this.updateImagePreview){
+            if(!this.updateImagePreview){
                 if (this.lang === "ch") {
                     this.errorInfo = "请上传照片";
                 } else {
@@ -380,7 +371,6 @@ export default {
                             this.updateImage = res.file;
                         }
                         payload.append("image", this.updateImage);
-                        payload.append("basketNum", this.number);
                         payload.append("note", this.note);
                         payload.append("submitter_id", this.submitter_id);
                         payload.append("submitter",this.submitter);
@@ -395,7 +385,6 @@ export default {
                         })
                             .then(doc => {
                                 if(doc.data.code === 0){
-                                    this.number = null
                                     this.note = null
                                     this.updateImage = null
                                     this.updateImagePreview = null
@@ -454,7 +443,6 @@ export default {
 
         clearMethod(){
             this.updateImagePreview = null
-            this.number = null
             this.note = null
             this.isShowAddReportDialog = false
         },
@@ -475,6 +463,7 @@ export default {
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
+                        console.log(doc)
                         this.breakBasketArray = doc.data.doc
                     }else if(doc.data.code === 1){
                         console.log('无可用数据')
@@ -610,11 +599,29 @@ export default {
     align-items: center;
 }
 
-.page_body_item_right{
-    flex-basis: 80%;
+.page_body_item_center{
+    flex-basis: 60%;
     text-align: left;
 }
 
+.page_body_item_right{
+    flex-basis: 20%;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.page_body_item_right div{
+    border: 1px solid #eee;
+    border-radius: 100%;
+    height: 50px;
+    width: 50px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
 .page_body_item_right_box{
     display: flex;
     display: -webkit-flex;
@@ -763,26 +770,47 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
     border-radius: 10px;
+    overflow: hidden;
+}
+
+.page_body_box_title{
+    background-color: #d74342;
+    color: #fff;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.page_body_box_item_title{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    width: 140px;
+    margin: 0 auto;
 }
 
 .page_body_box_item{
     display: flex;
     display: -webkit-flex;
-    height: 30px;
-    line-height: 30px;
     justify-content: center;
+    margin-left: 8px;
+    margin-right: 8px;
+    
 }
 
 .photo_frame{
     border: 2px dashed rgb(169, 169, 169);;
     width: 100px;
     height: 140px;
-    margin-top: 20px;
+    margin-top: 8px;
     background-color: #e0e0e0;
     display: flex;
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+    
 }
 
 .photo_frame img{
@@ -790,13 +818,9 @@ export default {
     height: 100%;
     object-fit: cover;
 }
-.page_body_box_item_left{
-    width: 80px;
-}
 
 .page_body_box_item_right{
     width: 180px;
-    margin-right: 12px;
 }
 
 .page_body_box_item_right input{
