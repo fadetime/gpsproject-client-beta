@@ -348,7 +348,6 @@ export default {
         },
 
         approvalMethod(mode,item){
-            console.log(item)
             let tempApprover = localStorage.getItem("drivername");
             let tempApprover_id = localStorage.getItem("_id");
             let tempDate = new Date()
@@ -416,7 +415,7 @@ export default {
                     if(doc.data.code === 0){
                         this.breakBasketArray = doc.data.doc
                     }else if(doc.data.code === 1){
-                        console.log('无可用数据')
+                        this.breakBasketArray = []
                     }else{
                         if(this.lang === 'ch'){
                             this.errorInfo = '获取数据失败'
