@@ -1,7 +1,8 @@
 <template>
     <div id="checkerpage">
         <div class="check-top">
-            <span>车辆检查</span>
+            <span v-if="lang === 'ch'">车辆检查</span>
+            <span v-else>Car Check</span>
         </div>
         <div style="height:40px">
             <!-- 顶部占位符 -->
@@ -118,7 +119,7 @@
                             <div>
                                 <div class="checkboxbox-body-item">
                                     <div v-if="tempData.brakeLight"
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('brake')">
                                         <div class="brakeLights-icon"></div>
                                         <div v-if="lang === 'ch'"
@@ -127,7 +128,7 @@
                                              class="greentext">Brake Light</div>
                                     </div>
                                     <div v-else
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('brake')">
                                         <div class="brakeLights-icon-red"></div>
                                         <div v-if="lang === 'ch'"
@@ -136,7 +137,7 @@
                                              class="redtext">Brake Light</div>
                                     </div>
                                     <div v-if="tempData.headlight"
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('light')">
                                         <div class="light-icon"></div>
                                         <div v-if="lang === 'ch'"
@@ -145,7 +146,7 @@
                                              class="greentext">Front Light</div>
                                     </div>
                                     <div v-else
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('light')">
                                         <div class="light-icon-red"></div>
                                         <div v-if="lang === 'ch'"
@@ -156,7 +157,7 @@
                                 </div>
                                 <div class="checkboxbox-body-item">
                                     <div v-if="tempData.tyre"
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('tyre')">
                                         <div class="tyre-icon"></div>
                                         <div v-if="lang === 'ch'"
@@ -165,7 +166,7 @@
                                              class="greentext">Tyre</div>
                                     </div>
                                     <div v-else
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('tyre')">
                                         <div class="tyre-icon-red"></div>
                                         <div v-if="lang === 'ch'"
@@ -174,7 +175,7 @@
                                              class="redtext">Tyre</div>
                                     </div>
                                     <div v-if="tempData.petrolCard"
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('petrolCard')">
                                         <div class="card-icon"></div>
                                         <div v-if="lang === 'ch'"
@@ -183,7 +184,7 @@
                                              class="greentext">Petrol Card</div>
                                     </div>
                                     <div v-else
-                                         style="font-size:14px"
+                                         style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('petrolCard')">
                                         <div class="card-icon-red"></div>
                                         <div v-if="lang === 'ch'"
@@ -226,14 +227,14 @@
                     </div>
                     <div class="checkbox-box-bottom">
                         <div class="checkbox-body-center-button"
-                             style="width: 80px;margin-right:10px"
+                             style="width: 80px;"
                              @click="isShowMissionBox = false">
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>chancel</span>
                         </div>
-                        <div class="checkbox-body-center-button"
+                        <div v-if="!tempData.checkDate" class="checkbox-body-center-button"
                              style="width: 80px;"
-                             @click="comfirmCheckMtehod()">
+                             @click="openConfirmDialogMethod()">
                             <span v-if="lang === 'ch'">确定</span>
                             <span v-else>confirm</span>
                         </div>
@@ -242,6 +243,133 @@
             </div>
         </transition>
         <!-- mission check box end -->
+
+        <!-- confirm dialog start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowConfirmDialog"
+                 class="checkbox-back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowConfirmDialog"
+                 class="checkbox-front"
+                 @click.self.prevent="isShowConfirmDialog = false">
+                <div class="checkbox-box">
+                    <div class="confirmbox-box-title">
+                        <span v-if="lang === 'ch'">检查确认</span>
+                        <span v-else>Check confirm</span>
+                    </div>
+                    <div class="confirmbox-box-body">
+                        <div class="confirmbox-box-body-title">
+                            <span>{{tempData.carPlate}}</span>
+                        </div>
+                        <div class="confirmbox-box-body-center">
+                            <div class="confirmbox-box-body-center-item">
+                                <div class="confirmbox-box-body-center-item-left">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">刹车灯:</span>
+                                        <span v-else>Brake Light:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.brakeLight" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.brakeLight" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="confirmbox-box-body-center-item-right">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">前大灯:</span>
+                                        <span v-else>Front Light:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.headlight" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.headlight" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="confirmbox-box-body-center-item">
+                                <div class="confirmbox-box-body-center-item-left">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">轮胎:</span>
+                                        <span v-else>Tyre:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.tyre" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.tyre" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="confirmbox-box-body-center-item-right">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">油卡:</span>
+                                        <span v-else>Petrol Card:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.petrolCard" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.petrolCard" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="confirmbox-box-body-centerk-item">
+                                <div class="confirmbox-box-body-centerk-item-left">
+                                    <span v-if="lang === 'ch'">里程:</span>
+                                    <span v-else>Kilometers:</span>
+                                </div>
+                                <div class="confirmbox-box-body-centerk-item-right">
+                                    <span>{{tempData.kilometer}}</span>
+                                </div>
+                            </div>
+                            <div class="confirmbox-box-body-centerk-item">
+                                <div class="confirmbox-box-body-centerk-item-left">
+                                    <span v-if="lang === 'ch'">备注:</span>
+                                    <span v-else>Note:</span>
+                                </div>
+                                <div class="confirmbox-box-body-centerk-item-right" style="height:100px;overflow-y:auto;overflow-x:hidden;word-break: break-all;text-align: left;">
+                                    <span>{{tempData.note}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="confirmbox-box-bottom">
+                        <div class="confirmbox-box-bottom-button" @click="isShowConfirmDialog = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>Cancel</span>
+                        </div>
+                        <div class="confirmbox-box-bottom-button" style="margin-left:10px" @click="comfirmCheckMtehod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>Confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- confirm dialog end -->
 
         <!-- first page notice start -->
         <transition name="remove-client-transition"
@@ -317,7 +445,8 @@ export default {
             showOtherError:true,
             _id:null,
             isShowFirstPageNotice:false,
-            isShowBigImageDialog:false
+            isShowBigImageDialog:false,
+            isShowConfirmDialog:false
         };
     },
     mounted() {
@@ -332,6 +461,24 @@ export default {
         }
     },
     methods: {
+        openConfirmDialogMethod(){
+            if(this.tempData.kilometer){
+                this.isShowMissionBox = false
+                this.isShowConfirmDialog = true
+            }else{
+                if(this.lang === 'ch'){
+                    this.errorInfo = '请输入汽车里程'
+                }else{
+                    this.errorInfo = 'Please input kilometers'
+                }
+                this.showError = true
+                setTimeout(() => {
+                    this.showError = false
+                }, 2000);
+            }
+            console.log(this.tempData)
+        },
+
         findFirstPageNotice(){
             let noticeOldTime = localStorage.getItem('noticeOldTime')
             if(noticeOldTime){
@@ -438,6 +585,7 @@ export default {
                     this.isShowMissionBox = false
                     if(doc.data.code === 0){
                         this.findCheckWork();
+                        this.isShowConfirmDialog = false
                         this.showError = true;
                         if (this.lang === "ch") {
                             this.errorInfo = "更新成功";
@@ -573,6 +721,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/brakeLights.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 
 .brakeLights-icon-red{
@@ -581,6 +730,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/brakeLights.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 
 .light-icon {
@@ -589,6 +739,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/light.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 
 .light-icon-red {
@@ -597,6 +748,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/light.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 .tyre-icon {
     background: #2f9514;
@@ -604,6 +756,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/tyre.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 
 .tyre-icon-red {
@@ -612,6 +765,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/tyre.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 
 .card-icon {
@@ -620,6 +774,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/card.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 
 .card-icon-red{
@@ -628,6 +783,7 @@ export default {
     -webkit-mask-image: url(../../public/icons/card.svg);
     width: 46px;
     height: 46px;
+    margin: 0 auto;
 }
 
 .kilometers-icon {
@@ -787,6 +943,7 @@ export default {
     display: flex;
     display: -webkit-flex;
     margin: 10px;
+    justify-content: center;
 }
 
 .checkbox-body-center-button {
@@ -824,10 +981,12 @@ export default {
 .errinfo {
     position: fixed;
     z-index: 19;
-    top: 8px;
+    top: 0;
     background-color: rgba(255, 255, 0, 0.7);
     width: 100%;
     z-index: 99;
+    height: 40px;
+    line-height: 40px;
 }
 
 .errinfo span {
@@ -927,5 +1086,104 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+}
+
+.confirmbox-box-title {
+    background: #d74342;
+    color: #fff;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.confirmbox-box-body-title{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    width: 140px;
+    margin-top: 4px;
+}
+
+.confirmbox-box-body{
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmbox-box-body-center{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.confirmbox-box-body-center-item{
+    display: flex;
+    display: -webkit-flex;
+    margin-top: 4px;
+}
+
+.confirmbox-box-body-center-item-left{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.confirmbox-box-body-center-item-right{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.confirmbox-box-body-center-item-name{
+    width: 80px;
+    text-align: right;
+}
+
+.confirmbox-box-body-center-item-content{
+    width: 50px;
+    border-bottom: 1px solid #eee;
+}
+
+.confirmbox-box-body-centerk-item{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 4px;
+}
+
+.confirmbox-box-body-centerk-item-left{
+    width: 80px;
+    text-align: right;
+    height: 30px;
+    line-height: 30px;
+}
+
+.confirmbox-box-body-centerk-item-right{
+    width: 140px;
+    border: 1px solid #e0e0e0;
+    background-color: #eee;
+    border-radius: 4px;
+    margin-left: 10px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.confirmbox-box-bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.confirmbox-box-bottom-button{
+    border: 1px solid #eee;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 10px;
 }
 </style>
