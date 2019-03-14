@@ -277,6 +277,10 @@ export default {
 </script>
 
 <style scoped>
+#notice_page{
+    overflow: hidden;
+}
+
 .page_title{
     background-color: #d74342;
     color: #fff;
@@ -339,7 +343,13 @@ export default {
     padding-left: 24px;
     padding-right: 24px;
     padding-top: 8px;
-    overflow-x: auto
+    position: fixed;
+    top: 83px;
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    overflow: auto;
+    -webkit-overflow-scrolling:touch;
 }
 
 .notice_body_item{

@@ -3,6 +3,9 @@
         <div class="title">
             <span>维修信息</span>
         </div>
+        <div style="height:40px">
+            <!-- empty area -->
+        </div>
         <div v-if="!showEmptyGIF">
             <div v-for="(item,index) in allFixMission" :key="index" class="infoBox">
                 <div class="infobox-top">
@@ -267,13 +270,15 @@ export default {
 <style scoped>
 .title {
     width: 100%;
-    height: 50px;
+    height: 40px;
     background: #d74342;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     color: #fff;
-    font-size: 18px;
-    line-height: 50px;
+    font-size: 16px;
+    line-height: 40px;
+    position: fixed;
+    z-index: 24;
 }
 
 .infoBox {
