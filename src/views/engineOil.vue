@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="engine_oil_bottom_box_content" style="flex-wrap:nowrap;display: -webkit-box;justify-content: space-around;" ref="engineOilBottomBoxContent">
-                <div class="box_item" style="margin-bottom: 0;" ref="engineOilBottomBoxContentItem" v-for="(item,index) in carArrary" :key="index" @click="openDetail(item,'bottom')">
+                <div :class="'box_item'+ margin0_8" ref="engineOilBottomBoxContentItem" v-for="(item,index) in carArrary" :key="index" @click="openDetail(item,'bottom')">
                     <div class="box_item_img">
                         <img :src="item.image | imgurl" v-on:error.once="loadDefault($event)">
                     </div>
@@ -205,7 +205,8 @@ export default {
             showError:false,
             errorInfo:null,
             inputNumber:null,
-            lockMode:false
+            lockMode:false,
+            margin0_8:' margin0'
         }
     },
 
@@ -319,12 +320,14 @@ export default {
                 this.$refs.bottomBox.style.height = lindBoxHeight + 'px'
                 this.$refs.engineOilBottomBoxContent.style.flexWrap = 'wrap'
                 this.$refs.engineOilBottomBoxContent.style.display = 'flex'
-                this.$refs.engineOilBottomBoxContentItem[1].style.marginBottom = '8px'
+                // this.$refs.engineOilBottomBoxContentItem[1].style.marginBottom = '8px'
+                this.margin0_8=' margin8'
             }else{
                 this.$refs.bottomBox.style.height = '100px'
                 this.$refs.engineOilBottomBoxContent.style.flexWrap = 'nowrap'
                 this.$refs.engineOilBottomBoxContent.style.display = '-webkit-box'
-                this.$refs.engineOilBottomBoxContentItem[1].style.marginBottom = '0'
+                // this.$refs.engineOilBottomBoxContentItem[1].style.marginBottom = '0'
+                this.margin0_8=' margin0'
             }
         }
     }
@@ -695,5 +698,13 @@ export default {
 .errinfo span {
     font-size: 16px;
     line-height: 32px;
+}
+
+.margin0{
+    margin-bottom: 0
+}
+
+.margin8{
+    margin-bottom: 8px
 }
 </style>
