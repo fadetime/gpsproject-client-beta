@@ -4,7 +4,7 @@
             <div style="width:24px;margin-left: 8px;"></div>
             <div>
                 <span v-if="lang === 'ch'">坏框统计审批</span>
-                <span v-else>Basket break check</span>
+                <span v-else>Basket verificator</span>
             </div>
             <div style="margin-right: 8px;" @click="showSmallDialogMethod">
                 <div class="add_icon"></div>
@@ -16,11 +16,11 @@
         <div class="break_top_button">
             <div class="break_top_button_item break_top_button_item_left" @click="buttonChangeModeMethod('left')" ref="break_top_button_left">
                 <span v-if="lang === 'ch'">未审批</span>
-                <span v-else>NEW</span>
+                <span v-else>Pending</span>
             </div>
             <div class="break_top_button_item break_top_button_item_right" @click="buttonChangeModeMethod('right')" ref="break_top_button_right">
                 <span v-if="lang === 'ch'">已审批</span>
-                <span v-else>OLD</span>
+                <span v-else>Verified</span>
             </div>
         </div>
         <div class="break_body" ref="break_body">
@@ -48,7 +48,7 @@
                         <!-- empty space area -->
                     </div>
                     <div class="page_body_item_bottom_content">
-                        <div class="page_body_item_bottom_content_left">
+                        <div class="page_body_item_bottom_content_left" @click="openBigImg(item.image)">
                             <img :src="item.image | imgurl" alt="break_basket_img">
                         </div>
                         <div class="page_body_item_bottom_content_right">
@@ -157,6 +157,14 @@
                     <img :src="firstPageImage | imgurl" alt="notice_pic">
                 </div>
             </div>
+            <div v-else-if="isShowBreakBigImageDialog" class="bigimg_dialog">
+                <div class="first_notic_back_close" @click="isShowBreakBigImageDialog = false">
+                    <span style="font-size: 24px;line-height: 36px;">x</span>
+                </div>
+                <div class="bigimg_dialog_frame">
+                    <img :src="breakBasketTempImage | imgurl" alt="notice_pic">
+                </div>
+            </div>
         </transition>
         <!-- big image dialog end -->
 
@@ -223,11 +231,18 @@ export default {
             isShowFirstPageNotice:false,
             isShowBigImageDialog:false,
             pageNow:1,
-            isShowNextButton:true
+            isShowNextButton:true,
+            isShowBreakBigImageDialog:false,
+            breakBasketTempImage:null
         }
     },
 
     methods:{
+        openBigImg(itemImg){
+            this.breakBasketTempImage = itemImg
+            this.isShowBreakBigImageDialog = true
+        },
+
         NextPageMethod(){
             this.pageNow ++
             axios

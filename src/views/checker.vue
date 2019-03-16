@@ -108,8 +108,7 @@
                         <span>{{tempData.carPlate}}</span>
                     </div>
                     <div class="checkbox-box-body">
-                        <div class="checkbox-box-body-top"
-                             style="width:175px">
+                        <div class="checkbox-box-body-top">
                             <div class="checkbox-box-body-top-title">
                                 <div>
                                     <span v-if="lang === 'ch'">状态检查</span>
@@ -154,6 +153,24 @@
                                         <div v-else
                                              class="redtext">Front Light</div>
                                     </div>
+                                    <div v-if="tempData.drivingRecorder"
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('drivingRecorder')">
+                                        <div class="drivingRecorder"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="greentext">记录仪</div>
+                                        <div v-else
+                                             class="greentext">Recorder</div>
+                                    </div>
+                                    <div v-else
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('drivingRecorder')">
+                                        <div class="drivingRecorder-red"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="redtext">记录仪</div>
+                                        <div v-else
+                                             class="redtext">Recorder</div>
+                                    </div>
                                 </div>
                                 <div class="checkboxbox-body-item">
                                     <div v-if="tempData.tyre"
@@ -192,12 +209,29 @@
                                         <div v-else
                                              class="redtext">Petrol Card</div>
                                     </div>
+                                    <div v-if="tempData.cart"
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('cart')">
+                                        <div class="cart_icon"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="greentext">手推车</div>
+                                        <div v-else
+                                             class="greentext">Cart</div>
+                                    </div>
+                                    <div v-else
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('cart')">
+                                        <div class="cart_icon-red"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="redtext">手推车</div>
+                                        <div v-else
+                                             class="redtext">Cart</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="checkbox-box-body-top"
-                             style="width:175px">
+                        <div class="checkbox-box-body-top">
                             <div class="checkbox-box-body-top-title">
                                 <div>
                                     <span v-if="lang === 'ch'">里程检查</span>
@@ -212,8 +246,7 @@
                             </div>
                         </div>
 
-                        <div class="checkbox-box-body-top"
-                             style="width:175px">
+                        <div class="checkbox-box-body-top">
                             <div class="checkbox-box-body-top-title">
                                 <div>
                                     <span v-if="lang ==='ch'">其他问题</span>
@@ -336,6 +369,42 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="confirmbox-box-body-center-item">
+                                <div class="confirmbox-box-body-center-item-left">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">小推车:</span>
+                                        <span v-else>Cart:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.cart" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.cart" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="confirmbox-box-body-center-item-right">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">记录仪:</span>
+                                        <span v-else>Recorder:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.drivingRecorder" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.drivingRecorder" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="confirmbox-box-body-centerk-item">
                                 <div class="confirmbox-box-body-centerk-item-left">
                                     <span v-if="lang === 'ch'">里程:</span>
@@ -619,12 +688,17 @@ export default {
                 this.tempData.headlight = !this.tempData.headlight;
             } else if (item === "tyre") {
                 this.tempData.tyre = !this.tempData.tyre;
+            }else if (item === "cart") {
+                this.tempData.cart = !this.tempData.cart;
+            }else if (item === "drivingRecorder") {
+                this.tempData.drivingRecorder = !this.tempData.drivingRecorder;
             } else {
                 this.tempData.petrolCard = !this.tempData.petrolCard;
             }
         },
 
         openMissionBoxMethod(item) {
+            console.log(item)
             this.isShowMissionBox = true;
             this.tempData = item;
         },
@@ -652,6 +726,7 @@ export default {
                     console.log(err);
                 });
         },
+
         createCheckMtehod() {
             let createDate = new Date().toISOString();
             axios
@@ -750,6 +825,43 @@ export default {
     height: 46px;
     margin: 0 auto;
 }
+
+.drivingRecorder {
+    background: #2f9514;
+    mask-image: url(../../public/icons/drivingRecorder.svg);
+    -webkit-mask-image: url(../../public/icons/drivingRecorder.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.drivingRecorder-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/drivingRecorder.svg);
+    -webkit-mask-image: url(../../public/icons/drivingRecorder.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.cart_icon {
+    background: #2f9514;
+    mask-image: url(../../public/icons/cart.svg);
+    -webkit-mask-image: url(../../public/icons/cart.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.cart_icon-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/cart.svg);
+    -webkit-mask-image: url(../../public/icons/cart.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
 .tyre-icon {
     background: #2f9514;
     mask-image: url(../../public/icons/tyre.svg);

@@ -54,7 +54,7 @@
             </div>
         </div>
         <div v-else>
-            <div ref="breakEmpty" class="breakbox_empty">
+            <div ref="breakEmpty" class="breakbox_empty" style="height: 500px;">
                 <div class="icon_empty"></div>
                 <div v-if="lang === 'ch'" style="font-size:16px;color:#e0e0e0;padding-top:10px">~空~</div>
                 <div v-else style="font-size:16px;color:#e0e0e0;padding-top:10px">~EMPTY~</div>
@@ -106,8 +106,7 @@
         <transition name="carwash-transition" leave-active-class="animated fadeOut faster">
             <div v-if="isShowSmallDialog" class="small_dialog_front">
                 <div class="small_dialog_front_item">
-                    <div class="icon_refresh"></div>
-                    <div @click="openAddReportDialogMethod">
+                    <div @click="openAddReportDialogMethod" style="width: 100px;">
                         <span v-if="lang === 'ch'">添加申报</span>
                         <span v-else>add+</span>
                     </div>
@@ -466,7 +465,7 @@ export default {
                         console.log(doc)
                         this.breakBasketArray = doc.data.doc
                     }else if(doc.data.code === 1){
-                        console.log('无可用数据')
+                        this.breakBasketArray = []
                     }else{
                         if(this.lang === 'ch'){
                             this.errorInfo = '获取数据失败'
