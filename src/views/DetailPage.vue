@@ -590,7 +590,6 @@ export default {
     },
     methods: {
         uploadReturnImgAndFinishMethod() {
-            console.log("345");
             //
             if (!this.updateImagePreview) {
                 if (this.lang === "ch") {

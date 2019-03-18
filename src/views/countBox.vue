@@ -51,6 +51,11 @@
                                 <div v-if="collection.area1image" class="countbox_body_content_frame_body_array_item_frame">
                                     <img :src="collection.area1image | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
                                 </div>
+                                <div v-else class="countbox_body_content_frame_body_array_frame_multiple">
+                                <div class="countbox_body_content_frame_body_array_frame_multiple_frame" v-for="(item,index) in collection.area1imageArray" :key="index">
+                                    <img :src="'uploads/countBox/'+item | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
+                                </div>
+                            </div>
                             </div>
                             <div class="countbox_body_content_frame_body_array_space_button" @click="addNumMethod('1')">
                                 <span>+ Add number</span>
@@ -77,6 +82,11 @@
                             <div v-if="collection.area2image" class="countbox_body_content_frame_body_array_item_frame">
                                 <img :src="collection.area2image | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
                             </div>
+                            <div v-else class="countbox_body_content_frame_body_array_frame_multiple">
+                                <div class="countbox_body_content_frame_body_array_frame_multiple_frame" v-for="(item,index) in collection.area2imageArray" :key="index">
+                                    <img :src="'uploads/countBox/'+item | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
+                                </div>
+                            </div>
                             <div class="countbox_body_content_frame_body_array_space_button" @click="addNumMethod('2')">
                                 <span>+ Add number</span>
                             </div>
@@ -98,8 +108,13 @@
                                         <span v-else>Null</span>
                                     </div>
                                 </div>
-                                <div v-if="collection.area3image" class="countbox_body_content_frame_body_array_item_frame">
-                                    <img :src="collection.area3image | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
+                            </div>
+                            <div v-if="collection.area3image" class="countbox_body_content_frame_body_array_item_frame">
+                                <img :src="collection.area3image | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
+                            </div>
+                            <div v-else class="countbox_body_content_frame_body_array_frame_multiple">
+                                <div class="countbox_body_content_frame_body_array_frame_multiple_frame" v-for="(item,index) in collection.area3imageArray" :key="index">
+                                    <img :src="'uploads/countBox/'+item | imgurl" style="width: 100%;height: 100%;object-fit: cover;">
                                 </div>
                             </div>
                             <div class="countbox_body_content_frame_body_array_space_button" @click="addNumMethod('3')">
@@ -118,14 +133,19 @@
                 </div>
             </div>
         </div>
-
+        <!-- single pic input -->
         <input type="file"
                 style="display:none"
                 id="upload_pic"
-                multiple="multiple"
                 @change="fileChange($event)"
                 accept="image/*">
-
+        <!-- multiple pic input  -->
+        <input type="file"
+                style="display:none"
+                id="upload_multiple_pic"
+                multiple="multiple"
+                @change="multiplePicChange($event)"
+                accept="image/*">
         <!-- count box dialog start  -->
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -161,10 +181,22 @@
                                 <input type="number" v-model="number">
                             </div>
                         </div>
-                        <div class="count_box_body_item_frame">
+                        <div class="count_box_body_item_center">
+                            <div class="count_box_center_button count_box_center_button_left" :style="choiseLeft" @click="changeButtonColor('left')">Single PIC</div>
+                            <div class="count_box_center_button count_box_center_button_right" :style="choiseRight" @click="changeButtonColor('right')">Multiple PIC</div>
+                        </div>
+                        <div v-if="isShowSinglePic" class="count_box_body_item_frame">
                             <div class="photo_frame" @click="uploadFile" ref="photoFrame">
                                 <div v-if="!updateImagePreview" class="icon_add" style="-webkit-mask-size: 54px 54px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                                 <img v-else :src="updateImagePreview" alt="newimg">
+                            </div>
+                        </div>
+                        <div v-else style="height:148px" class="count_box_body_item_multiple_area">
+                            <div class="multiple_pic_frame" @click="uploadMultipleFile">
+                                <div class="icon_add" style="-webkit-mask-size: 54px 54px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                            </div>
+                            <div v-for="(item,index) in multiplePicArray" :key="index" class="multiple_pic_frame">
+                                <img :src="item" alt="newimg">
                             </div>
                         </div>
                     </div>
@@ -268,6 +300,7 @@
 <script>
 import axios from "axios";
 import config from "../assets/js/config";
+import lrz from "lrz";
 
 export default {
     mounted(){
@@ -301,16 +334,58 @@ export default {
             updateImagePreview:null,
             updateImage:[],
             isShowCreateDialog:false,
-            editPart:null
+            editPart:null,
+            multiplePicArray:[],
+            choiseLeft:'',
+            choiseRight:'color:#eee',
+            isShowSinglePic:true
         }
     },
 
     methods:{
+        changeButtonColor(item){
+            if(item === 'left'){
+                this.choiseLeft = ''
+                this.choiseRight = 'color:#eee'
+                this.isShowSinglePic = true
+            }else{
+                this.choiseLeft = 'color:#eee'
+                this.choiseRight = ''
+                this.isShowSinglePic = false
+            }
+        },
+        // test method
+        multiplePicChange(el) {
+            console.log(this.updateImage)
+            if (typeof FileReader === "undefined") {
+                return alert("浏览器不支持上传图片");
+            }
+            if (!el.target.files[0].size) return; //判断是否有文件数量
+            this.updateImagePreview = window.URL.createObjectURL(
+                el.target.files[0]
+            );
+            for (let index = 0; index < el.target.files.length; index++) {
+                this.updateImagePreview = window.URL.createObjectURL(
+                el.target.files[index]);
+                this.multiplePicArray.push(this.updateImagePreview)
+                let tempArray = el.target.files[index]
+                this.updateImage.push(tempArray)
+            }
+            console.log(this.updateImage)
+            console.log(typeof(this.updateImage))
+            el.target.value = "";
+            // console.log(el.target.files)
+        },
+        // test method
         //图片上传
+        //多图上传
+        uploadMultipleFile() {
+            document.getElementById("upload_multiple_pic").click();
+        },
+        // 单图上传 start
         uploadFile() {
             document.getElementById("upload_pic").click();
         },
-
         fileChange(el) {
             if (typeof FileReader === "undefined") {
                 return alert("浏览器不支持上传图片");
@@ -322,7 +397,7 @@ export default {
             this.updateImage = el.target.files[0];
             el.target.value = "";
         },
-        //
+        // 单图上传 end
 
         editNumberMethod(){
             if(!this.updateImagePreview){
@@ -334,60 +409,109 @@ export default {
             }else{
                 let payload = new FormData();
                 let date = new Date().toISOString()
-                let maxSize = 200 * 1024; //200KB
-                lrz(this.updateImage, {
-                    quality: 0.5
-                })
-                    .then(res => {
-                        if (this.updateImage.size > maxSize) {
-                            this.updateImage = res.file;
-                        }
-                        payload.append("image", this.updateImage);
-                        payload.append("number", this.number);
-                        payload.append("date", date);
-                        payload.append("_id",this.collection._id);
-                        payload.append("editPart",this.editPart);
-                        axios({
-                            method: "post",
-                            url: config.server + "/boxcount/edit",
-                            data: payload,
-                            headers: {
-                                "Content-Type": "multipart/form-data"
+                // 上传单张图片
+                if(this.isShowSinglePic){
+                    let maxSize = 200 * 1024; //200KB
+                    lrz(this.updateImage, {
+                        quality: 0.5
+                    })
+                        .then(res => {
+                            if (this.updateImage.size > maxSize) {
+                                this.updateImage = res.file;
                             }
-                        })
-                            .then(doc => {
-                                console.log(doc)
-                                if(doc.data.code === 0){
-                                    this.findCountBoxCollection()
-                                    this.isShowAddCountDialog = false
-                                    if(this.lang === 'ch'){
-                                        this.errorInfo = '提交成功'
-                                    }else{
-                                        this.errorInfo = 'Submit success'
-                                    }
-                                    setTimeout(() => {
-                                        this.showErrorTips = false
-                                    }, 2000);
-                                }else{
-                                    this.showErrorTips = true
-                                    if(this.lang === 'ch'){
-                                        this.errorInfo = '提交错误'
-                                    }else{
-                                        this.errorInfo = 'Submit error'
-                                    }
-                                    setTimeout(() => {
-                                        this.showErrorTips = false
-                                    }, 2000);
+                            payload.append("image", this.updateImage);
+                            payload.append("number", this.number);
+                            payload.append("date", date);
+                            payload.append("_id",this.collection._id);
+                            payload.append("editPart",this.editPart);
+                            axios({
+                                method: "post",
+                                url: config.server + "/boxcount/edit",
+                                data: payload,
+                                headers: {
+                                    "Content-Type": "multipart/form-data"
                                 }
                             })
-                            .catch(err => {
-                                console.log(err);
-                            });
+                                .then(doc => {
+                                    console.log(doc)
+                                    if(doc.data.code === 0){
+                                        this.findCountBoxCollection()
+                                        this.isShowAddCountDialog = false
+                                        if(this.lang === 'ch'){
+                                            this.errorInfo = '提交成功'
+                                        }else{
+                                            this.errorInfo = 'Submit success'
+                                        }
+                                        setTimeout(() => {
+                                            this.showErrorTips = false
+                                        }, 2000);
+                                    }else{
+                                        this.showErrorTips = true
+                                        if(this.lang === 'ch'){
+                                            this.errorInfo = '提交错误'
+                                        }else{
+                                            this.errorInfo = 'Submit error'
+                                        }
+                                        setTimeout(() => {
+                                            this.showErrorTips = false
+                                        }, 2000);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        })
+                        .catch(err => {
+                            console.log("lrz err");
+                            console.log(err);
+                        });
+                }else{
+                // 上传多张图片
+                this.updateImage.forEach(element => {
+                    payload.append("image", element);
+                });
+                payload.append("number", this.number);
+                payload.append("date", date);
+                payload.append("_id",this.collection._id);
+                payload.append("editPart",this.editPart);
+                axios({
+                    method: "post",
+                    url: config.server + "/boxcount/editM",
+                    data: payload,
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                })
+                    .then(doc => {
+                        console.log(doc)
+                        if(doc.data.code === 0){
+                            this.findCountBoxCollection()
+                            this.isShowAddCountDialog = false
+                            if(this.lang === 'ch'){
+                                this.errorInfo = '提交成功'
+                            }else{
+                                this.errorInfo = 'Submit success'
+                            }
+                            setTimeout(() => {
+                                this.showErrorTips = false
+                            }, 2000);
+                        }else{
+                            this.showErrorTips = true
+                            if(this.lang === 'ch'){
+                                this.errorInfo = '提交错误'
+                            }else{
+                                this.errorInfo = 'Submit error'
+                            }
+                            setTimeout(() => {
+                                this.showErrorTips = false
+                            }, 2000);
+                        }
                     })
                     .catch(err => {
-                        console.log("lrz err");
                         console.log(err);
                     });
+                }
+                
             }
         },
 
@@ -456,7 +580,6 @@ export default {
         },
 
         delCollectionMethod(){
-            
             axios
                 .post(config.server + '/boxcount/remove',{
                     _id:this.collection._id,
@@ -536,6 +659,8 @@ export default {
             this.updateImagePreview = null
             this.isShowAddCountDialog = true
             this.editPart = item
+            this.multiplePicArray = []
+            this.updateImage = []
         },
 
         findCountBoxCollection(){
@@ -583,7 +708,6 @@ export default {
                             this.errorInfo = 'Create success'
                         }
                         this.showErrorTips = true
-                        // this.isShowAddCountDialog = false
                         this.findCountBoxCollection()
                         this.isShowCreateDialog = false
                         setTimeout(() => {
@@ -600,7 +724,6 @@ export default {
                             this.showErrorTips = false
                         }, 2000);
                     }
-                    
                 })
                 .catch(err => {
                     console.log(err)
@@ -730,9 +853,43 @@ export default {
     margin-top: 10px;
 }
 
+.count_box_body_item_center{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.count_box_center_button{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border: 1px solid #eee;
+}
+
+.count_box_center_button_left{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.count_box_center_button_right{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
 .count_box_body_item_frame{
     display: flex;
     display: -webkit-flex;
+    justify-content: center;
+    width: 300px;
+}
+
+.count_box_body_item_multiple_area{
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+    width: 300px;
     justify-content: center;
 }
 
@@ -742,7 +899,7 @@ export default {
 }
 
 .count_box_body_item_right{
-    width: 100px;
+    width: 160px;
     text-align: center;
     margin-left: 8px;
     margin-right: 12px;
@@ -780,6 +937,17 @@ export default {
     object-fit: cover;
 }
 
+.multiple_pic_frame{
+    border: 2px dashed rgb(169, 169, 169);;
+    width: 68px;
+    height: 68px;
+    margin-top: 8px;
+    background-color: #e0e0e0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
 .icon_add{
     background: #fff;
     mask-image: url(../../public/icons/baseline-add_circle_outline-24px.svg);
@@ -887,9 +1055,30 @@ export default {
 }
 
 .countbox_body_content_frame_body_array_item_frame{
-    height: 100px;
+    height: 120px;
     width: 80px;
     margin: 0 auto;
+}
+
+.countbox_body_content_frame_body_array_frame_multiple{
+    height: 130px;
+    margin: 0 auto;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0 12px;
+}
+
+.countbox_body_content_frame_body_array_frame_multiple_frame{
+    width: 60px;
+    height: 60px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
 .countbox_body_content_frame_body_array_item_left{
