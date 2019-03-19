@@ -36,7 +36,7 @@
                     <div class="countbox_body_content_frame_body_array">
                         <div class="countbox_body_content_frame_body_array_frame">
                             <div class="countbox_body_content_frame_body_array_title">
-                                <span>DT AREA</span>
+                                <span>LOADING AREA</span>
                             </div>
                             <div class="countbox_body_content_frame_body_array_space">
                                 <div class="countbox_body_content_frame_body_array_item">
@@ -96,7 +96,7 @@
                     <div class="countbox_body_content_frame_body_array">
                         <div class="countbox_body_content_frame_body_array_frame">
                             <div class="countbox_body_content_frame_body_array_title">
-                                <span>FACTORY AREA</span>
+                                <span>PICK AND PACK AREA</span>
                             </div>
                             <div class="countbox_body_content_frame_body_array_space">
                                 <div class="countbox_body_content_frame_body_array_item">

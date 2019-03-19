@@ -216,7 +216,7 @@
                                         <div v-if="lang === 'ch'"
                                              class="greentext">手推车</div>
                                         <div v-else
-                                             class="greentext">Cart</div>
+                                             class="greentext">Trolly</div>
                                     </div>
                                     <div v-else
                                          style="font-size:14px;width: 80px;"
@@ -225,7 +225,7 @@
                                         <div v-if="lang === 'ch'"
                                              class="redtext">手推车</div>
                                         <div v-else
-                                             class="redtext">Cart</div>
+                                             class="redtext">Trolly</div>
                                     </div>
                                 </div>
                             </div>
@@ -374,7 +374,7 @@
                                 <div class="confirmbox-box-body-center-item-left">
                                     <div class="confirmbox-box-body-center-item-name">
                                         <span v-if="lang === 'ch'">小推车:</span>
-                                        <span v-else>Cart:</span>
+                                        <span v-else>Trolly:</span>
                                     </div>
                                     <div class="confirmbox-box-body-center-item-content">
                                         <div v-if="lang === 'ch'">
