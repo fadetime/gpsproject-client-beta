@@ -19,6 +19,7 @@ import brokeBoxReportCheck from './views/brokeBoxReport_check.vue'
 import noticePage from './views/notice.vue'
 import countBox from './views/countBox.vue'
 import engineOil from './views/engineOil.vue'
+import tripCount from './views/tripCount.vue'
 
 import AuthGuard from './auth-guard'
 import fixCarGuard from './fixCar-guard'
@@ -136,6 +137,11 @@ export default new Router({
       path: '/engineoil',
       name: 'engineOil',
       component: engineOil
+    },
+    {
+      path: '/tripCount',
+      name: 'tripCount',
+      component: tripCount
     }
     
   ]

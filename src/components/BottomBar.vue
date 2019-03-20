@@ -88,6 +88,13 @@
                            v-if="newPosts"
                            style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
                     </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-count_line"
+                                        @click="goTripCount">
+                        <div class="md-bottom-bar-icon assignment_turned"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">统计</span>
+                        <span v-else class="md-bottom-bar-label">TRIP COUNT</span>
+                    </md-bottom-bar-item>
                     <md-bottom-bar-item id="bottom-bar-item-mission" @click="goNotice">
                         <div class="md-bottom-bar-icon notification_outline"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
@@ -387,6 +394,9 @@ export default {
         },
         goCountBox() {
             this.$router.push("/countbox");
+        },
+        goTripCount() {
+            this.$router.push("/tripCount");
         },
         goBreakBox() {
             this.$router.push("/brokeboxreport");

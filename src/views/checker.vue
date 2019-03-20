@@ -32,7 +32,7 @@
                     <div class="check-body-box-center-center">
                         {{item.carPlate}}
                     </div>
-                    <div v-if="item.checkDate" class="check-body-box-center-right">
+                    <div v-if="item.isFinish" class="check-body-box-center-right">
                         <div class="baseline-check"></div>
                     </div>
                 </div>
@@ -171,8 +171,26 @@
                                         <div v-else
                                              class="redtext">Recorder</div>
                                     </div>
-                                </div>
+                                </div>    
                                 <div class="checkboxbox-body-item">
+                                    <div v-if="tempData.carWindow"
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('carWindow')">
+                                        <div class="carWindow"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="greentext">车窗</div>
+                                        <div v-else
+                                             class="greentext">Car window</div>
+                                    </div>
+                                    <div v-else
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('carWindow')">
+                                        <div class="carWindow-red"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="redtext">车窗</div>
+                                        <div v-else
+                                             class="redtext">Car window</div>
+                                    </div>
                                     <div v-if="tempData.tyre"
                                          style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('tyre')">
@@ -209,6 +227,8 @@
                                         <div v-else
                                              class="redtext">Petrol Card</div>
                                     </div>
+                                </div>
+                                <div class="checkboxbox-body-item">
                                     <div v-if="tempData.cart"
                                          style="font-size:14px;width: 80px;"
                                          @click="checkButtonMethod('cart')">
@@ -226,6 +246,42 @@
                                              class="redtext">手推车</div>
                                         <div v-else
                                              class="redtext">Trolly</div>
+                                    </div>
+                                    <div v-if="tempData.taillight"
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('taillight')">
+                                        <div class="headlight"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="greentext">尾灯</div>
+                                        <div v-else
+                                             class="greentext">Back light</div>
+                                    </div>
+                                    <div v-else
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('taillight')">
+                                        <div class="headlight-red"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="redtext">尾灯</div>
+                                        <div v-else
+                                             class="redtext">Back light</div>
+                                    </div>
+                                    <div v-if="tempData.sideMirror"
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('sideMirror')">
+                                        <div class="side_mirror"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="greentext">后视镜</div>
+                                        <div v-else
+                                             class="greentext">Side mirror</div>
+                                    </div>
+                                    <div v-else
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('sideMirror')">
+                                        <div class="side_mirror-red"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="redtext">后视镜</div>
+                                        <div v-else
+                                             class="redtext">Side mirror</div>
                                     </div>
                                 </div>
                             </div>
@@ -263,13 +319,19 @@
                              style="width: 80px;"
                              @click="isShowMissionBox = false">
                             <span v-if="lang === 'ch'">取消</span>
-                            <span v-else>chancel</span>
+                            <span v-else>Chancel</span>
                         </div>
-                        <div v-if="!tempData.checkDate" class="checkbox-body-center-button"
+                        <div v-if="!tempData.isFinish" class="checkbox-body-center-button"
+                             style="width: 80px;background-color:#ff9800;border:none;color:#fff"
+                             @click="openPassDialogMethod()">
+                            <span v-if="lang === 'ch'">跳过</span>
+                            <span v-else>Pass</span>
+                        </div>
+                        <div v-if="!tempData.isFinish" class="checkbox-body-center-button"
                              style="width: 80px;"
                              @click="openConfirmDialogMethod()">
                             <span v-if="lang === 'ch'">确定</span>
-                            <span v-else>confirm</span>
+                            <span v-else>Confirm</span>
                         </div>
                     </div>
                 </div>
@@ -277,6 +339,41 @@
         </transition>
         <!-- mission check box end -->
 
+        <!-- confirm dialog start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowPassDialog"
+                 class="checkbox-back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowPassDialog"
+                 class="checkbox-front"
+                 @click.self.prevent="isShowPassDialog = false">
+                <div class="checkbox-box">
+                    <div class="confirmbox-box-title">
+                        <span>Tips</span>
+                    </div>
+                    <div class="confirmbox-box-body">
+                        <div style="padding-top: 12px;">
+                            <span>Do you want pass this car?</span>
+                        </div>
+                    </div>
+                    <div class="confirmbox-box-bottom">
+                        <div class="confirmbox-box-bottom-button" @click="isShowPassDialog = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>Cancel</span>
+                        </div>
+                        <div class="confirmbox-box-bottom-button" style="margin-left:10px" @click="comfirmPassMtehod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>Confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
         <!-- confirm dialog start -->
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -405,6 +502,60 @@
                                 </div>
                             </div>
 
+                            <div class="confirmbox-box-body-center-item">
+                                <div class="confirmbox-box-body-center-item-left">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">车窗:</span>
+                                        <span v-else>Car window:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.carWindow" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.carWindow" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="confirmbox-box-body-center-item-right">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">尾灯:</span>
+                                        <span v-else>Back light:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.taillight" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.taillight" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="confirmbox-box-body-center-item">
+                                <div class="confirmbox-box-body-center-item-left">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">后视镜:</span>
+                                        <span v-else>Side mirror:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.sideMirror" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.sideMirror" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="confirmbox-box-body-centerk-item">
                                 <div class="confirmbox-box-body-centerk-item-left">
                                     <span v-if="lang === 'ch'">里程:</span>
@@ -515,7 +666,8 @@ export default {
             _id:null,
             isShowFirstPageNotice:false,
             isShowBigImageDialog:false,
-            isShowConfirmDialog:false
+            isShowConfirmDialog:false,
+            isShowPassDialog:false
         };
     },
     mounted() {
@@ -530,6 +682,60 @@ export default {
         }
     },
     methods: {
+        comfirmPassMtehod(){
+            let time = null
+            this.tempData.headlight = true
+            this.tempData.brakeLight = true
+            this.tempData.tyre = true
+            this.tempData.drivingRecorder = true
+            this.tempData.cart = true
+            this.tempData.carWindow = true
+            this.tempData.taillight = true
+            this.tempData.sideMirror = true
+            this.tempData.petrolCard = true
+            axios
+                .post(config.server + "/checkworker/edit",{
+                    _id:this._id,
+                    data:this.tempData,
+                    time:time,
+                    isFinish: true
+                })
+                .then(doc => {
+                    this.isShowMissionBox = false
+                    if(doc.data.code === 0){
+                        this.findCheckWork();
+                        this.isShowPassDialog = false
+                        this.showError = true;
+                        if (this.lang === "ch") {
+                            this.errorInfo = "更新成功";
+                        } else {
+                            this.errorInfo = "update success";
+                        }
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                    }else{
+                        this.showError = true;
+                        if (this.lang === "ch") {
+                            this.errorInfo = "更新出错";
+                        } else {
+                            this.errorInfo = "update filed";
+                        }
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        openPassDialogMethod(){
+            this.isShowPassDialog = true
+            this.isShowMissionBox = false
+        },
+
         openConfirmDialogMethod(){
             if(this.tempData.kilometer){
                 this.isShowMissionBox = false
@@ -648,7 +854,8 @@ export default {
                 .post(config.server + "/checkworker/edit",{
                     _id:this._id,
                     data:this.tempData,
-                    time:time
+                    time:time,
+                    isFinish: true
                 })
                 .then(doc => {
                     this.isShowMissionBox = false
@@ -692,6 +899,12 @@ export default {
                 this.tempData.cart = !this.tempData.cart;
             }else if (item === "drivingRecorder") {
                 this.tempData.drivingRecorder = !this.tempData.drivingRecorder;
+            }else if (item === "carWindow") {
+                this.tempData.carWindow = !this.tempData.carWindow;
+            }else if (item === "taillight") {
+                this.tempData.taillight = !this.tempData.taillight;
+            }else if (item === "sideMirror") {
+                this.tempData.sideMirror = !this.tempData.sideMirror;
             } else {
                 this.tempData.petrolCard = !this.tempData.petrolCard;
             }
@@ -712,7 +925,7 @@ export default {
                         this._id = doc.data.doc._id
                         let tempNum = 0
                         this.checkMissionArray.forEach(element => {
-                            if(element.checkDate){
+                            if(element.isFinish){
                                 tempNum += 1
                             }
                         });
@@ -844,6 +1057,24 @@ export default {
     margin: 0 auto;
 }
 
+.carWindow {
+    background: #2f9514;
+    mask-image: url(../../public/icons/carWindow.svg);
+    -webkit-mask-image: url(../../public/icons/carWindow.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.carWindow-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/carWindow.svg);
+    -webkit-mask-image: url(../../public/icons/carWindow.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
 .cart_icon {
     background: #2f9514;
     mask-image: url(../../public/icons/cart.svg);
@@ -857,6 +1088,42 @@ export default {
     background: #d74342;
     mask-image: url(../../public/icons/cart.svg);
     -webkit-mask-image: url(../../public/icons/cart.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.headlight {
+    background: #2f9514;
+    mask-image: url(../../public/icons/headlight.svg);
+    -webkit-mask-image: url(../../public/icons/headlight.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.headlight-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/headlight.svg);
+    -webkit-mask-image: url(../../public/icons/headlight.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.side_mirror {
+    background: #2f9514;
+    mask-image: url(../../public/icons/side_mirror.svg);
+    -webkit-mask-image: url(../../public/icons/side_mirror.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.side_mirror-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/side_mirror.svg);
+    -webkit-mask-image: url(../../public/icons/side_mirror.svg);
     width: 46px;
     height: 46px;
     margin: 0 auto;
@@ -915,6 +1182,7 @@ export default {
     margin: 10px auto 0 auto;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
 }
 
 .check-body-box-top {
@@ -993,7 +1261,7 @@ export default {
 
 .checkbox-front {
     position: fixed;
-    z-index: 26;
+    z-index: 101;
     top: 0;
     bottom: 0;
     left: 0;

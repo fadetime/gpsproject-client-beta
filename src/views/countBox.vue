@@ -798,6 +798,7 @@ export default {
     width: 54px;
     height: 54px;
     -webkit-mask-size: 54px 54px;
+    mask-size: 54px 54px;
 }
 
 .countbox_body_frame_bottom{
