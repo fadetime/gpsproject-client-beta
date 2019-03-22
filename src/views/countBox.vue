@@ -44,7 +44,7 @@
                                         <span>Number</span>
                                     </div>
                                     <div class="countbox_body_content_frame_body_array_item_right">
-                                        <span v-if="collection.area1number">{{collection.area1number}}</span>
+                                        <span v-if="collection.area1number != null">{{collection.area1number}}</span>
                                         <span v-else>Null</span>
                                     </div>
                                 </div>
@@ -74,7 +74,7 @@
                                         <span>Number</span>
                                     </div>
                                     <div class="countbox_body_content_frame_body_array_item_right">
-                                        <span v-if="collection.area2number">{{collection.area2number}}</span>
+                                        <span v-if="collection.area2number != null">{{collection.area2number}}</span>
                                         <span v-else>Null</span>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@
                                         <span>Number</span>
                                     </div>
                                     <div class="countbox_body_content_frame_body_array_item_right">
-                                        <span v-if="collection.area3number">{{collection.area3number}}</span>
+                                        <span v-if="collection.area3number != null">{{collection.area3number}}</span>
                                         <span v-else>Null</span>
                                     </div>
                                 </div>
@@ -294,6 +294,30 @@
             </div>
         </transition>
         <!-- error tips end -->
+
+        <!-- loading animation start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation" class="count_back" style="z-index: 101;"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation"
+                 class="count_front" style="z-index: 102;">
+                <div class="loadinganimation_box">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- loading animation end -->
     </div>
 </template>
 
@@ -338,7 +362,8 @@ export default {
             multiplePicArray:[],
             choiseLeft:'',
             choiseRight:'color:#eee',
-            isShowSinglePic:true
+            isShowSinglePic:true,
+            loadingAnimation:false
         }
     },
 
@@ -354,6 +379,7 @@ export default {
                 this.isShowSinglePic = false
             }
         },
+
         // test method
         multiplePicChange(el) {
             console.log(this.updateImage)
@@ -377,6 +403,7 @@ export default {
             // console.log(el.target.files)
         },
         // test method
+
         //图片上传
         //多图上传
         uploadMultipleFile() {
@@ -466,50 +493,76 @@ export default {
                             console.log(err);
                         });
                 }else{
-                // 上传多张图片
-                this.updateImage.forEach(element => {
-                    payload.append("image", element);
-                });
-                payload.append("number", this.number);
-                payload.append("date", date);
-                payload.append("_id",this.collection._id);
-                payload.append("editPart",this.editPart);
-                axios({
-                    method: "post",
-                    url: config.server + "/boxcount/editM",
-                    data: payload,
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                })
-                    .then(doc => {
-                        console.log(doc)
-                        if(doc.data.code === 0){
-                            this.findCountBoxCollection()
-                            this.isShowAddCountDialog = false
-                            if(this.lang === 'ch'){
-                                this.errorInfo = '提交成功'
-                            }else{
-                                this.errorInfo = 'Submit success'
+                    // 上传多张图片
+                    this.loadingAnimation = true
+                    let tempCount = 0
+                    let maxSize = 200 * 1024; //200KB
+                    this.updateImage.forEach(element => {
+                    lrz(element, {
+                            quality: 0.5
+                        })
+                        .then(res => {
+                            if (element.size > maxSize) {
+                                    element = res.file;
                             }
-                            setTimeout(() => {
-                                this.showErrorTips = false
-                            }, 2000);
-                        }else{
-                            this.showErrorTips = true
-                            if(this.lang === 'ch'){
-                                this.errorInfo = '提交错误'
-                            }else{
-                                this.errorInfo = 'Submit error'
-                            }
-                            setTimeout(() => {
-                                this.showErrorTips = false
-                            }, 2000);
-                        }
+                            payload.append("image", element);
+                            tempCount ++
+                        })
+                        .catch(err => {
+                            console.log('lrz error')
+                            console.log(err)
+                            this.loadingAnimation = false
+                            clearInterval(tempSwitch)
+                        })
                     })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                    let tempSwitch = setInterval(() => {
+                        if(tempCount === this.updateImage.length){
+                            clearInterval(tempSwitch)
+                            console.log('all done')
+                            payload.append("number", this.number);
+                            payload.append("date", date);
+                            payload.append("_id",this.collection._id);
+                            payload.append("editPart",this.editPart);
+                            axios({
+                                method: "post",
+                                url: config.server + "/boxcount/editM",
+                                data: payload,
+                                headers: {
+                                    "Content-Type": "multipart/form-data"
+                                }
+                            })
+                                .then(doc => {
+                                    console.log(doc)
+                                    if(doc.data.code === 0){
+                                        this.findCountBoxCollection()
+                                        this.isShowAddCountDialog = false
+                                        this.loadingAnimation = false
+                                        if(this.lang === 'ch'){
+                                            this.errorInfo = '提交成功'
+                                        }else{
+                                            this.errorInfo = 'Submit success'
+                                        }
+                                        setTimeout(() => {
+                                            this.showErrorTips = false
+                                        }, 2000);
+                                    }else{
+                                        this.showErrorTips = true
+                                        this.loadingAnimation = false
+                                        if(this.lang === 'ch'){
+                                            this.errorInfo = '提交错误'
+                                        }else{
+                                            this.errorInfo = 'Submit error'
+                                        }
+                                        setTimeout(() => {
+                                            this.showErrorTips = false
+                                        }, 2000);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        }
+                    }, 500);
                 }
                 
             }
@@ -525,7 +578,6 @@ export default {
                 let tempdate = new Date().toLocaleDateString()
                 tempdate = new Date(tempdate).getTime()
                 if(noticeOldTime < tempdate){
-                    console.log('if')
                     axios
                     .get(config.server + '/announcement/find')
                     .then(doc => {
@@ -632,7 +684,7 @@ export default {
                         this.showErrorTips = true
                         setTimeout(() => {
                             this.showErrorTips = false
-                        }, 2000);
+                        }, 3000);
 
                         this.isHaveCount = false
                         this.findCountBoxCollection()
@@ -656,6 +708,7 @@ export default {
         },
 
         addNumMethod(item){
+            this.number = null
             this.updateImagePreview = null
             this.isShowAddCountDialog = true
             this.editPart = item
@@ -670,7 +723,6 @@ export default {
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
-                        console.log(doc)
                         this.collection = doc.data.doc
                         this.isHaveCount = true
                     }else if(doc.data.code === 1){
@@ -700,7 +752,6 @@ export default {
                     submitter:this.userName
                 })
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         if(this.lang === 'ch'){
                             this.errorInfo = '创建成功'
@@ -879,6 +930,7 @@ export default {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
+
 .count_box_body_item_frame{
     display: flex;
     display: -webkit-flex;
@@ -948,7 +1000,9 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
+
 .icon_add{
     background: #fff;
     mask-image: url(../../public/icons/baseline-add_circle_outline-24px.svg);
@@ -1109,6 +1163,7 @@ export default {
 
 .countbox_body_content_frame_bottom_button{
     border: 1px solid #eee;
+    background-color: #fff;
     width: 100px;
     height: 30px;
     line-height: 30px;
@@ -1219,5 +1274,48 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+}
+
+.loadinganimation_box{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+}
+
+.spinner {
+    margin: 32px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: rgba(212, 50, 49, 1);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
 }
 </style>
