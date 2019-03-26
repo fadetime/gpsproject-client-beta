@@ -611,7 +611,8 @@
                 </div>
                 <div class="first_notic_back_bottom">
                     <div class="first_notic_back_bottom_frame">
-                        <span>{{firstPageText}}</span>
+                        <span v-if="lang === 'ch'">{{firstPageText}}</span>
+                        <span v-else>{{firstPageTextEN}}</span>
                     </div>
                 </div>
             </div>
@@ -667,7 +668,9 @@ export default {
             isShowFirstPageNotice:false,
             isShowBigImageDialog:false,
             isShowConfirmDialog:false,
-            isShowPassDialog:false
+            isShowPassDialog:false,
+            firstPageTextEN:null,
+            firstPageText:null
         };
     },
     mounted() {
@@ -761,28 +764,29 @@ export default {
                 tempdate = new Date(tempdate).getTime()
                 if(noticeOldTime < tempdate){
                     axios
-                    .get(config.server + '/announcement/find')
-                    .then(doc => {
-                        if(doc.data.code === 0){
-                            this.firstPageText = doc.data.text
-                            this.firstPageImage = doc.data.image
-                            this.isShowFirstPageNotice = true
-                            localStorage.noticeOldTime = tempdate
-                        }else{
-                            if(this.lang === 'ch'){
-                                this.errorInfo = '获取首页通知失败'
+                        .get(config.server + '/announcement/find')
+                        .then(doc => {
+                            if(doc.data.code === 0){
+                                this.firstPageText = doc.data.text
+                                this.firstPageTextEN = doc.data.textEN
+                                this.firstPageImage = doc.data.image
+                                this.isShowFirstPageNotice = true
+                                localStorage.noticeOldTime = tempdate
                             }else{
-                                this.errorInfo = 'Get first page notice failed'
+                                if(this.lang === 'ch'){
+                                    this.errorInfo = '获取首页通知失败'
+                                }else{
+                                    this.errorInfo = 'Get first page notice failed'
+                                }
+                                this.showErrorTips = true
+                                setTimeout(() => {
+                                    this.showErrorTips = false
+                                }, 2000);
                             }
-                            this.showErrorTips = true
-                            setTimeout(() => {
-                                this.showErrorTips = false
-                            }, 2000);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
                 }
             }else{
                 noticeOldTime = new Date().toLocaleDateString()
@@ -792,6 +796,7 @@ export default {
                     .then(doc => {
                         if(doc.data.code === 0){
                             this.firstPageText = doc.data.text
+                            this.firstPageTextEN = doc.data.textEN
                             this.firstPageImage = doc.data.image
                             this.isShowFirstPageNotice = true
                             localStorage.noticeOldTime = noticeOldTime

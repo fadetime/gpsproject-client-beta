@@ -209,7 +209,8 @@
                 </div>
                 <div class="first_notic_back_bottom">
                     <div class="first_notic_back_bottom_frame">
-                        <span>{{firstPageText}}</span>
+                        <span v-if="lang === 'ch'">{{firstPageText}}</span>
+                        <span v-else>{{firstPageTextEN}}</span>
                     </div>
                 </div>
             </div>
@@ -280,7 +281,9 @@ export default {
             radioPicked: null,
             otherText: null,
             isShowFirstPageNotice:false,
-            isShowBigImageDialog:false
+            isShowBigImageDialog:false,
+            firstPageTextEN:null,
+            firstPageText:null,
         }
     },
     methods:{
@@ -295,6 +298,7 @@ export default {
                     .then(doc => {
                         if(doc.data.code === 0){
                             this.firstPageText = doc.data.text
+                            this.firstPageTextEN = doc.data.textEN
                             this.firstPageImage = doc.data.image
                             this.isShowFirstPageNotice = true
                             localStorage.noticeOldTime = tempdate
@@ -322,6 +326,7 @@ export default {
                     .then(doc => {
                         if(doc.data.code === 0){
                             this.firstPageText = doc.data.text
+                            this.firstPageTextEN = doc.data.textEN
                             this.firstPageImage = doc.data.image
                             this.isShowFirstPageNotice = true
                             localStorage.noticeOldTime = noticeOldTime

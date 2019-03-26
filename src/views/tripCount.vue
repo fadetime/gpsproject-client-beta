@@ -25,34 +25,64 @@
                     </div>
                 </div>
                 <div class="tripcount_body_content_top">
-                    <div class="tripcount_body_content_top_item">
+                    <div class="tripcount_body_content_top_item" style="flex-basis: 10%;">
                         <span>No.</span>
                     </div>
                     <div class="tripcount_body_content_top_item">
                         <span>Car No</span>
                     </div>
                     <div class="tripcount_body_content_top_item">
+                        <span>driver</span>
+                    </div>
+                    <div class="tripcount_body_content_top_item">
                         <span>Out</span>
                     </div>
-                    <div class="tripcount_body_content_top_item" style="border-right: none">
+                    <div class="tripcount_body_content_top_item">
+                        <span>Out Km</span>
+                    </div>
+                    <div class="tripcount_body_content_top_item">
                         <span>In</span>
+                    </div>
+                    <div class="tripcount_body_content_top_item" style="border-right: none">
+                        <span>In Km</span>
                     </div>
                 </div>
                 <div class="tripcount_body_content_center_frame" ref="infoArea" style="height:300px;">
                     <div class="tripcount_body_content_center" v-for="(item,index) in missionArray" :key="index" @click="editCountMethod(item,index)">
-                        <div class="tripcount_body_content_center_item">
-                            <span>{{index}}</span>
+                        <div class="tripcount_body_content_center_item" style="flex-basis: 10%;">
+                            <span>{{index + 1}}</span>
                         </div>
                         <div class="tripcount_body_content_center_item">
                             <span v-if="item.carNo">{{item.carNo}}</span>
                             <span v-else>Null</span>
                         </div>
                         <div class="tripcount_body_content_center_item">
+                            <div v-if="lang === 'ch'">
+                                <span v-if="item.driverNameCh">{{item.driverNameCh}}</span>
+                                <span v-else-if="item.driverNameEn">{{item.driverNameEn}}</span>
+                                <span v-else>Null</span>
+                            </div>
+                            <div v-else>
+                                <span v-if="item.driverNameEn">{{item.driverNameEn}}</span>
+                                <span v-else-if="item.driverNameCh">{{item.driverNameCh}}</span>
+                                <span v-else>Null</span>
+                            </div>
+                            
+                        </div>
+                        <div class="tripcount_body_content_center_item">
                             <span v-if="item.out">{{item.out}}</span>
                             <span v-else>Null</span>
                         </div>
                         <div class="tripcount_body_content_center_item">
+                            <span v-if="item.outKm">{{item.outKm}}</span>
+                            <span v-else>Null</span>
+                        </div>
+                        <div class="tripcount_body_content_center_item">
                             <span v-if="item.in">{{item.in}}</span>
+                            <span v-else>Null</span>
+                        </div>
+                        <div class="tripcount_body_content_center_item">
+                            <span v-if="item.inKm">{{item.inKm}}</span>
                             <span v-else>Null</span>
                         </div>
                     </div>
@@ -109,7 +139,7 @@
                             </div>
                             <div class="tripcount_edit_item_right">
                                 <div class="tripcount_edit_item_right_box">
-                                    <span>{{shippingIndex}}</span>
+                                    <span>{{shippingIndex + 1}}</span>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +150,26 @@
                             <div class="tripcount_edit_item_right" @click="openCarListDialog">
                                 <div class="tripcount_edit_item_right_box" style="background-color:#fff;border: 1px solid rgba(0,0,0,0.4);">
                                     <span v-if="shippingDate.carNo">{{shippingDate.carNo}}</span>
-                                    <span v-else>Choise</span>
+                                    <span v-else style="border-bottom: 1px solid;">Choise</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tripcount_edit_item">
+                            <div class="tripcount_edit_item_left">
+                                <span>Driver</span>
+                            </div>
+                            <div class="tripcount_edit_item_right" @click="openStaffListDialog">
+                                <div class="tripcount_edit_item_right_box" style="background-color:#fff;border: 1px solid rgba(0,0,0,0.4);">
+                                    <div v-if="lang === 'ch'">
+                                        <span v-if="shippingDate.driverNameCh">{{shippingDate.driverNameCh}}</span>
+                                        <span v-else-if="shippingDate.driverNameEn">{{shippingDate.driverNameEn}}</span>
+                                        <span v-else>Choise</span>
+                                    </div>
+                                    <div v-else>
+                                        <span v-if="shippingDate.driverNameEn">{{shippingDate.driverNameEn}}</span>
+                                        <span v-else-if="shippingDate.driverNameCh">{{shippingDate.driverNameCh}}</span>
+                                        <span v-else style="border-bottom: 1px solid;">Choise</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -132,12 +181,28 @@
                                 <input type="number" v-model="shippingDate.out">
                             </div>
                         </div>
+                        <div class="tripcount_edit_item">
+                            <div class="tripcount_edit_item_left">
+                                <span>Out Km</span>
+                            </div>
+                            <div class="tripcount_edit_item_right">
+                                <input type="number" v-model="shippingDate.outKm">
+                            </div>
+                        </div>
                         <div class="tripcount_edit_item" style="margin-bottom:8px;">
                             <div class="tripcount_edit_item_left">
                                 <span>In num</span>
                             </div>
                             <div class="tripcount_edit_item_right">
                                 <input type="number" v-model="shippingDate.in">
+                            </div>
+                        </div>
+                        <div class="tripcount_edit_item" style="margin-bottom:8px;">
+                            <div class="tripcount_edit_item_left">
+                                <span>In Km</span>
+                            </div>
+                            <div class="tripcount_edit_item_right">
+                                <input type="number" v-model="shippingDate.inKm">
                             </div>
                         </div>
                     </div>
@@ -176,7 +241,7 @@
                         <div class="tripcount_carlist_body_frame">
                             <div class="tripcount_carlist_body_content" v-for="(item,index) in carListArray" :key="index" @click="choiseCarMethod(item)">
                                 <div class="tripcount_carlist_body_content_left">
-                                    <span>{{index}}</span>
+                                    <span>{{index + 1}}</span>
                                 </div>
                                 <div class="tripcount_carlist_body_content_right">
                                     <span>{{item.carid}}</span>
@@ -199,6 +264,53 @@
             </div>
         </transition>
         <!-- car list end -->
+
+        <!-- staff list start -->
+        <transition name="remove-client-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowStaffListDialog"
+                 class="tripcount_add_tips_back" @click.self.prevent="isShowStaffListDialog = false">
+                <div class="tripcount_add_tips_box">
+                    <div class="tripcount_add_tips_box_title">
+                        <span>Staff list</span>
+                    </div>
+                    <div class="tripcount_carlist_body">
+                        <div class="tripcount_carlist_body_title">
+                            <div class="tripcount_carlist_body_title_left">
+                                <span>No.</span>
+                            </div>
+                            <div class="tripcount_carlist_body_title_right">
+                                <span>Name</span>
+                            </div>
+                        </div>
+                        <div class="tripcount_carlist_body_frame">
+                            <div class="tripcount_carlist_body_content" v-for="(item,index) in staffListArray" :key="index" @click="choiseStaffMethod(item)">
+                                <div class="tripcount_carlist_body_content_left">
+                                    <span>{{index + 1}}</span>
+                                </div>
+                                <div class="tripcount_carlist_body_content_right">
+                                    <span v-if="item.name_en">{{item.name_en}}</span>
+                                    <span v-else>{{item.dirvername}}</span>
+                                </div>
+                                <div v-if="choiseStaff === item" class="tripcount_carlist_body_content_icon">
+                                    <div class="check_icon"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tripcount_carlist_bottom">
+                        <div class="tripcount_box_footer_button" @click="isShowStaffListDialog = false">
+                            <span>Cancel</span>
+                        </div>
+                        <div class="tripcount_box_footer_button" style="margin-left:8px" @click="confirmChoiseStaff()">
+                            <span>Choise</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- staff list end -->
 
         <!-- confirm submit dialog start -->
         <transition name="remove-client-transition"
@@ -267,12 +379,19 @@ export default {
         this.getMission()
     },
 
+    computed: {
+        lang() {
+            return this.$store.state.lang;
+        }
+    },
+
     data(){
         return{
             lindBoxHeight:0,
             isShowAddTips:false,
             isShowEditDialog:false,
             isShowCarlistDialog:false,
+            isShowStaffListDialog:false,
             isShowConfirmDialog:false,
             pageFlag:false,
             missionDate:new Date().toLocaleDateString(),
@@ -283,7 +402,9 @@ export default {
             shippingDate:null,
             shippingIndex:null,
             carListArray:[],
+            staffListArray:[],
             choiseCar:null,
+            choiseStaff:null,
             loadingAnimation:false
         }
     },
@@ -297,7 +418,6 @@ export default {
                     finishDate:tempDate
                 })
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.isShowConfirmDialog = false
                         this.getMission()
@@ -320,13 +440,17 @@ export default {
                 .post(config.server + '/tripCount/edit',{
                     mission_id:this.mission_id,
                     array_id:this.shippingDate._id,
+                    driver_id:this.shippingDate.driver_id,
+                    driverNameCh:this.shippingDate.driverNameCh,
+                    driverNameEn:this.shippingDate.driverNameEn,
                     carNo:this.shippingDate.carNo,
                     out:this.shippingDate.out,
+                    outKm:this.shippingDate.outKm,
                     in:this.shippingDate.in,
+                    inKm:this.shippingDate.inKm,
                     lastEditDate:tempDate
                 })
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.getMission()
                         this.isShowEditDialog = false
@@ -344,8 +468,19 @@ export default {
             this.isShowCarlistDialog = false
         },
 
+        confirmChoiseStaff(){
+            this.shippingDate.driverNameCh = this.choiseStaff.dirvername
+            this.shippingDate.driverNameEn = this.choiseStaff.name_en
+            this.shippingDate.driver_id = this.choiseStaff._id
+            this.isShowStaffListDialog = false
+        },
+
         choiseCarMethod(carInfo){
             this.choiseCar = carInfo
+        },
+
+        choiseStaffMethod(staffInfo){
+            this.choiseStaff = staffInfo
         },
 
         openCarListDialog(){
@@ -353,7 +488,6 @@ export default {
             axios
                 .get(config.server + '/car/clientGet')
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.carListArray = doc.data.doc
                     }else{
@@ -365,8 +499,23 @@ export default {
                 })
         },
 
+        openStaffListDialog(){
+            this.isShowStaffListDialog = true
+            axios
+                .post(config.server + '/dirver/name')
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.staffListArray = doc.data.doc
+                    }else{
+                        console.log('获取车辆信息错误')
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
         editCountMethod(item,index){
-            console.log(item)
             this.shippingDate = item
             this.shippingIndex = index
             this.isShowEditDialog = true
@@ -376,7 +525,6 @@ export default {
             axios
                 .get(config.server + '/tripCount/')
                 .then(doc => {
-                    console.log(doc)    
                     if(doc.data.code === 0){
                         this.mission_id = doc.data.doc._id
                         this.missionArray = doc.data.doc.missionArray
@@ -488,7 +636,7 @@ export default {
     background-color: #fff;
     height: 30px;
     line-height: 30px;
-    margin: 0 24px;
+    margin: 0 12px;
     justify-content: space-around;
     border-radius: 10px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
@@ -504,11 +652,11 @@ export default {
     display: -webkit-flex;
     background-color: #fff;
     margin-top: 8px;
-    margin-left: 24px;
-    margin-right: 24px;
+    margin-left: 12px;
+    margin-right: 12px;
     height: 30px;
     line-height: 30px;
-    font-size: 16px;
+    font-size: 14px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     border-top-left-radius: 10px;
@@ -516,15 +664,15 @@ export default {
 }
 
 .tripcount_body_content_top_item{
-    flex-basis: 25%;
+    flex-basis: 15%;
     border-right: 1px solid #eee;
 }
 
 .tripcount_body_content_center_frame{
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    margin-left: 24px;
-    margin-right: 24px;
+    margin-left: 12px;
+    margin-right: 12px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     overflow-x: hidden;
@@ -539,9 +687,12 @@ export default {
 }
 
 .tripcount_body_content_center_item{
-    flex-basis: 25%;
+    flex-basis: 15%;
     line-height: 30px;
     height: 30px;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
 }
 .add_icon{
     background: #d74342;
