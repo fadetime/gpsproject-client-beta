@@ -163,97 +163,106 @@
                         <div class="checkcar-body-center-title">
                             <span>{{carNum}}</span>
                         </div>
-                        <div v-if="checkPage" class="checkcar-body-center-page">
-                            <div class="checkcar-body-center-item">
-                                <label for="checkwiper" class="checkcar-body-center-item-left">
-                                    <span>{{language.homePage.wiper}}</span>
-                                </label>
-                                <div class="checkcar-body-center-item-middle">
-                                    <md-checkbox id="checkwiper" v-model="wiper" style="margin:0"></md-checkbox>
+                        <div v-if="checkPage" class="checkcar-body-center-page" >
+                            <div style="display:flex">
+                                <div>
+                                    <div class="checkcar-body-center-item">
+                                        <label for="checkwiper" class="checkcar-body-center-item-left">
+                                            <span>{{language.homePage.wiper}}</span>
+                                        </label>
+                                        <div class="checkcar-body-center-item-middle">
+                                            <md-checkbox id="checkwiper" v-model="wiper" style="margin:0"></md-checkbox>
+                                        </div>
+                                        <div class="checkcar-body-center-item-right">
+                                            <span v-if="wiper" style="color:green">{{language.homePage.ok}}</span>
+                                            <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="checkcar-body-center-item">
+                                        <label for="checkheadlight" class="checkcar-body-center-item-left">
+                                            <span>{{language.homePage.headlight}}</span>
+                                        </label>
+                                        <div class="checkcar-body-center-item-middle">
+                                            <md-checkbox id="checkheadlight" v-model="headlight" style="margin:0"></md-checkbox>
+                                        </div>
+                                        <div class="checkcar-body-center-item-right">
+                                            <span v-if="headlight" style="color:green">{{language.homePage.ok}}</span>
+                                            <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="checkcar-body-center-item">
+                                        <label for="checkmirror" class="checkcar-body-center-item-left">
+                                            <span>{{language.homePage.mirror}}</span>
+                                        </label>
+                                        <div class="checkcar-body-center-item-middle">
+                                            <md-checkbox id="checkmirror" v-model="mirror" style="margin:0"></md-checkbox>
+                                        </div>
+                                        <div class="checkcar-body-center-item-right">
+                                            <span v-if="mirror" style="color:green">{{language.homePage.ok}}</span>
+                                            <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="checkcar-body-center-item">
+                                        <label for="checktyre" class="checkcar-body-center-item-left">
+                                            <span>{{language.homePage.tyre}}</span>
+                                        </label>
+                                        <div class="checkcar-body-center-item-middle">
+                                            <md-checkbox id="checktyre" v-model="tyre" style="margin:0"></md-checkbox>
+                                        </div>
+                                        <div class="checkcar-body-center-item-right">
+                                            <span v-if="tyre" style="color:green">{{language.homePage.ok}}</span>
+                                            <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <span v-if="wiper" style="color:green">{{language.homePage.ok}}</span>
-                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                <div>
+                                    <div class="checkcar-body-center-item">
+                                        <label for="checkbackup" class="checkcar-body-center-item-left">
+                                            <span>{{language.homePage.backup}}</span>
+                                        </label>
+                                        <div class="checkcar-body-center-item-middle">
+                                            <md-checkbox id="checkbackup" v-model="backup" style="margin:0"></md-checkbox>
+                                        </div>
+                                        <div class="checkcar-body-center-item-right">
+                                            <span v-if="backup" style="color:green">{{language.homePage.ok}}</span>
+                                            <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="checkcar-body-center-item">
+                                        <label for="checkbrake" class="checkcar-body-center-item-left">
+                                            <span>{{language.homePage.brake}}</span>
+                                        </label>
+                                        <div class="checkcar-body-center-item-middle">
+                                            <md-checkbox id="checkbrake" v-model="brake" style="margin:0"></md-checkbox>
+                                        </div>
+                                        <div class="checkcar-body-center-item-right">
+                                            <span v-if="brake" style="color:green">{{language.homePage.ok}}</span>
+                                            <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="checkcar-body-center-item">
+                                        <label for="checkbrake" class="checkcar-body-center-item-left">
+                                            <span v-if="lang === 'ch'">油卡</span>
+                                            <span v-else>CetrolCard</span>
+                                        </label>
+                                        <div class="checkcar-body-center-item-middle">
+                                            <md-checkbox id="checkbrake" v-model="petrolCard" style="margin:0"></md-checkbox>
+                                        </div>
+                                        <div class="checkcar-body-center-item-right">
+                                            <span v-if="petrolCard" style="color:green">{{language.homePage.ok}}</span>
+                                            <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="checkcar-body-center-item">
-                                <label for="checkheadlight" class="checkcar-body-center-item-left">
-                                    <span>{{language.homePage.headlight}}</span>
-                                </label>
-                                <div class="checkcar-body-center-item-middle">
-                                    <md-checkbox id="checkheadlight" v-model="headlight" style="margin:0"></md-checkbox>
-                                </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <span v-if="headlight" style="color:green">{{language.homePage.ok}}</span>
-                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
-                                </div>
-                            </div>
-                            <div class="checkcar-body-center-item">
-                                <label for="checkmirror" class="checkcar-body-center-item-left">
-                                    <span>{{language.homePage.mirror}}</span>
-                                </label>
-                                <div class="checkcar-body-center-item-middle">
-                                    <md-checkbox id="checkmirror" v-model="mirror" style="margin:0"></md-checkbox>
-                                </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <span v-if="mirror" style="color:green">{{language.homePage.ok}}</span>
-                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
-                                </div>
-                            </div>
-                            <div class="checkcar-body-center-item">
-                                <label for="checktyre" class="checkcar-body-center-item-left">
-                                    <span>{{language.homePage.tyre}}</span>
-                                </label>
-                                <div class="checkcar-body-center-item-middle">
-                                    <md-checkbox id="checktyre" v-model="tyre" style="margin:0"></md-checkbox>
-                                </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <span v-if="tyre" style="color:green">{{language.homePage.ok}}</span>
-                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
-                                </div>
-                            </div>
-                            <div class="checkcar-body-center-item">
-                                <label for="checkbackup" class="checkcar-body-center-item-left">
-                                    <span>{{language.homePage.backup}}</span>
-                                </label>
-                                <div class="checkcar-body-center-item-middle">
-                                    <md-checkbox id="checkbackup" v-model="backup" style="margin:0"></md-checkbox>
-                                </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <span v-if="backup" style="color:green">{{language.homePage.ok}}</span>
-                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
-                                </div>
-                            </div>
-                            <div class="checkcar-body-center-item">
-                                <label for="checkbrake" class="checkcar-body-center-item-left">
-                                    <span>{{language.homePage.brake}}</span>
-                                </label>
-                                <div class="checkcar-body-center-item-middle">
-                                    <md-checkbox id="checkbrake" v-model="brake" style="margin:0"></md-checkbox>
-                                </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <span v-if="brake" style="color:green">{{language.homePage.ok}}</span>
-                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
-                                </div>
-                            </div>
-                            <div class="checkcar-body-center-item">
-                                <label for="checkbrake" class="checkcar-body-center-item-left">
-                                    <span>油卡</span>
-                                </label>
-                                <div class="checkcar-body-center-item-middle">
-                                    <md-checkbox id="checkbrake" v-model="petrolCard" style="margin:0"></md-checkbox>
-                                </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <span v-if="petrolCard" style="color:green">{{language.homePage.ok}}</span>
-                                    <span v-else style="color:#c3c304">{{language.homePage.error}}</span>
-                                </div>
-                            </div>
-                            <div class="checkcar-body-center-item">
-                                <div class="checkcar-body-center-item-left">
-                                    <span>{{language.homePage.box}}</span>
-                                </div>
-                                <div class="checkcar-body-center-item-right">
-                                    <input type="number" style="width:160%;margin-left:11px;" v-model="boxNum">
+                            <div>
+                                <div class="checkcar-body-center-item">
+                                    <div class="checkcar-body-center-item-left">
+                                        <span>{{language.homePage.box}}</span>
+                                    </div>
+                                    <div class="checkcar-body-center-item-right">
+                                        <input type="number" style="margin-left:8px;height: 30px;line-height: 30px;border-radius: 10px;border: 1px solid rgba(0,0,0,0.5);" v-model="boxNum">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -552,6 +561,61 @@
             </div>
         </transition>
         <!-- big image dialog end -->
+
+        <!-- 机油报警提示窗口 start -->
+        <transition name="warning-classes-back"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowOilWarning" class="oilwarning_dialog_back"></div>
+        </transition>
+        <transition name="warning-classes-front"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowOilWarning" class="oilwarning_dialog_front">   
+                <div class="oilwarning_dialog_front_box">
+                    <div class="oilwarning_dialog_front_box_title">
+                        <span>请更换车辆机油</span>
+                    </div>
+                    <div class="oilwarning_dialog_front_box_body">
+                        <div class="oilwarning_dialog_front_box_body_left">
+                            <div class="notification_icon"></div>
+                        </div>
+                        <div class="oilwarning_dialog_front_box_body_right">
+                            <div class="oilwarning_dialog_front_box_body_right_item">
+                                <div class="oilwarning_dialog_front_box_body_right_item_name">
+                                    <span>最后更换机油</span>
+                                </div>
+                                <div class="oilwarning_dialog_front_box_body_right_item_value">
+                                    <span>{{warningInfo.lastOilKelometer}}</span>
+                                </div>
+                            </div>
+                            <div class="oilwarning_dialog_front_box_body_right_item">
+                                <div class="oilwarning_dialog_front_box_body_right_item_name">
+                                    <span>车辆已行驶</span>
+                                </div>
+                                <div class="oilwarning_dialog_front_box_body_right_item_value">
+                                    <span>{{warningInfo.kelometer}}</span>
+                                </div>
+                            </div>
+                            <div class="oilwarning_dialog_front_box_body_right_item">
+                                <div class="oilwarning_dialog_front_box_body_right_item_name"> 
+                                    <span>机油行驶性能</span>
+                                </div>
+                                <div class="oilwarning_dialog_front_box_body_right_item_value">
+                                    <span>{{warningInfo.oilProperty}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oilwarning_dialog_front_box_bottom">
+                        <div class="oilwarning_botton" @click="isShowOilWarning = false">
+                            <span>确认</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 机油报警提示窗口 end -->
     </div>
 </template>
 
@@ -646,7 +710,9 @@ export default {
             isShowFirstPageNotice:false,
             isShowBigImageDialog:false,
             firstPageText:null,
-            firstPageTextEN:null
+            firstPageTextEN:null,
+            isShowOilWarning: false,
+            warningInfo:null
         }
     },
     computed: {
@@ -1217,7 +1283,30 @@ export default {
                 this.$router.push('/detailpage')
                 this.$store.dispatch('setShowButtom', false)
             }
+            this.findCarOilWarning()
         },
+
+        //查找车辆是否报警方法 start
+        findCarOilWarning(){
+            axios
+                .post(config.server + '/dirver/findOilWarning', {
+                    carNo: this.carNum
+                })
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.isShowOilWarning = true
+                        this.warningInfo = {
+                            lastOilKelometer:doc.data.lastOilKelometer,
+                            kelometer:doc.data.kelometer,
+                            oilProperty:doc.data.oilProperty
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+        //查找车辆是否报警方法 end
 
         loadDefault(e) {
             e.currentTarget.src = this.imgDefault
@@ -1454,7 +1543,8 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
-    width: 180px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .previewclient-box{
@@ -1475,12 +1565,14 @@ export default {
 }
 
 .checkcar-body-center {
-    padding: 8px 12px;
+    padding: 8px;
 }
 
 .checkcar-body-center-title {
     border-bottom: 1px solid rgba(0, 0, 0, 0.12);
     font-size: 16px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .checkcar-body-center-item {
@@ -1491,20 +1583,20 @@ export default {
 }
 
 .checkcar-body-center-item-left {
-    flex-basis: 50%;
     text-align: right;
     line-height: 34px;
-    padding-right: 8px;
+    padding-right: 4px;
+    width: 80px;
 }
 
 .checkcar-body-center-item-middle {
-    padding-left: 16px;
-    flex-basis: 25%;
+    padding-left: 4px;
+    width: 30px;
 }
 
 .checkcar-body-center-item-right {
-    padding-left: 8px;
-    flex-basis: 25%;
+    padding-left: 4px;
+    width: 40px;
     line-height: 34px;
 }
 
@@ -1801,5 +1893,112 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+}
+
+.oilwarning_dialog_back{
+    position: fixed;
+    z-index: 104;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.oilwarning_dialog_front{
+    position: fixed;
+    z-index: 105;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.oilwarning_dialog_front_box{
+    background-color: #f7f7f7;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.oilwarning_dialog_front_box_title{
+    background-color: #d74342;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    font-size: 16px;
+}
+
+.oilwarning_dialog_front_box_body{
+    display: flex;
+    display: -webkit-flex;
+    margin: 8px 12px;
+    padding: 8px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+}
+
+.notification_icon{
+    /* background: var(--md-theme-default-icon-on-background, rgba(0, 0, 0, 0.54)); */
+    background-color: #ff9800;
+    background-size: 48px 48px;
+    mask-image: url(../../public/icons/baseline-report_problem-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-report_problem-24px.svg);
+    width: 48px;
+    height: 48px;
+    -webkit-mask-size: 48px 48px;
+    mask-size: 48px 48px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+}
+
+.oilwarning_dialog_front_box_body_left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.oilwarning_dialog_front_box_body_right_item{
+    display: flex;
+    display: -webkit-flex;
+    height: 24px;
+    line-height: 24px;
+}
+
+.oilwarning_dialog_front_box_body_right_item_name{
+    width: 100px;
+    text-align: right;
+}
+
+.oilwarning_dialog_front_box_body_right_item_value{
+    width: 80px;
+    text-align: left;
+    margin-left: 8px;
+}
+
+.oilwarning_dialog_front_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.oilwarning_botton{
+    height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 100px;
+    line-height: 30px;
+    border-radius: 10px;
 }
 </style>

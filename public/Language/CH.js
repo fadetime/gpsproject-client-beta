@@ -23,7 +23,7 @@ export default{
         headlight:'大灯',
         mirror:'后视镜',
         tyre:'车胎',
-        backup:'备用车胎',
+        backup:'备胎',
         brake:'刹车',
         confirmCheck:'确认提交',
         ok:'正常',
