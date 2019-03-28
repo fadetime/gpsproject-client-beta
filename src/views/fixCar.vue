@@ -167,10 +167,18 @@ export default {
             isShowBigImageDialog:false
         }
     },
+
     mounted() {
         this.getFixMissionMethod()
         this.findFirstPageNotice()
     },
+
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        }
+    },
+    
     methods: {
         findFirstPageNotice(){
             let noticeOldTime = localStorage.getItem('noticeOldTime')
