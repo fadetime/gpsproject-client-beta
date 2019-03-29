@@ -574,7 +574,8 @@
             <div v-if="isShowOilWarning" class="oilwarning_dialog_front">   
                 <div class="oilwarning_dialog_front_box">
                     <div class="oilwarning_dialog_front_box_title">
-                        <span>请更换车辆机油</span>
+                        <span v-if="lang === 'ch'">请更换车辆机油</span>
+                        <span v-else>Kindly change engine oil</span>
                     </div>
                     <div class="oilwarning_dialog_front_box_body">
                         <div class="oilwarning_dialog_front_box_body_left">
@@ -583,28 +584,31 @@
                         <div class="oilwarning_dialog_front_box_body_right">
                             <div class="oilwarning_dialog_front_box_body_right_item">
                                 <div class="oilwarning_dialog_front_box_body_right_item_name">
-                                    <span>最后更换机油</span>
+                                    <span v-if="lang === 'ch'">最后更换机油</span>
+                                    <span v-else>Last change</span>
                                 </div>
                                 <div class="oilwarning_dialog_front_box_body_right_item_value">
-                                    <span>{{warningInfo.lastOilKelometer}}</span>
+                                    <span>{{warningInfo.lastOilKelometer}} Km</span>
                                 </div>
                             </div>
                             <div class="oilwarning_dialog_front_box_body_right_item">
                                 <div class="oilwarning_dialog_front_box_body_right_item_name">
-                                    <span>车辆已行驶</span>
+                                    <span v-if="lang === 'ch'">车辆已行驶</span>
+                                    <span v-else>Mileage drive</span>
                                 </div>
                                 <div class="oilwarning_dialog_front_box_body_right_item_value">
-                                    <span>{{warningInfo.kelometer}}</span>
+                                    <span>{{warningInfo.kelometer}} Km</span>
                                 </div>
                             </div>
-                            <div class="oilwarning_dialog_front_box_body_right_item">
+                            <!-- <div class="oilwarning_dialog_front_box_body_right_item">
                                 <div class="oilwarning_dialog_front_box_body_right_item_name"> 
-                                    <span>机油行驶性能</span>
+                                    <span v-if="lang === 'ch'">机油行驶性能</span>
+                                    <span v-else>EngineOil max usage</span>
                                 </div>
                                 <div class="oilwarning_dialog_front_box_body_right_item_value">
-                                    <span>{{warningInfo.oilProperty}}</span>
+                                    <span>{{warningInfo.oilProperty}} Km</span>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="oilwarning_dialog_front_box_bottom">
