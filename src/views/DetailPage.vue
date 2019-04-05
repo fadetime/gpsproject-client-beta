@@ -121,7 +121,6 @@
                                 <span>{{x.clientbpostcode}}</span>
                             </div>
                         </div>
-                        isReturn
                         <div v-if="x.isReturn">
                             <div v-if="lang === 'ch'"
                                 v-show="x.note"
@@ -469,7 +468,7 @@
                     </div>
                 </div>
             </div>
-        </transition>`
+        </transition>
         <!-- confirm box twice end -->
 
         <!-- return pic confirm box start -->
@@ -627,6 +626,7 @@ export default {
                         payload.append("inBasket", 0);
                         payload.append("_id", this.tempArr._id);
                         payload.append("dialogClientName", this.clientName);
+                        payload.append("isReturn", this.isReturnItem);
                         axios({
                             method: "post",
                             url: config.server + "/client-driver/update",
@@ -653,6 +653,10 @@ export default {
                                         })
                                         .then(doc => {
                                             console.log('修改夜班加单状态')
+                                            if(this.isReturnAccess){
+                                                console.log('into if')
+                                                this.sendBackCustomerService(tempDate)
+                                            }
                                             console.log(doc)
                                         })
                                         .catch(err => {
@@ -703,6 +707,57 @@ export default {
             }
         },
 
+        sendBackCustomerService(tempDate){
+            axios
+                .post(config.server + "/customerService/errorID", {
+                    mission_id:this.tempArr._id,
+                    clientName: this.clientName,
+                    finishiDate:tempDate
+                })
+                .then(doc => {
+                    console.log(doc)
+                    console.log(doc.data.doc.errorID)
+                    console.log('doc.errorID')
+                    axios
+                        .post(config.customerServiceAddress + "/errorRecords/update/" + doc.data.doc.errorID,{
+                                ifSolved:true,
+                                solution:'司机取回' + this.drivername
+                        })
+                        .then(customerInfo => {
+                            console.log(customerInfo)
+                            if(customerInfo.data.status === 0){
+                                if(this.lang === 'ch'){
+                                    this.errorInfo = "已成功通知客服"
+                                }else{
+                                    this.errorInfo = "Send to customer service log"
+                                }
+                                this.showError = true
+                                setTimeout(() => {
+                                    this.showError = false
+                                }, 2000);
+                            }else{
+                                if(this.lang === 'ch'){
+                                    this.errorInfo = "信息发送至客服失败"
+                                }else{
+                                    this.errorInfo = "Send to customer service log failed"
+                                }
+                                this.showError = true
+                                setTimeout(() => {
+                                    this.showError = false
+                                }, 2000);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            
+            
+        },
+
         confirmTwiceMethod() {
             if (this.isReturnItem) {
                 if (this.isReturnAccess) {
@@ -720,7 +775,9 @@ export default {
                         .then(doc => {
                             console.log(doc);
                             let tempKey = true;
-
+                            // if(isReturnDone){
+                            //     this.sendBackCustomerService(tempDate)
+                            // }
                             //
                             this.outBasket = 0;
                             this.inBasket = 0;
@@ -738,18 +795,13 @@ export default {
                             } else {
                                 // Browser doesn't support
                                 alert("不支持定位功能");
-                                console.log(
-                                    "browser doesnt support geolocation"
-                                );
+                                console.log("browser doesnt support geolocation");
                             }
                             let tempDate = new Date().toISOString();
 
                             setTimeout(() => {
                                 axios
-                                    .post(
-                                        config.server +
-                                            "/client-driver/exupdate",
-                                        {
+                                    .post(config.server +"/client-driver/exupdate",{
                                             _id: this.tempArr._id,
                                             clientName: this.clientName,
                                             position: tempPosition,
@@ -757,9 +809,9 @@ export default {
                                             inBasket: this.inBasket,
                                             date: tempDate,
                                             driverName: this.drivername,
-                                            lineName: this.tempArr.missionline
-                                        }
-                                    )
+                                            lineName: this.tempArr.missionline,
+                                            isReturn:this.isReturnItem
+                                        })
                                     .then(doc => {
                                         if (doc.data.code === 0) {
                                             this.missionGetOne();
@@ -819,8 +871,8 @@ export default {
         closeErrorInfo() {
             this.showError = false;
         },
+
         openConfirmBoxMethod(x) {
-            console.log(x);
             this.isReturnItem = x.isReturn;
             this.inBasket = null;
             this.outBasket = null;
@@ -832,6 +884,7 @@ export default {
                 this.tempShiping = x.clientbnameEN;
             }
         },
+
         noPicUpdate() {
             if (!this.inBasket || !this.outBasket) {
                 console.log("into wrong");
@@ -873,10 +926,12 @@ export default {
                             inBasket: this.inBasket,
                             date: tempDate,
                             driverName: this.drivername,
-                            lineName: this.tempArr.missionline
+                            lineName: this.tempArr.missionline,
+                            isReturn:this.isReturnItem
                         })
                         .then(doc => {
                             if (doc.data.code === 0) {
+                                console.log('123')
                                 this.missionGetOne();
                                 this.confirmBox = false;
                                 this.showError = true;

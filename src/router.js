@@ -12,6 +12,7 @@ import search from './views/Search.vue'
 import dayShiftHome from './views/dayShiftHome.vue'
 import billPage from './views/bill.vue'
 import checkPage from './views/checker.vue'
+import checkPage_day from './views/checker_dayShift.vue'
 import dayMissionPool from './views/dayMissionPool.vue'
 import dayDriverMissionPage from './views/dayDriverMissionPage.vue'
 import brokeBoxReport from './views/brokeBoxReport.vue'
@@ -142,7 +143,11 @@ export default new Router({
       path: '/tripCount',
       name: 'tripCount',
       component: tripCount
+    },
+    {
+      path: '/checkPage_day',
+      name: 'checkPage_day',
+      component: checkPage_day
     }
-    
   ]
 })

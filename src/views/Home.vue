@@ -648,6 +648,8 @@ export default {
             this.$router.push('/daypool')
         }else if(localStorage.getItem('driverRole') === 'maintain'){
             this.$router.push('/fixcar')
+        }else if(localStorage.getItem('driverRole') === 'dayShiftChecker'){
+            this.$router.push('/checkPage_day')
         }
     },
 

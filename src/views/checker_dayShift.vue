@@ -1,7 +1,7 @@
 <template>
     <div id="checkerpage">
         <div class="check-top">
-            <span v-if="lang === 'ch'">车辆检查</span>
+            <span v-if="lang === 'ch'">检查车辆</span>
             <span v-else>Car Check</span>
         </div>
         <div style="height:40px">
@@ -61,7 +61,7 @@
                     </div>
                     <div class="checkbox-box-body">
                         <div class="checkbox-box-body-top"
-                             style="width:175px">
+                             style="width:176px">
                             <div class="checkbox-box-body-top-title">
                                 <div>
                                     <span>当前日期</span>
@@ -368,11 +368,13 @@
                  @click.self.prevent="isShowPassDialog = false">
                 <div class="checkbox-box">
                     <div class="confirmbox-box-title">
-                        <span>Tips</span>
+                        <span v-if="lang === 'ch'">提示</span>
+                        <span v-else>TIPS</span>
                     </div>
                     <div class="confirmbox-box-body">
                         <div style="padding-top: 12px;">
-                            <span>Do you want pass this car?</span>
+                            <span v-if="lang === 'ch'">是否确定跳过检查？</span>
+                            <span v-else>Do you want pass this car?</span>
                         </div>
                     </div>
                     <div class="confirmbox-box-bottom">
@@ -388,6 +390,7 @@
                 </div>
             </div>
         </transition>
+
         <!-- confirm dialog start -->
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -780,7 +783,7 @@ export default {
                     }, 3000);
                 }else{
                     axios
-                        .post(config.server + '/checkworker/changeOil',{
+                        .post(config.server + '/checkWorkerDayShift/changeOil',{
                             car_id:this.car_id,
                             newOilNum:this.newOilNum
                         })
@@ -848,7 +851,7 @@ export default {
             this.tempData.sideMirror = true
             this.tempData.petrolCard = true
             axios
-                .post(config.server + "/checkworker/edit",{
+                .post(config.server + "/checkWorkerDayShift/edit",{
                     _id:this._id,
                     data:this.tempData,
                     time:time,
@@ -905,7 +908,6 @@ export default {
                     this.showError = false
                 }, 2000);
             }
-            console.log(this.tempData)
         },
 
         findFirstPageNotice(){
@@ -972,7 +974,7 @@ export default {
         allFinishCheckMethod(){
             let time = new Date().toISOString()
             axios
-                .post(config.server + "/checkworker/finish",{
+                .post(config.server + "/checkWorkerDayShift/finish",{
                     _id:this._id,
                     finishDate:time
                 })
@@ -1007,7 +1009,7 @@ export default {
         comfirmCheckMtehod(){
             let time = new Date().toISOString()
             axios
-                .post(config.server + "/checkworker/edit",{
+                .post(config.server + "/checkWorkerDayShift/edit",{
                     _id:this._id,
                     data:this.tempData,
                     time:time,
@@ -1071,7 +1073,7 @@ export default {
             this.isShowMissionBox = true;
             this.tempData = item;
             axios
-                .post(config.server + "/checkworker/findOil",{
+                .post(config.server + "/checkWorkerDayShift/findOil",{
                     carPlate:item.carPlate
                 })
                 .then(doc => {
@@ -1094,7 +1096,7 @@ export default {
 
         findCheckWork() {
             axios
-                .get(config.server + "/checkworker/")
+                .get(config.server + "/checkWorkerDayShift/")
                 .then(doc => {
                     if(doc.data.code === 0){
                         this.checkMissionArray = doc.data.doc.missionList;
@@ -1119,7 +1121,7 @@ export default {
         createCheckMtehod() {
             let createDate = new Date().toISOString();
             axios
-                .post(config.server + "/checkworker/create", {
+                .post(config.server + "/checkWorkerDayShift/create", {
                     createDate: createDate,
                     driverName: this.driverName,
                     driver_id: this.driver_id
