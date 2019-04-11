@@ -261,7 +261,7 @@
                                         <span>{{language.homePage.box}}</span>
                                     </div>
                                     <div class="checkcar-body-center-item-right">
-                                        <input type="number" style="margin-left:8px;height: 30px;line-height: 30px;border-radius: 10px;border: 1px solid rgba(0,0,0,0.5);" v-model="boxNum">
+                                        <input type="number" style="margin-left:8px;height: 30px;line-height: 30px;border-radius: 10px;border: 1px solid rgba(0,0,0,0.5);text-align:center;" v-model="boxNum">
                                     </div>
                                 </div>
                             </div>

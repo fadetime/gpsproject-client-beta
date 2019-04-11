@@ -555,6 +555,7 @@ export default {
             updateImagePreview: "",
             updateImage: "",
             _id: "",
+            returnPool_id: null,
             missionImage: "",
             dialogClientName: "",
             finishDate: "",
@@ -627,6 +628,7 @@ export default {
                         payload.append("_id", this.tempArr._id);
                         payload.append("dialogClientName", this.clientName);
                         payload.append("isReturn", this.isReturnItem);
+                        payload.append("returnPool_id", this.returnPool_id)
                         axios({
                             method: "post",
                             url: config.server + "/client-driver/update",
@@ -648,6 +650,7 @@ export default {
                                         .post(config.server + "/customerService/finish", {
                                             clientName: this.clientName,
                                             mission_id: this.tempArr._id,
+                                            returnPool_id: this.returnPool_id,
                                             finishiDate: tempDate,
                                             isReturnDone: this.isReturnAccess
                                         })
@@ -769,6 +772,7 @@ export default {
                         .post(config.server + "/customerService/finish", {
                             clientName: this.clientName,
                             mission_id: this.tempArr._id,
+                            returnPool_id: this.returnPool_id,
                             finishiDate: tempDate,
                             isReturnDone: this.isReturnAccess
                         })
@@ -810,7 +814,8 @@ export default {
                                             date: tempDate,
                                             driverName: this.drivername,
                                             lineName: this.tempArr.missionline,
-                                            isReturn:this.isReturnItem
+                                            isReturn:this.isReturnItem,
+                                            returnPool_id: this.returnPool_id,
                                         })
                                     .then(doc => {
                                         if (doc.data.code === 0) {
@@ -878,6 +883,8 @@ export default {
             this.outBasket = null;
             this.confirmBox = true;
             this.clientName = x.clientbname;
+            this.returnPool_id = x.returnPool_id
+            console.log(x)
             if (this.lang === "ch") {
                 this.tempShiping = x.clientbname;
             } else {
@@ -1403,6 +1410,8 @@ export default {
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
     background: #fff;
     width: 250px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .confirmBox-body-title {
@@ -1453,18 +1462,20 @@ export default {
     height: 32px;
     line-height: 32px;
     font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #eee;
 }
 
 .confirmBox-body-bottom-right {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
-    background: #d74342;
     width: 100px;
     font-size: 16px;
     height: 32px;
     line-height: 32px;
-    color: #fff;
     margin-left: 10px;
+    border-radius: 10px;
+    border: 1px solid #eee;
 }
 
 .returnbox {
