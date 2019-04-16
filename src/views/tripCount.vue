@@ -106,18 +106,31 @@
                         <span>TIPS</span>
                     </div>
                     <div class="tripcount_add_tips_box_body">
-                        <span>Do you want create today mission?</span>
+                        <div class="tripcount_add_tips_box_body_title">
+                            <span>Please choose mission date!</span>
+                        </div>
+                        <div class="tripcount_add_tips_box_body_item" @click="chooseDate('yesterday')">
+                            <div v-if="whereShowCheck === 'yesterday'" class="tripcount_icon_check"></div>
+                            <span>{{yesterday}}</span>
+                        </div>
+                        <div class="tripcount_add_tips_box_body_item" @click="chooseDate('today')">
+                            <div v-if="whereShowCheck === 'today'" class="tripcount_icon_check"></div>
+                            <span>{{today}}</span>
+                        </div>
+                        <div class="tripcount_add_tips_box_body_item" @click="chooseDate('tomorrow')">
+                            <div v-if="whereShowCheck === 'tomorrow'" class="tripcount_icon_check"></div>
+                            <span>{{tomorrow}}</span>
+                        </div>
                     </div>
                     <div class="tripcount_add_tips_box_bottom">
                         <div class="tripcount_box_footer_button" @click="isShowAddTips = false">
-                            <span>NO</span>
+                            <span>Cancel</span>
                         </div>
-                        <div class="tripcount_box_footer_button" style="margin-left:8px" @click="confirmAddMission">
-                            <span>YES</span>
+                        <div class="tripcount_box_footer_button" style="margin-left:30px" @click="confirmAddMission">
+                            <span>Confirm</span>
                         </div>
                     </div>
-                </div> 
-                
+                </div>
             </div>
         </transition> 
         <!-- add mission tips end -->
@@ -150,7 +163,7 @@
                             <div class="tripcount_edit_item_right" @click="openCarListDialog">
                                 <div class="tripcount_edit_item_right_box" style="background-color:#fff;border: 1px solid rgba(0,0,0,0.4);">
                                     <span v-if="shippingDate.carNo">{{shippingDate.carNo}}</span>
-                                    <span v-else style="border-bottom: 1px solid;">Choise</span>
+                                    <span v-else style="border-bottom: 1px solid;">Choose</span>
                                 </div>
                             </div>
                         </div>
@@ -163,12 +176,12 @@
                                     <div v-if="lang === 'ch'">
                                         <span v-if="shippingDate.driverNameCh">{{shippingDate.driverNameCh}}</span>
                                         <span v-else-if="shippingDate.driverNameEn">{{shippingDate.driverNameEn}}</span>
-                                        <span v-else>Choise</span>
+                                        <span v-else>Choose</span>
                                     </div>
                                     <div v-else>
                                         <span v-if="shippingDate.driverNameEn">{{shippingDate.driverNameEn}}</span>
                                         <span v-else-if="shippingDate.driverNameCh">{{shippingDate.driverNameCh}}</span>
-                                        <span v-else style="border-bottom: 1px solid;">Choise</span>
+                                        <span v-else style="border-bottom: 1px solid;">Choose</span>
                                     </div>
                                 </div>
                             </div>
@@ -361,15 +374,27 @@
             </div>
         </transition>
         <!-- loading animation end -->
-
+        <!-- second confirm box start -->
+        <secondConfirmDialog  v-on:secondBottonValue="secondBottonValue" :msg="childDialogMsg" :isShowChild="isShowChildValue"></secondConfirmDialog>
+        <!-- second confirm box start -->
+        <!-- tips box start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- tips box end -->
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import config from "../assets/js/config";
+import secondConfirmDialog from "../components/secondConfirmDialog"
+import tipsBox from "../components/tipsBox"
 
 export default {
+    components:{
+        secondConfirmDialog,
+        tipsBox
+    },
+
     mounted(){
         let screenHeight = document.documentElement.clientHeight
         this.lindBoxHeight = screenHeight - 40 - 56 - 7
@@ -405,11 +430,48 @@ export default {
             staffListArray:[],
             choiseCar:null,
             choiseStaff:null,
-            loadingAnimation:false
+            loadingAnimation:false,
+            isShowChildValue:false,
+            childDialogMsg:null,
+            tempShipping:null,
+            today:null,
+            yesterday:null,
+            tomorrow:null,
+            whereShowCheck:null,
+            tipsShowColor:null,
+            tipsInfo:null,
+            isShowTipsBox:false,
         }
     },
 
     methods:{
+        chooseDate(mode){
+            if(mode === 'tomorrow'){
+                this.whereShowCheck = 'tomorrow'
+            }else if(mode === 'yesterday'){
+                this.whereShowCheck = 'yesterday'
+            }else{
+                this.whereShowCheck = 'today'
+            }
+        },
+
+        secondBottonValue(secondBottonValue) {
+            if(!secondBottonValue){
+                this.isShowChildValue = false
+                this.isShowAddTips = true
+            }else{
+                this.isShowChildValue = false
+                this.mission_id = this.tempShipping.data.doc._id
+                this.missionArray = this.tempShipping.data.doc.missionArray
+                this.missionDate = new Date(this.tempShipping.data.doc.missionDate).toLocaleDateString()
+                setTimeout(() => {
+                    let infoAreaPx = this.lindBoxHeight - 120
+                    this.$refs.infoArea.style.height = infoAreaPx + 'px'
+                }, 0);
+                this.pageFlag = true
+            }
+        },
+
         confirmSubmitMission(){
             let tempDate = new Date().toISOString()
             axios
@@ -421,8 +483,19 @@ export default {
                     if(doc.data.code === 0){
                         this.isShowConfirmDialog = false
                         this.getMission()
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = 'Submit success'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     } else {
-                        console.log('submit failed')
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = 'Submit failed'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     }
                 })
                 .catch(err => {
@@ -454,8 +527,19 @@ export default {
                     if(doc.data.code === 0){
                         this.getMission()
                         this.isShowEditDialog = false
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = 'Edit success'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     } else {
-                        console.log('update failed')
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = 'Edit failed'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     }
                 })
                 .catch(err => {
@@ -491,7 +575,12 @@ export default {
                     if(doc.data.code === 0){
                         this.carListArray = doc.data.doc
                     }else{
-                        console.log('获取车辆信息错误')
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = 'Server error'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     }
                 })
                 .catch(err => {
@@ -507,7 +596,12 @@ export default {
                     if(doc.data.code === 0){
                         this.staffListArray = doc.data.doc
                     }else{
-                        console.log('获取车辆信息错误')
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = 'Server error'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     }
                 })
                 .catch(err => {
@@ -530,8 +624,8 @@ export default {
                         this.missionArray = doc.data.doc.missionArray
                         this.missionDate = new Date(doc.data.doc.missionDate).toLocaleDateString()
                         setTimeout(() => {
-                                let infoAreaPx = this.lindBoxHeight - 120
-                        this.$refs.infoArea.style.height = infoAreaPx + 'px'
+                            let infoAreaPx = this.lindBoxHeight - 120
+                            this.$refs.infoArea.style.height = infoAreaPx + 'px'
                         }, 0);
                         this.pageFlag = true
                     }else{
@@ -549,7 +643,14 @@ export default {
 
         confirmAddMission(){
             this.loadingAnimation = true
-            let date = new Date()
+            let date = null
+            if(this.whereShowCheck === 'yesterday'){
+                date = this.yesterday
+            }else if(this.whereShowCheck === 'tomorrow'){
+                date = this.tomorrow
+            }else{
+                date = this.today
+            }
             let dateString = new Date(date).toDateString()
             axios
                 .post(config.server + '/tripCount/create',{
@@ -560,9 +661,44 @@ export default {
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = 'Create success'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                         this.getMission()
+                    }else if(doc.data.code === 3){//任务已存在，读取任务
+                        this.mission_id = doc.data.doc._id
+                        this.missionArray = doc.data.doc.missionArray
+                        this.missionDate = new Date(doc.data.doc.missionDate).toLocaleDateString()
+                        setTimeout(() => {
+                            let infoAreaPx = this.lindBoxHeight - 120
+                            this.$refs.infoArea.style.height = infoAreaPx + 'px'
+                        }, 0);
+                        this.pageFlag = true
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = 'Read success'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }else if(doc.data.code === 1){//创建任务失败
+                        console.log(doc)
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = 'Create failed'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     }else{
                         console.log(doc)
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = 'Server error'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     }
                     this.isShowAddTips = false
                     this.loadingAnimation = false
@@ -574,7 +710,30 @@ export default {
         },
 
         addMission(){
-            this.isShowAddTips = true
+            let tempDate = new Date().toLocaleDateString()
+            this.today = new Date().toLocaleDateString()
+            let tempDay = new Date(this.today).getDate()
+            this.yesterday = new Date().setDate(tempDay - 1)
+            this.yesterday = new Date(this.yesterday).toLocaleDateString()
+            this.tomorrow = new Date().setDate(tempDay + 1)
+            this.tomorrow = new Date(this.tomorrow).toLocaleDateString()
+            axios
+                .post(config.server + '/tripCount/findOld',{
+                    missionDate:tempDate
+                })
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.childDialogMsg = 'Mission already exists,read or not？'
+                        this.isShowChildValue = true
+                        this.tempShipping = doc
+                    }else{
+                        this.isShowAddTips = true
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            
         }
     }
 }
@@ -703,6 +862,19 @@ export default {
     -webkit-mask-size: 54px 54px;
     mask-size: 54px 54px;
 }
+
+.tripcount_icon_check{
+    background: green;
+    mask-image: url(../../public/icons/baseline-check_circle_outline-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-check_circle_outline-24px.svg);
+    width: 30px;
+    height: 30px;
+    -webkit-mask-size: 30px 30px;
+    mask-size: 30px 30px;
+    position: absolute;
+    right: 8px;
+}
+
 .tripcount_add_tips_back{
     position: fixed;
     z-index: 24;
@@ -737,6 +909,29 @@ export default {
 
 .tripcount_add_tips_box_body{
     padding: 12px 12px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    margin: 8px;
+    border-radius: 10px;
+}
+
+.tripcount_add_tips_box_body_title{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #d74342;
+    font-size: 16px;
+}
+
+.tripcount_add_tips_box_body_item{
+    border: 1px solid #eee;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 5px;
+    line-height: 30px;
+    height: 30px;
+    margin-top: 8px;
+    font-size: 16px;
+    position: relative;
 }
 
 .tripcount_add_tips_box_bottom{

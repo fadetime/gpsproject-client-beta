@@ -339,62 +339,65 @@
                     <div class="confirmBox-body-title">
                         <span>{{language.detailPage.confirmBox_info}}</span>
                     </div>
-                    <div class="confirmBox-body-center"
-                         style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
-                        <span>{{tempShiping}}</span>
-                    </div>
-                    <div v-if="!isReturnItem"
-                         class="confirmBox-body-center-input">
-                        <div v-if="lang === 'ch'">
-                            <input type="number"
-                                   placeholder="送货框数"
-                                   v-model="outBasket">
-                            <input type="number"
-                                   placeholder="收回框数"
-                                   v-model="inBasket">
+                    <div class="confirmBox-body-frame">
+                        <div class="confirmBox-body-center"
+                            style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden">
+                            <span>{{tempShiping}}</span>
                         </div>
-                        <div v-else>
-                            <input type="number"
-                                   placeholder="Send out basket"
-                                   v-model="outBasket">
-                            <input type="number"
-                                   placeholder="Take back basket"
-                                   v-model="inBasket">
-                        </div>
-                    </div>
-                    <div v-if="isReturnItem"
-                         class="returnbox">
-                        <div style="position:relative"
-                             @click="changeReturnAccessMethod('returnAccess')">
-                            <div class="returnbox-item">
-                                <span v-if="lang === 'ch'">退菜成功</span>
-                                <span v-else>Done</span>
+                        <div v-if="!isReturnItem"
+                            class="confirmBox-body-center-input">
+                            <div v-if="lang === 'ch'">
+                                <input type="number"
+                                    placeholder="送货框数"
+                                    v-model="outBasket">
+                                <input type="number"
+                                    placeholder="收回框数"
+                                    v-model="inBasket">
                             </div>
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated fadeIn faster"
-                                        leave-active-class="animated fadeOut faster">
-                                <div v-if="isReturnAccess"
-                                     style="position:absolute;right:0;width:0;height:0;border-bottom: 30px solid #e22525;border-left: 30px solid transparent;top: 0;">
-                                    <div class="returnbox-icon"></div>
-                                </div>
-                            </transition>
-                        </div>
-                        <div style="position:relative;margin-left:10px"
-                             @click="changeReturnAccessMethod('returnFail')">
-                            <div class="returnbox-item">
-                                <span v-if="lang === 'ch'">退菜失败</span>
-                                <span v-else>Fail</span>
+                            <div v-else>
+                                <input type="number"
+                                    placeholder="Send out basket"
+                                    v-model="outBasket">
+                                <input type="number"
+                                    placeholder="Take back basket"
+                                    v-model="inBasket">
                             </div>
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated fadeIn faster"
-                                        leave-active-class="animated fadeOut faster">
-                                <div v-if="!isReturnAccess"
-                                     style="position:absolute;right:0;width:0;height:0;border-bottom: 30px solid #e22525;border-left: 30px solid transparent;top: 0;">
-                                    <div class="returnbox-icon"></div>
+                        </div>
+                        <div v-if="isReturnItem"
+                            class="returnbox">
+                            <div style="position:relative"
+                                @click="changeReturnAccessMethod('returnAccess')">
+                                <div class="returnbox-item">
+                                    <span v-if="lang === 'ch'">退菜成功</span>
+                                    <span v-else>Done</span>
                                 </div>
-                            </transition>
+                                <transition name="custom-classes-transition"
+                                            enter-active-class="animated fadeIn faster"
+                                            leave-active-class="animated fadeOut faster">
+                                    <div v-if="isReturnAccess"
+                                        style="position:absolute;right:0;width:0;height:0;border-bottom: 30px solid #e22525;border-left: 30px solid transparent;top: 0;">
+                                        <div class="returnbox-icon"></div>
+                                    </div>
+                                </transition>
+                            </div>
+                            <div style="position:relative;margin-left:10px"
+                                @click="changeReturnAccessMethod('returnFail')">
+                                <div class="returnbox-item">
+                                    <span v-if="lang === 'ch'">退菜失败</span>
+                                    <span v-else>Fail</span>
+                                </div>
+                                <transition name="custom-classes-transition"
+                                            enter-active-class="animated fadeIn faster"
+                                            leave-active-class="animated fadeOut faster">
+                                    <div v-if="!isReturnAccess"
+                                        style="position:absolute;right:0;width:0;height:0;border-bottom: 30px solid #e22525;border-left: 30px solid transparent;top: 0;">
+                                        <div class="returnbox-icon"></div>
+                                    </div>
+                                </transition>
+                            </div>
                         </div>
                     </div>
+                    
                     <div class="confirmBox-body-bottom">
                         <div class="confirmBox-body-bottom-left"
                              @click="confirmBox = false">
@@ -1424,13 +1427,20 @@ export default {
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
 }
 
+.confirmBox-body-frame{
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin: 8px;
+    padding: 8px;
+}
+
 .confirmBox-body-center {
     height: 40px;
     line-height: 40px;
     font-size: 16px;
     border-bottom: 1px solid #e0e0e0;
-    width: 80%;
-    margin: 10px auto;
 }
 
 .confirmBox-body-center-input {
@@ -1483,16 +1493,19 @@ export default {
     display: -webkit-flex;
     font-size: 16px;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 16px;
+    margin-bottom: 12px;
 }
 
 .returnbox-item {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #eee;
     height: 30px;
     line-height: 30px;
-    width: 80px;
+    width: 100px;
     position: relative;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 4px;
 }
 
 .returnbox-icon {

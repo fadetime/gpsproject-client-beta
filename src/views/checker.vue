@@ -284,6 +284,26 @@
                                              class="redtext">Side mirror</div>
                                     </div>
                                 </div>
+                                <div class="checkboxbox-body-item">
+                                    <div v-if="tempData.SD_card"
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('SD_card')">
+                                        <div class="sd_card"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="greentext">SD卡</div>
+                                        <div v-else
+                                             class="greentext">SD Card</div>
+                                    </div>
+                                    <div v-else
+                                         style="font-size:14px;width: 80px;"
+                                         @click="checkButtonMethod('SD_card')">
+                                        <div class="sd_card-red"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="redtext">SD卡</div>
+                                        <div v-else
+                                             class="redtext">SD Card</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -368,11 +388,13 @@
                  @click.self.prevent="isShowPassDialog = false">
                 <div class="checkbox-box">
                     <div class="confirmbox-box-title">
-                        <span>Tips</span>
+                        <span v-if="lang === 'ch'">提示</span>
+                        <span v-else>Tips</span>
                     </div>
                     <div class="confirmbox-box-body">
                         <div style="padding-top: 12px;">
-                            <span>Do you want pass this car?</span>
+                            <span v-if="lang === 'ch'">是否调过检查本车？</span>
+                            <span v-else>Do you want pass this car?</span>
                         </div>
                     </div>
                     <div class="confirmbox-box-bottom">
@@ -564,6 +586,22 @@
                                         </div>
                                         <div v-else>
                                             <span v-if="tempData.sideMirror" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="confirmbox-box-body-center-item-right">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">SD卡:</span>
+                                        <span v-else>Back light:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.SD_card" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.SD_card" style="color:#2f9514">OK</span>
                                             <span v-else style="color:#d74342">ERR</span>
                                         </div>
                                     </div>
@@ -905,7 +943,6 @@ export default {
                     this.showError = false
                 }, 2000);
             }
-            console.log(this.tempData)
         },
 
         findFirstPageNotice(){
@@ -1061,13 +1098,14 @@ export default {
                 this.tempData.taillight = !this.tempData.taillight;
             }else if (item === "sideMirror") {
                 this.tempData.sideMirror = !this.tempData.sideMirror;
+            }else if (item === "SD_card") {
+                this.tempData.SD_card = !this.tempData.SD_card;
             } else {
                 this.tempData.petrolCard = !this.tempData.petrolCard;
             }
         },
 
         openMissionBoxMethod(item) {
-            console.log(item)
             this.isShowMissionBox = true;
             this.tempData = item;
             axios
@@ -1075,7 +1113,6 @@ export default {
                     carPlate:item.carPlate
                 })
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.lastOilKelometer = doc.data.doc.lastOilKelometer
                         this.car_id = doc.data.doc._id
@@ -1301,6 +1338,24 @@ export default {
     background: #d74342;
     mask-image: url(../../public/icons/side_mirror.svg);
     -webkit-mask-image: url(../../public/icons/side_mirror.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.sd_card {
+    background: #2f9514;
+    mask-image: url(../../public/icons/SD_card.svg);
+    -webkit-mask-image: url(../../public/icons/SD_card.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+}
+
+.sd_card-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/SD_card.svg);
+    -webkit-mask-image: url(../../public/icons/SD_card.svg);
     width: 46px;
     height: 46px;
     margin: 0 auto;
