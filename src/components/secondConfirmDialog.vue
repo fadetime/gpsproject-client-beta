@@ -20,11 +20,11 @@
                         <div class="second_confirm_dialog_box_bottom">
                             <div class="second_confirm_dialog_box_bottom_button" @click="secondBottonMethod('cancel')">
                                 <span v-if="lang === 'ch'">取消</span>
-                                <span v-else>Cancel</span>
+                                <span v-else>NO</span>
                             </div>
                             <div class="second_confirm_dialog_box_bottom_button" style="margin-left:8px" @click="secondBottonMethod('confirm')">
                                 <span v-if="lang === 'ch'">确定</span>
-                                <span v-else>Confirm</span>
+                                <span v-else>YES</span>
                             </div>
                         </div>
                     </div>

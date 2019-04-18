@@ -23,7 +23,6 @@
                         <div>
                             <span>{{drivercard}}</span>
                         </div>
-
                     </div>
                 </div>
 
@@ -50,6 +49,11 @@
         </div>
         <div class="bottom">
             <md-button class="md-raised md-primary" style="width:80%" @click="languageWindow=true">{{language.setupPage.lang}}</md-button>
+        </div>
+        <div class="bottom" style="display: flex;justify-content: center;" @click="goCarRulePage()">
+            <div class="setup_button_square">
+                <span>车辆守则</span>
+            </div>
         </div>
         <div class="bottom">
             <md-button class="md-raised md-primary" style="width:80%" @click="isChangePSW = true,showDialog = true">{{language.setupPage.changePsw}}</md-button>
@@ -185,6 +189,10 @@ export default {
         this.driverimage = localStorage.getItem('image')
     },
     methods: {
+        goCarRulePage(){
+            this.$router.push("/carRule");
+        },
+
         changeOldVersion(){
             router.replace()
         },
@@ -415,5 +423,17 @@ export default {
     background-color: rgba(0, 0, 0, 0.75);
     width: 100%;
     height: 200px;
+}
+
+.setup_button_square{
+    background-color: #d74342;
+    height: 36px;
+    line-height: 36px;
+    color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 80%;
+    margin: 6px 0;
+    border-radius: 2px;
 }
 </style>

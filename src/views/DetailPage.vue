@@ -333,7 +333,7 @@
                     leave-active-class="animated zoomOut faster">
             <div v-if="confirmBox"
                  class="confirmBox-back"
-                 @click.prevent.self="confirmBox = false"
+                 @click.self.prevent="confirmBox = false"
                  @touchmove.prevent>
                 <div class="confirmBox-body">
                     <div class="confirmBox-body-title">
@@ -395,6 +395,33 @@
                                     </div>
                                 </transition>
                             </div>
+                        </div>
+                        <div v-if="!isReturnAccess" class="detail_reason">
+                            <div class="detail_reason_item">
+                                <div class="detail_reason_item_left">
+                                    <input id="back_failed_reason1" type="radio" value="找不到" v-model="backFailedReason">
+                                </div>
+                                <div class="detail_reason_item_right">
+                                    <span>找不到</span>
+                                </div>
+                            </div>
+                            <div class="detail_reason_item">
+                                <div class="detail_reason_item_left">
+                                    <input id="back_failed_reason2" type="radio" value="未拿出" v-model="backFailedReason">
+                                </div>
+                                <div class="detail_reason_item_right">
+                                    <span>未拿出</span>
+                                </div>
+                            </div>
+                            <div class="detail_reason_item">
+                                <div class="detail_reason_item_left">
+                                    <input id="back_failed_reason3" type="radio" value="其他" v-model="backFailedReason">
+                                </div>
+                                <div class="detail_reason_item_right">
+                                    <span>其他</span>
+                                </div>
+                            </div>
+                            <textarea v-if="backFailedReason === '其他'" v-model="backFailedReason_text"></textarea>
                         </div>
                     </div>
                     
@@ -577,7 +604,9 @@ export default {
             clientName: null,
             isReturnAccess: true,
             isReturnItem: false,
-            showReturnPicBox: false
+            showReturnPicBox: false,
+            backFailedReason: null,
+            backFailedReason_text: null
         };
     },
     computed: {
@@ -771,13 +800,20 @@ export default {
                     this.confirmBox = false
                 } else {
                     let tempDate = new Date().toISOString();
+                    let driverNote = null
+                    if(this.backFailedReason === '其他'){
+                        driverNote = this.backFailedReason_text
+                    }else{
+                        driverNote = this.backFailedReason
+                    }
                     axios
                         .post(config.server + "/customerService/finish", {
                             clientName: this.clientName,
                             mission_id: this.tempArr._id,
                             returnPool_id: this.returnPool_id,
                             finishiDate: tempDate,
-                            isReturnDone: this.isReturnAccess
+                            isReturnDone: this.isReturnAccess,
+                            driverNote:driverNote
                         })
                         .then(doc => {
                             console.log(doc);
@@ -1540,5 +1576,31 @@ export default {
     color: #fff;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
         rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.detail_reason textarea {
+    border-radius: 5px;
+}
+
+.detail_reason_item{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.detail_reason_item_left{
+    padding-top: 2px;
+}
+
+.detail_reason_item_left input{
+    height: 20px;
+    width: 30px;
+}
+
+.detail_reason_item_right{
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
 }
 </style>

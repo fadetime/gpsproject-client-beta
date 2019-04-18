@@ -9,7 +9,7 @@
             <div class="report_basket_title_center">
                 <span>框数检查报告</span>
             </div>
-            <div class="report_basket_title_right" @click="openChooseMonthBox">
+            <div class="report_basket_title_right" @click="openChooseMonthBox()">
                 <span>{{topMonth}}月</span>
             </div>
         </div>
@@ -23,6 +23,7 @@
                 </div>
             </div>
         </div>
+        <button @click="getTripsDriverCarInfoMethod()">test</button>
         <div v-if="missionInfo" class="report_basket_body">
             <div class="report_basket_body_title">
                 <div class="report_basket_body_title_left">
@@ -61,45 +62,81 @@
                 <div class="report_basket_month_box_body">
                     <div class="report_basket_month_box_body_item">
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(1)">
+                            <div v-if="topMonth === 1" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>1</span>
+                            </div>
                             <span>1</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" style="margin:0 12px" @click="chooseMonth(2)">
+                            <div v-if="topMonth === 2" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>2</span>
+                            </div>
                             <span>2</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(3)">
+                            <div v-if="topMonth === 3" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>3</span>
+                            </div>
                             <span>3</span>
                         </div>
                     </div>
                     <div class="report_basket_month_box_body_item">
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(4)">
+                            <div v-if="topMonth === 4" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>4</span>
+                            </div>
                             <span>4</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" style="margin:0 12px" @click="chooseMonth(5)">
+                            <div v-if="topMonth === 5" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>5</span>
+                            </div>
                             <span>5</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(6)">
+                            <div v-if="topMonth === 6" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>6</span>
+                            </div>
                             <span>6</span>
                         </div>
                     </div>
                     <div class="report_basket_month_box_body_item">
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(7)">
+                            <div v-if="topMonth === 7" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>7</span>
+                            </div>
                             <span>7</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" style="margin:0 12px" @click="chooseMonth(8)">
+                            <div v-if="topMonth === 8" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>8</span>
+                            </div>
                             <span>8</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(9)">
+                            <div v-if="topMonth === 9" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>9</span>
+                            </div>
                             <span>9</span>
                         </div>
                     </div>
                     <div class="report_basket_month_box_body_item" style="margin-bottom:0">
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(10)">
+                            <div v-if="topMonth === 10" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>10</span>
+                            </div>
                             <span>10</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" style="margin:0 12px" @click="chooseMonth(11)">
+                            <div v-if="topMonth === 11" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>11</span>
+                            </div>
                             <span>11</span>
                         </div>
                         <div class="report_basket_month_box_body_item_frame" @click="chooseMonth(12)">
+                            <div v-if="topMonth === 12" class="report_basket_month_box_body_item_frame_redborder">
+                                <span>12</span>
+                            </div>
                             <span>12</span>
                         </div>
                     </div>
@@ -107,6 +144,9 @@
                 <div class="report_basket_month_box_bottom">
                     <div class="white_button" @click="isShowMonthBox = false">
                         <span>关闭</span>
+                    </div>
+                    <div class="white_button" @click="confirmChooseMonthMethod()" style="margin-left:8px">
+                        <span>确定</span>
                     </div>
                 </div>
             </div>
@@ -137,8 +177,71 @@ export default {
     },
 
     methods:{
+        getTripsDriverCarInfoMethod(){
+            axios
+                .get(config.server + "/times/DC")
+                .then(doc => {
+                    console.log(doc)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        confirmChooseMonthMethod(){
+            this.isShowMonthBox = false
+            axios
+                .post(config.server + "/tripCount/oneMonth",{
+                    month:this.topMonth
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        let tempArray = []
+                        let tempDate = new Date().setMonth(this.topMonth - 1)
+                        tempDate = new Date(tempDate).toLocaleDateString()
+                        async function waitForeachMethod(index) {
+                            return new Promise(resolve => {
+                                doc.data.doc.forEach(element => {
+                                    if(element.missionDate === tempDate){
+                                        tempArray.push({
+                                            index:index,
+                                            date:element.missionDate,
+                                            array:element.missionArray
+                                        })
+                                    }
+                                });
+                                resolve(index)
+                            })
+                        }
+                        let maxDate = this.maxDay + 1
+                        async function addArrayMethod() {
+                            for (let index = 1; index < maxDate; index++) {
+                                tempDate = new Date(tempDate).setDate(index)
+                                tempDate = new Date(tempDate).toISOString()
+                                await waitForeachMethod(index)
+                                if(!tempArray[index - 1]){
+                                    tempArray.push({
+                                        index:index,
+                                        date:tempDate,
+                                        array:null
+                                    })
+                                }
+                            }
+                        }
+                        addArrayMethod()
+                        console.log(tempArray)
+                    }else{
+                        console.log('获取数据错误')
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            this.getMaxDayMethod()
+        },
+
         chooseDayMethod(day){
-            console.log(day)
             this.chooseDayValue = day
             let tempDate = new Date().setMonth(this.topMonth - 1)
             tempDate = new Date(tempDate).setDate(day)
@@ -167,15 +270,13 @@ export default {
             tempDate = new Date(tempDate).setMonth(this.topMonth)
             tempDate = new Date(tempDate).setDate(0)
             this.maxDay = new Date(tempDate).getDate(0)
-            console.log(this.maxDay)
         },
+
         openChooseMonthBox(){
             this.isShowMonthBox = true
         },
         chooseMonth(num){
             this.topMonth = num
-            this.isShowMonthBox = false
-            this.getMaxDayMethod()
         }
     }
 }
@@ -219,25 +320,25 @@ export default {
 }
 
 .report_basket_top_item{
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    width: 30px;
+    width: 20px;
     border-radius: 5px;
     flex-shrink: 0;
-    margin: 4px;
+    margin: 2px;
 }
 
 .report_basket_top_item_red{
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
-    width: 30px;
+    width: 20px;
     border-radius: 5px;
     flex-shrink: 0;
-    margin: 4px;
+    margin: 2px;
     background-color: #d74342;
     color: #fff;
 }
@@ -328,12 +429,24 @@ export default {
 }
 
 .report_basket_month_box_body_item_frame{
-    width: 30px;
+    width: 40px;
     height: 30px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     border-radius: 10px;
     border: 1px solid #eee;
+    position: relative;
+}
+
+.report_basket_month_box_body_item_frame_redborder{
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+    border-radius: 10px;
+    background-color: #d74342;
+    color: #fff;
 }
 
 .report_basket_month_box_body_item_frame span{

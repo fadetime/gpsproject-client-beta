@@ -117,10 +117,6 @@
                             <div v-if="whereShowCheck === 'today'" class="tripcount_icon_check"></div>
                             <span>{{today}}</span>
                         </div>
-                        <div class="tripcount_add_tips_box_body_item" @click="chooseDate('tomorrow')">
-                            <div v-if="whereShowCheck === 'tomorrow'" class="tripcount_icon_check"></div>
-                            <span>{{tomorrow}}</span>
-                        </div>
                     </div>
                     <div class="tripcount_add_tips_box_bottom">
                         <div class="tripcount_box_footer_button" @click="isShowAddTips = false">
@@ -436,7 +432,6 @@ export default {
             tempShipping:null,
             today:null,
             yesterday:null,
-            tomorrow:null,
             whereShowCheck:null,
             tipsShowColor:null,
             tipsInfo:null,
@@ -446,9 +441,7 @@ export default {
 
     methods:{
         chooseDate(mode){
-            if(mode === 'tomorrow'){
-                this.whereShowCheck = 'tomorrow'
-            }else if(mode === 'yesterday'){
+            if(mode === 'yesterday'){
                 this.whereShowCheck = 'yesterday'
             }else{
                 this.whereShowCheck = 'today'
@@ -723,7 +716,7 @@ export default {
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
-                        this.childDialogMsg = 'Mission already exists,read or not？'
+                        this.childDialogMsg = 'Date update？'
                         this.isShowChildValue = true
                         this.tempShipping = doc
                     }else{
