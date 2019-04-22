@@ -13,7 +13,7 @@
                 <span>{{topMonth}}月</span>
             </div>
         </div>
-        <div class="report_basket_top">
+        <!-- <div class="report_basket_top">
             <div v-for="(item,index) in maxDay" :key="index" @click="chooseDayMethod(item)">
                 <div v-if="chooseDayValue === item" class="report_basket_top_item_red">
                     <span>{{item}}</span>
@@ -22,7 +22,7 @@
                     <span>{{item}}</span>
                 </div>
             </div>
-        </div>
+        </div> -->
         <button @click="getTripsDriverCarInfoMethod()">test</button>
         <div v-if="missionInfo" class="report_basket_body">
             <div class="report_basket_body_title">
@@ -45,6 +45,60 @@
                 
             </div>
         </div>
+        <!-- 报表主体部分 start -->
+        <div class="report_basket_body_main">
+            <div class="report_basket_body_left">
+                <div class="report_basket_body_left_title">
+                    <span>TITLE</span>
+                </div>
+                <div class="report_basket_body_left_item" v-for="(item,index) in lineInfo" :key="index">
+                    <div class="report_basket_body_left_item_frame">
+                        <div class="report_basket_body_left_item_frame_index">
+                            <span>{{index + 1}}</span>
+                        </div>
+                        <div class="report_basket_body_left_item_frame_info">
+                            <div class="report_basket_body_left_item_top">
+                                <span>{{item.timescar.carid}}</span>
+                            </div>
+                            <div class="report_basket_body_left_item_bottom">
+                                <span>{{item.timesdirver.dirvername}}</span>
+                            </div>
+                        </div>
+                        <div class="report_basket_body_left_item_frame_title">
+                            <div class="report_basket_body_left_item_frame_title_item">
+                                <span>IN</span>
+                            </div>
+                            <div class="report_basket_body_left_item_frame_title_item">
+                                <span>OUT</span>
+                            </div>
+                            <div class="report_basket_body_left_item_frame_title_item">
+                                <span>TOTAL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="report_basket_body_right">
+                <div v-for="(item,index) in reportInfo" :key="index" class="report_basket_body_right_title">
+                    <div class="report_basket_body_right_title_item">
+                        <span>{{item.index}}</span>
+                    </div>
+                    <div v-for="(numInfo,index) in item.array" :key="'numInfo' + index">
+                        <div class="report_basket_body_right_title_item_num">
+                            <span>{{numInfo.in}}</span>
+                        </div>
+                        <div class="report_basket_body_right_title_item_num">
+                            <span>{{numInfo.out}}</span>
+                        </div>
+                        <div class="report_basket_body_right_title_item_num">
+                            <span>{{numInfo.out - numInfo.in}}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- 报表主体部分 end -->
         <!-- 月份选择框 start -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -172,7 +226,9 @@ export default {
             maxDay:null,
             isShowMonthBox:false,
             chooseDayValue:null,
-            missionInfo:null
+            missionInfo:null,
+            lineInfo:null,
+            reportInfo:null
         }
     },
 
@@ -182,6 +238,11 @@ export default {
                 .get(config.server + "/times/DC")
                 .then(doc => {
                     console.log(doc)
+                    if(doc.data.code === 0){
+                        this.lineInfo = doc.data.doc
+                    }else{
+                        console.log('获取线路信息失败')
+                    }
                 })
                 .catch(err => {
                     console.log(err)
@@ -215,22 +276,32 @@ export default {
                             })
                         }
                         let maxDate = this.maxDay + 1
+                        let newLineInfo = this.lineInfo
                         async function addArrayMethod() {
                             for (let index = 1; index < maxDate; index++) {
                                 tempDate = new Date(tempDate).setDate(index)
                                 tempDate = new Date(tempDate).toISOString()
                                 await waitForeachMethod(index)
                                 if(!tempArray[index - 1]){
+                                    let nullArray = []
+                                    newLineInfo.forEach(item => {
+                                        let tempdate = {
+                                            in:null,
+                                            out:null
+                                        }
+                                        nullArray.push(tempdate)
+                                    })
                                     tempArray.push({
                                         index:index,
                                         date:tempDate,
-                                        array:null
+                                        array:nullArray
                                     })
                                 }
                             }
                         }
                         addArrayMethod()
                         console.log(tempArray)
+                        this.reportInfo = tempArray
                     }else{
                         console.log('获取数据错误')
                     }
@@ -370,6 +441,73 @@ export default {
     display: flex;
     display: -webkit-flex;
     border-bottom: 1px solid #d74342;
+}
+
+.report_basket_body_main{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.report_basket_body_left_title{
+    width: 112px;
+    border: 1px solid #eee;
+    height: 20px;
+    line-height: 20px;
+}
+
+.report_basket_body_left_item_frame{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.report_basket_body_left_item_frame_index{
+    height: 42px;
+    line-height: 42px;
+    border: 1px solid #eee;
+    width: 10px;
+}
+
+.report_basket_body_left_item_frame_info{
+    width: 62px;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.report_basket_body_left_item_frame_info div{
+    border: 1px solid #eee;
+    height: 21px;
+    line-height: 21px;
+}
+
+.report_basket_body_left_item_frame_title{
+    font-size: 12px;
+}
+
+.report_basket_body_left_item_frame_title_item{
+    border: 1px solid #eee;
+    height: 14px;
+    line-height: 14px;
+    width: 40px;
+}
+
+.report_basket_body_right{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.report_basket_body_right_title_item{
+    width: 20px;
+    height: 20px;
+    border: 1px solid #eee;
+}
+
+.report_basket_body_right_title_item_num{
+    height: 14px;
+    font-size: 12px;
+    line-height: 14px;
+    border: 1px solid #eee;
 }
 
 .report_basket_month_back{

@@ -6,7 +6,7 @@
         <div style="height:40px">
             <!-- title empty space -->
         </div>
-        <div class="tripcount_body" ref="tripcount_body">
+        <div class="tripcount_body" ref="tripcount_body" >
             <div v-if="!pageFlag" class="tripcount_body_item">
                 <div class="tripcount_body_frame" @click="addMission">
                     <div class="add_icon"></div>
@@ -15,7 +15,7 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="tripcount_body_content">
+            <div v-else class="tripcount_body_content" >
                 <div class="tripcount_body_content_title">
                     <div class="tripcount_body_content_title_left">
                         <span>Mission Date</span>
@@ -638,19 +638,21 @@ export default {
             this.loadingAnimation = true
             let date = null
             if(this.whereShowCheck === 'yesterday'){
-                date = this.yesterday
-            }else if(this.whereShowCheck === 'tomorrow'){
-                date = this.tomorrow
+                date = new Date().toDateString()
+                date = new Date(date).getTime()
+                date = date - 86400000
+                date = new Date(date).toISOString()
             }else{
-                date = this.today
+                date = new Date().toDateString()
+                date = new Date(date).getTime()
+                date = new Date(date).toISOString()
             }
-            let dateString = new Date(date).toDateString()
             axios
                 .post(config.server + '/tripCount/create',{
                     creater: this.userName,
                     creater_id: this.user_id,//创建人_id
-                    createDate: date,//创建时间
-                    missionDate: new Date(dateString).toISOString(),//任务时间
+                    createDate: new Date(),//创建时间
+                    missionDate: date,//任务时间
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
@@ -703,30 +705,13 @@ export default {
         },
 
         addMission(){
-            let tempDate = new Date().toLocaleDateString()
             this.today = new Date().toLocaleDateString()
             let tempDay = new Date(this.today).getDate()
-            this.yesterday = new Date().setDate(tempDay - 1)
+            let yesterday_locale = new Date().toDateString()
+            this.yesterday = new Date(yesterday_locale).getTime()
+            this.yesterday = this.yesterday - 86400000
             this.yesterday = new Date(this.yesterday).toLocaleDateString()
-            this.tomorrow = new Date().setDate(tempDay + 1)
-            this.tomorrow = new Date(this.tomorrow).toLocaleDateString()
-            axios
-                .post(config.server + '/tripCount/findOld',{
-                    missionDate:tempDate
-                })
-                .then(doc => {
-                    if(doc.data.code === 0){
-                        this.childDialogMsg = 'Date update？'
-                        this.isShowChildValue = true
-                        this.tempShipping = doc
-                    }else{
-                        this.isShowAddTips = true
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-            
+            this.isShowAddTips = true
         }
     }
 }

@@ -117,12 +117,16 @@
 </template>
 
 <style scoped>
+.carrule_top_pic{
+    margin-top: 48px;
+}
+
 .carrule_top_title{
     position: relative;
 }
 
 .carrule_top_color{
-    width: 120px;
+    width: 100px;
     height: 60px;
     margin-left:-24px;
     transform:skew(-30deg);
@@ -134,7 +138,7 @@
 
 .carrule_top_title_content{
     position: absolute;
-    top: 0;
+    top: 16px;
     right: 18px;
     font-size: 30px;
 }
@@ -157,7 +161,7 @@
 
 .carrule_top_body{
     padding: 24px 0;
-    margin-top: 24px;
+    margin-top: 80px;
 }
 .carrule_top_body_frame{
     position: relative;
