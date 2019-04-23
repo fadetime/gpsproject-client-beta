@@ -518,7 +518,6 @@ export default {
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
-                        this.getMission()
                         this.isShowEditDialog = false
                         this.tipsShowColor = 'green'
                         this.tipsInfo = 'Edit success'
