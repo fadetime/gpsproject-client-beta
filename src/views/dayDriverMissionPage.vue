@@ -3,8 +3,8 @@
         <div class="page-title">
             <div class="page-title-left"></div>
             <div class="page-title-center">
-                <span v-if="lang === 'ch'">白班任务池</span>
-                <span v-else>Day Shift Mission Pool</span>
+                <span v-if="lang === 'ch'">白班任务</span>
+                <span v-else>Day Shift Mission</span>
             </div>
             <div class="page-title-right">
                 <div class="dateicon"></div>
@@ -1366,14 +1366,16 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
     width: 180px;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .checkcar-body-top {
     background: #d74342;
     color: #fff;
     font-size: 16px;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }

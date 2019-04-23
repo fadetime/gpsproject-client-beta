@@ -402,7 +402,8 @@
                                     <input id="back_failed_reason1" type="radio" value="找不到" v-model="backFailedReason">
                                 </div>
                                 <div class="detail_reason_item_right">
-                                    <span>找不到</span>
+                                    <span v-if="lang === 'ch'">找不到</span>
+                                    <span v-else>Cant find</span>
                                 </div>
                             </div>
                             <div class="detail_reason_item">
@@ -410,7 +411,8 @@
                                     <input id="back_failed_reason2" type="radio" value="未拿出" v-model="backFailedReason">
                                 </div>
                                 <div class="detail_reason_item_right">
-                                    <span>未拿出</span>
+                                    <span v-if="lang === 'ch'">未拿出</span>
+                                    <span v-else>Not in the specified location</span>
                                 </div>
                             </div>
                             <div class="detail_reason_item">
@@ -418,7 +420,8 @@
                                     <input id="back_failed_reason3" type="radio" value="其他" v-model="backFailedReason">
                                 </div>
                                 <div class="detail_reason_item_right">
-                                    <span>其他</span>
+                                    <span v-if="lang === 'ch'">其他</span>
+                                    <span v-else>Other</span>
                                 </div>
                             </div>
                             <textarea v-if="backFailedReason === '其他'" v-model="backFailedReason_text"></textarea>
@@ -562,7 +565,9 @@
                @change="changeReturnImg($event)"
                accept="image/*">
         <!-- return pic confirm box end -->
-
+        <!-- tips box start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- tips box end -->
     </div>
 </template>
 
@@ -571,14 +576,21 @@ import axios from "axios";
 import config from "../assets/js/config";
 import lrz from "lrz";
 import _ from "lodash";
+import tipsBox from "../components/tipsBox"
 
 export default {
+    components:{
+        tipsBox
+    },
+
     created() {
         this.drivername = localStorage.getItem("drivername");
     },
+
     mounted() {
         this.missionGetOne();
     },
+
     data() {
         return {
             uploadDialog: false,
@@ -606,7 +618,10 @@ export default {
             isReturnItem: false,
             showReturnPicBox: false,
             backFailedReason: null,
-            backFailedReason_text: null
+            backFailedReason_text: null,
+            tipsShowColor: null,
+            tipsInfo:null,
+            isShowTipsBox:null
         };
     },
     computed: {
@@ -644,16 +659,6 @@ export default {
                         if (this.updateImage.size > maxSize) {
                             this.updateImage = res.file;
                         }
-
-                        // _id: this.tempArr._id,
-                        // clientName: this.clientName,
-                        // position: tempPosition,
-                        // outBasket: this.outBasket,
-                        // inBasket: this.inBasket,
-                        // date: tempDate,
-                        // driverName: this.drivername,
-                        // lineName: this.tempArr.missionline
-
                         payload.append("image", this.updateImage);
                         payload.append("outBasket", 0);
                         payload.append("inBasket", 0);
@@ -802,11 +807,95 @@ export default {
                     let tempDate = new Date().toISOString();
                     let driverNote = null
                     if(this.backFailedReason === '其他'){
-                        driverNote = this.backFailedReason_text
+                        if(this.backFailedReason_text){
+                            driverNote = this.backFailedReason_text
+                            let tempDate = new Date().toISOString();
+                            axios
+                                .post(config.server + "/customerService/finish", {
+                                    clientName: this.clientName,
+                                    mission_id: this.tempArr._id,
+                                    returnPool_id: this.returnPool_id,
+                                    finishiDate: tempDate,
+                                    isReturnDone: this.isReturnAccess,
+                                    driverNote:driverNote
+                                })
+                                .then(doc => {
+                                    console.log(doc);
+                                    let tempKey = true;
+                                    this.outBasket = 0;
+                                    this.inBasket = 0;
+                                    //获取用户位置
+                                    let tempPosition;
+                                    if (navigator.geolocation) {
+                                        navigator.geolocation.getCurrentPosition(
+                                            function(position) {
+                                                tempPosition = {
+                                                    lat: position.coords.latitude,
+                                                    lng: position.coords.longitude
+                                                };
+                                            }
+                                        );
+                                    } else {
+                                        // Browser doesn't support
+                                        alert("不支持定位功能");
+                                        console.log("browser doesnt support geolocation");
+                                    }
+                                    
+
+                                    setTimeout(() => {
+                                        axios
+                                            .post(config.server +"/client-driver/exupdate",{
+                                                    _id: this.tempArr._id,
+                                                    clientName: this.clientName,
+                                                    position: tempPosition,
+                                                    outBasket: this.outBasket,
+                                                    inBasket: this.inBasket,
+                                                    date: tempDate,
+                                                    driverName: this.drivername,
+                                                    lineName: this.tempArr.missionline,
+                                                    isReturn:this.isReturnItem,
+                                                    returnPool_id: this.returnPool_id,
+                                                })
+                                            .then(doc => {
+                                                if (doc.data.code === 0) {
+                                                    this.missionGetOne();
+                                                    this.confirmBox = false;
+                                                    this.showError = true;
+                                                    this.errorInfo = this.language.detailPage.missionSuccess;
+                                                    this.confirmTwiceBox = false;
+                                                } else {
+                                                    this.showError = true;
+                                                    this.errorInfo = this.language.detailPage.missionError;
+                                                }
+                                                setTimeout(() => {
+                                                    this.showError = false;
+                                                }, 3000);
+                                            })
+                                            .catch(err => {
+                                                console.log(err);
+                                            });
+                                    }, 200);
+                                    //
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        }else{
+                            this.tipsShowColor = 'yellow'
+                            if(this.lang === 'ch'){
+                                this.tipsInfo = '请输入原因'
+                            }else{
+                                this.tipsInfo = 'Please input reason'
+                            }
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 3000);
+                        }
                     }else{
                         driverNote = this.backFailedReason
-                    }
-                    axios
+                        let tempDate = new Date().toISOString();
+                        axios
                         .post(config.server + "/customerService/finish", {
                             clientName: this.clientName,
                             mission_id: this.tempArr._id,
@@ -818,10 +907,6 @@ export default {
                         .then(doc => {
                             console.log(doc);
                             let tempKey = true;
-                            // if(isReturnDone){
-                            //     this.sendBackCustomerService(tempDate)
-                            // }
-                            //
                             this.outBasket = 0;
                             this.inBasket = 0;
                             //获取用户位置
@@ -840,8 +925,6 @@ export default {
                                 alert("不支持定位功能");
                                 console.log("browser doesnt support geolocation");
                             }
-                            let tempDate = new Date().toISOString();
-
                             setTimeout(() => {
                                 axios
                                     .post(config.server +"/client-driver/exupdate",{
@@ -880,6 +963,7 @@ export default {
                         .catch(err => {
                             console.log(err);
                         });
+                    }
                 }
             } else {
                 if (!this.inBasket || !this.outBasket) {

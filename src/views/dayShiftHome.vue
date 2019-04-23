@@ -216,7 +216,7 @@
             <div v-if="isShowFirstPageNotice"
                  class="first_notic_back">
                 <div class="first_notic_back_close" @click="isShowFirstPageNotice = false">
-                    <span v-if="lang === 'ch'" style="font-size:14px;line-height: 38px;">已读</span>
+                    <span v-if="lang === 'ch'" style="font-size:14px;line-height: 40px;">已读</span>
                     <span v-else style="font-size:13px;line-height: 42px;">READ</span>
                 </div>
                 <div class="first_notic_back_top">
@@ -251,19 +251,32 @@
             </div>
         </transition>
         <!-- big image dialog end -->
-
-        <!-- 操作提示 -->
-        <transition name="tips-classes-transition"
-                    enter-active-class="animated bounceInDown"
-                    leave-active-class="animated bounceOutUp">
-            <div class="errinfo"
-                 v-if="showError"
-                 @click="showError = false">
-                <span>{{errorInfo}}</span>
+        <!-- loading animation start -->
+        <transition name="dayshift-classes-loading-back"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation" class="dayshift_loading_back"></div>
+        </transition>
+        <transition name="dayshift-classes-loading-front"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation"
+                 class="dayshift_loading_front">
+                <div class="dayshift_loading_box">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
             </div>
         </transition>
-        <!-- 操作提示 -->
-
+        <!-- loading animation end -->
+        <!-- tips box start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- tips box end -->
     </div>
 </template>
 
@@ -271,8 +284,12 @@
 import axios from "axios";
 import config from "../assets/js/config";
 import _ from "lodash";
+import tipsBox from "../components/tipsBox"
 
 export default {
+    components:{
+        tipsBox
+    },
     mounted() {
         this.drivername = localStorage.getItem("drivername");
         this.getMissionPool();
@@ -292,9 +309,6 @@ export default {
             drivername: null,
             missionArray: [],
             finishNumber: [],
-            showError: false,
-            errorInfo: "未知错误",
-            showRemoveBox: false,
             radioPicked: null,
             otherText: null,
             missionInfo: null,
@@ -306,6 +320,10 @@ export default {
             isShowBigImageDialog:false,
             firstPageTextEN:null,
             firstPageText:null,
+            loadingAnimation:false,
+            tipsShowColor:null,
+            tipsInfo:null,
+            isShowTipsBox:null
         };
     },
     methods: {
@@ -325,15 +343,16 @@ export default {
                                 this.isShowFirstPageNotice = true
                                 localStorage.noticeOldTime = tempdate
                             }else{
-                                if(this.lang === 'ch'){
-                                    this.errorInfo = '获取首页通知失败'
-                                }else{
-                                    this.errorInfo = 'Get first page notice failed'
+                                this.tipsShowColor = 'yellow'
+                                if (this.lang === "ch") {
+                                    this.tipsInfo = "获取首页通知失败";
+                                } else {
+                                    this.tipsInfo = "Get first page notice failed";
                                 }
-                                this.showErrorTips = true
+                                this.isShowTipsBox = true
                                 setTimeout(() => {
-                                    this.showErrorTips = false
-                                }, 2000);
+                                    this.isShowTipsBox = false;
+                                }, 3000)
                             }
                         })
                         .catch(err => {
@@ -353,15 +372,16 @@ export default {
                             this.isShowFirstPageNotice = true
                             localStorage.noticeOldTime = noticeOldTime
                         }else{
-                            if(this.lang === 'ch'){
-                                this.errorInfo = '获取首页通知失败'
-                            }else{
-                                this.errorInfo = 'Get first page notice failed'
+                            this.tipsShowColor = 'yellow'
+                            if (this.lang === "ch") {
+                                this.tipsInfo = "获取首页通知失败";
+                            } else {
+                                this.tipsInfo = "Get first page notice failed";
                             }
-                            this.showErrorTips = true
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.showErrorTips = false
-                            }, 2000);
+                                this.isShowTipsBox = false;
+                            }, 3000)
                         }
                     })
                     .catch(err => {
@@ -372,6 +392,7 @@ export default {
 
         saveMission() {
             let tempDate = new Date().toISOString();
+            this.loadingAnimation = true
             axios
                 .post(config.server + "/dsdriver/create", {
                     driverName: this.drivername,
@@ -380,40 +401,43 @@ export default {
                 })
                 .then(doc => {
                     console.log(doc);
+                    this.loadingAnimation = false
                     if (doc.data.code === 0) {
                         this.isShowConfirmStartBox = false
+                        this.isShowChoiseConfirmBox = false
                         this.getMissionPool();
+                        this.tipsShowColor = 'green'
                         if (this.lang === "ch") {
-                            this.errorInfo = "建立任务成功";
+                            this.tipsInfo = "建立任务成功";
                         } else {
-                            this.errorInfo = "Create mission success";
+                            this.tipsInfo = "Create mission success";
                         }
-                        this.showRemoveBox = false;
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
-                        }, 3000);
+                            this.isShowTipsBox = false;
+                        }, 3000)
                     }else{
                         if (this.lang === "ch") {
-                            this.errorInfo = "建立任务错误";
+                            this.tipsInfo = "建立任务错误";
                         } else {
-                            this.errorInfo = "Catch an error while create mission";
+                            this.tipsInfo = "Catch an error while create mission";
                         }
-                        this.showRemoveBox = false;
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
+                            this.isShowTipsBox = false;
                         }, 3000);
                     }
                 })
                 .catch(err => {
                     console.log(err);
                     if (this.lang === "ch") {
-                        this.errorInfo = "客户端错误";
+                        this.tipsInfo = "客户端错误";
                     } else {
-                        this.errorInfo = "web client error";
+                        this.tipsInfo = "web client error";
                     }
-                    this.showRemoveBox = false;
+                    this.isShowTipsBox = true
                     setTimeout(() => {
-                        this.showError = false;
+                        this.isShowTipsBox = false;
                     }, 3000);
                 });
         },
@@ -442,25 +466,25 @@ export default {
                 .then(doc => {
                     console.log(doc);
                     if (doc.data.code === 0) {
-                        if (this.lang === "ch") {
-                            this.errorInfo = "状态更新成功";
-                        } else {
-                            this.errorInfo = "state update success";
-                        }
-                        this.showRemoveBox = false;
-                        setTimeout(() => {
-                            this.showError = false;
-                        }, 3000);
                         this.getMissionPool();
+                        if (this.lang === "ch") {
+                            this.tipsInfo = "状态更新成功";
+                        } else {
+                            this.tipsInfo = "state update success";
+                        }
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false;
+                        }, 2000);
                     } else {
                         if (this.lang === "ch") {
-                            this.errorInfo = "状态更新失败";
+                            this.tipsInfo = "状态更新失败";
                         } else {
-                            this.errorInfo = "state update failed";
+                            this.tipsInfo = "state update failed";
                         }
-                        this.showRemoveBox = false;
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
+                            this.isShowTipsBox = false;
                         }, 3000);
                     }
                 })
@@ -471,7 +495,6 @@ export default {
 
         getMissionPool() {
             let b = new Date().toISOString();
-            console.log(b)
             this.needDoNum = 0;
             this.$store.dispatch("setDoNum", this.needDoNum);
             axios
@@ -494,24 +517,24 @@ export default {
                         });
                         this.$store.dispatch("setDoNum", this.needDoNum);
                     } else if (doc.data.code === 1) {
-                        this.showError = true;
                         if (this.lang === "ch") {
-                            this.errorInfo = "未找该日任务";
+                            this.tipsInfo = "未找该日任务";
                         } else {
-                            this.errorInfo = "Mission not found in today";
+                            this.tipsInfo = "Mission not found in today";
                         }
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
+                            this.isShowTipsBox = false;
                         }, 3000);
                     } else {
-                        this.showError = true;
                         if (this.lang === "ch") {
-                            this.errorInfo = "未找到白班任务";
+                            this.tipsInfo = "未找到白班任务";
                         } else {
-                            this.errorInfo = "Mission not found";
+                            this.tipsInfo = "Mission not found";
                         }
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
+                            this.isShowTipsBox = false;
                         }, 3000);
                     }
                 })
@@ -549,6 +572,7 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     margin-bottom: 10px;
     overflow: hidden;
+    border-radius: 10px;
 }
 
 .search-body-center-item-title {
@@ -781,14 +805,16 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .confirmstart-box-title {
     background: #d74342;
     color: #fff;
     font-size: 16px;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
@@ -804,6 +830,8 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     height: 300px;
     overflow: auto;
+    padding: 8px;
+    border-radius: 10px;
 }
 
 .confirmstart-box-body-item {
@@ -821,7 +849,7 @@ export default {
 }
 
 .confirmstart-box-body-item-right {
-    width: 200px;
+    width: 180px;
     margin-left: 20px;
     text-align: left;
 }
@@ -925,5 +953,71 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+}
+
+.dayshift_loading_back {
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.dayshift_loading_front {
+    position: fixed;
+    z-index: 102;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dayshift_loading_box{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+}
+
+.spinner {
+    margin: 32px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: rgba(212, 50, 49, 1);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
 }
 </style>
