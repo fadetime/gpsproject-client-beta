@@ -1,7 +1,7 @@
 <template>
     <div id="report_basket">
         <div class="report_basket_title">
-            <div class="report_basket_title_left">
+            <div class="report_basket_title_left" @click="goBackMethod()">
                 <div>
                     <img src="../../../public/icons/left.png" alt="exit" style="width: 20px;">
                 </div>
@@ -23,7 +23,6 @@
                 </div>
             </div>
         </div> -->
-        <button @click="getTripsDriverCarInfoMethod()">test</button>
         <div v-if="missionInfo" class="report_basket_body">
             <div class="report_basket_body_title">
                 <div class="report_basket_body_title_left">
@@ -46,7 +45,7 @@
             </div>
         </div>
         <!-- 报表主体部分 start -->
-        <div class="report_basket_body_main">
+        <div v-if="lineInfo" class="report_basket_body_main">
             <div class="report_basket_body_left">
                 <div class="report_basket_body_left_title">
                     <span>TITLE</span>
@@ -199,7 +198,7 @@
                     <div class="white_button" @click="isShowMonthBox = false">
                         <span>关闭</span>
                     </div>
-                    <div class="white_button" @click="confirmChooseMonthMethod()" style="margin-left:8px">
+                    <div class="white_button" @click="getTripsDriverCarInfoMethod()" style="margin-left:8px">
                         <span>确定</span>
                     </div>
                 </div>
@@ -207,14 +206,47 @@
         </div>
         </transition>
         <!-- 月份选择框 end -->
+
+        <!-- tips box start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- tips box end -->
+
+        <!-- loading animation start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation" class="tripcount_loading_back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation"
+                 class="tripcount_loading_front">
+                <div class="tripcount_loading_box">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- loading animation end -->
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import config from "../../assets/js/config";
+import tipsBox from "../../components/tipsBox"
 
 export default {
+    components:{
+        tipsBox
+    },
+
     mounted(){
         this.topMonth = new Date().getMonth() + 1
         this.getMaxDayMethod()
@@ -228,21 +260,41 @@ export default {
             chooseDayValue:null,
             missionInfo:null,
             lineInfo:null,
-            reportInfo:null
+            reportInfo:null,
+            tipsShowColor:null,
+            tipsInfo:null,
+            isShowTipsBox:null,
+            loadingAnimation:false
         }
     },
 
     methods:{
+        goBackMethod(){
+            this.$router.push("/report");
+        },
+
         getTripsDriverCarInfoMethod(){
+            this.loadingAnimation = true
             axios
                 .get(config.server + "/times/DC")
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.lineInfo = doc.data.doc
+                        this.confirmChooseMonthMethod()
                     }else{
-                        console.log('获取线路信息失败')
+                        console.log('Get trips info failed')
+                        this.tipsShowColor = 'yellow'
+                        if(this.lang === 'cn'){
+                            this.tipsInfo = '获取线路信息失败'
+                        }else{
+                            this.tipsInfo = 'Get trips info failed'
+                        }
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                             this.isShowTipsBox = false   
+                        }, 3000);
                     }
+                    this.loadingAnimation = false
                 })
                 .catch(err => {
                     console.log(err)
@@ -346,6 +398,7 @@ export default {
         openChooseMonthBox(){
             this.isShowMonthBox = true
         },
+
         chooseMonth(num){
             this.topMonth = num
         }
@@ -446,6 +499,7 @@ export default {
 .report_basket_body_main{
     display: flex;
     display: -webkit-flex;
+    margin-top: 12px;
 }
 
 .report_basket_body_left_title{
@@ -495,6 +549,7 @@ export default {
 .report_basket_body_right{
     display: flex;
     display: -webkit-flex;
+    overflow-x: auto;
 }
 
 .report_basket_body_right_title_item{
@@ -607,5 +662,71 @@ export default {
     width: 80px;
     border-radius: 10px;
     background-color: #fff;
+}
+
+.tripcount_loading_back {
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.tripcount_loading_front {
+    position: fixed;
+    z-index: 102;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tripcount_loading_box{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+}
+
+.spinner {
+    margin: 32px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: rgba(212, 50, 49, 1);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
 }
 </style>

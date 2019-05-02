@@ -633,7 +633,7 @@ export default {
     name: 'homepage',
     beforeCreate() {
         if(localStorage.getItem('driverRole') === 'dayshift'){
-            this.$router.push('/dayShiftHome')
+            this.$router.push('/ddmpage')
         }else if(localStorage.getItem('driverRole') === 'breakbox'){
             this.$router.push('/brokeboxreport')
         }else if(localStorage.getItem('driverRole') === 'leader'){
@@ -645,7 +645,7 @@ export default {
         }else if(localStorage.getItem('driverRole') === 'bill'){
             this.$router.push('/bill')
         }else if(localStorage.getItem('driverRole') === 'dayshiftLeader'){
-            this.$router.push('/daypool')
+            this.$router.push('/dayshifthome')
         }else if(localStorage.getItem('driverRole') === 'maintain'){
             this.$router.push('/fixcar')
         }else if(localStorage.getItem('driverRole') === 'dayShiftChecker'){
@@ -1231,6 +1231,7 @@ export default {
                     })
             }
         },
+        
         getChoiceDayMethod() {
             if (this.choiseDay === 'today') {
                 this.choiceDayClassA = 'choiceday'
@@ -1328,7 +1329,6 @@ export default {
                 .then(doc => {
                     this.allMission = doc.data.doc
                     this.allMission = _.orderBy(this.allMission,['complete'],['asc'])
-                    console.log(this.allMission)
                     this.lockCount = 0
                     // 计算完成任务数 和 加锁任务
                     let startNum = -1
@@ -1357,7 +1357,6 @@ export default {
                             }
                         }
                     })
-                    console.log(this.lockCount)
                     this.$store.dispatch('setDoNum', this.needDoNum)
                 })
                 .catch(err => {

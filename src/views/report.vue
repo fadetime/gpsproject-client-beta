@@ -6,7 +6,7 @@
         <div class="report_emptyspace"></div>
         <div class="report_body">
             <div class="report_icon_item">
-                <div class="report_icon_frame">
+                <div class="report_icon_frame" @click="goReportBasket()">
                     <div class="report_icon_basket"></div>
                 </div>
             </div>
@@ -14,6 +14,16 @@
         <div class="report_emptyspace_bottom"></div>
     </div>
 </template>
+
+<script>
+export default {
+    methods:{
+        goReportBasket(){
+            this.$router.push("/report_basket");
+        }
+    }
+}
+</script>
 
 <style scoped>
 .report_title{

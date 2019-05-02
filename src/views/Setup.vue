@@ -59,7 +59,7 @@
             <md-button class="md-raised md-primary" style="width:80%" @click="isChangePSW = true,showDialog = true">{{language.setupPage.changePsw}}</md-button>
         </div>
         <div class="bottom">
-            <a href="http://18.136.155.152:7070">
+            <a href="http://18.136.155.152:9000">
                 <md-button class="md-raised md-primary " style="width:80%;" @click="changeOldVersion">{{language.setupPage.oldVersion}}</md-button>
             </a>
         </div>

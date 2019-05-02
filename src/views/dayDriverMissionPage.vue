@@ -589,10 +589,15 @@
                             <span v-else>Confirm remove</span>
                         </div>
                     </div>
-                    <div class="findcar-body"
-                         style="border: 1px solid #e6e6e6;">
+                    <div class="findcar-body" style="border: 1px solid #e6e6e6;">
                         <div style="font-size:16px;height:30px;line-height:30px;overflow: hidden;">
                             <span>{{shippingClient.clientName}}</span>
+                        </div>
+                        <div class="daydriver_photoarea">
+                            <div class="photoarea" @click="uploadImgFile()">
+                                <md-icon class="md-size-3x" style="padding-top:28px" v-if="!updateImagePreview">add_a_photo</md-icon>
+                                <img :src="updateImagePreview" v-else>
+                            </div>
                         </div>
                     </div>
                     <div class="findcar-bottom">
@@ -618,11 +623,11 @@
                                 <span v-else>confirm</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </transition>
+        <input type="file" style="display:none" id="daydriver_upload_file" @change="fileChange($event)" accept="image/*">
         <!-- confirm and remove mission box end -->
 
         <!-- 操作提示 -->
@@ -636,6 +641,10 @@
             </div>
         </transition>
         <!-- 操作提示 -->
+
+        <!-- tips box start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- tips box end -->
     </div>
 </template>
 
@@ -643,8 +652,13 @@
 import axios from "axios";
 import config from "../assets/js/config";
 import async from "async";
+import tipsBox from "../components/tipsBox"
 
 export default {
+    components:{
+        tipsBox
+    },
+    
     mounted() {
         this.driverName = localStorage.getItem("drivername");
         this.getDayShiftDriverMission();
@@ -675,6 +689,7 @@ export default {
             otherError: true,
             otherErrorText: null,
             updateImagePreview: null,
+            updateImage:null,
             wiper: true,
             headlight: true,
             mirror: true,
@@ -695,11 +710,31 @@ export default {
             clean: true,
             otherErrorAgain: true,
             boxNumAgain: null,
-            otherErrorTextAgain: null
+            otherErrorTextAgain: null,
+            tipsShowColor:null,
+            tipsInfo:null,
+            isShowTipsBox:null,
         };
     },
 
     methods: {
+        uploadImgFile() {
+            document.getElementById("daydriver_upload_file").click();
+        },
+
+        fileChange(el) {
+            if (typeof FileReader === "undefined") {
+                return alert("浏览器不支持上传图片");
+            }
+            console.log("###");
+            if (!el.target.files[0].size) return; //判断是否有文件数量
+            this.updateImagePreview = window.URL.createObjectURL(
+                el.target.files[0]
+            );
+            this.updateImage = el.target.files[0];
+            el.target.value = "";
+        },
+
         confirmCheckAgain() {
             if (!this.boxNumAgain) {
                 this.showError = true;
@@ -836,96 +871,125 @@ export default {
                     console.log(err);
                 });
         },
-        confirmFinishClientMethod() {
-            let tempDate = new Date().toISOString();
-            axios
-                .post(config.server + "/dsdriver/finish", {
-                    mission_id: this._id,
-                    clientName: this.shippingClient.clientName,
-                    finisDate: tempDate
-                })
-                .then(doc => {
-                    console.log(doc);
-                    if (doc.data.code === 0) {
-                        this.findMissionByID();
-                        this.getDayShiftDriverMission();
-                        this.showCRbox = false;
-                        if (this.lang === "ch") {
-                            this.errorInfo = "任务提交成功";
-                        } else {
-                            this.errorInfo = "submit mission success";
-                        }
-                        this.showError = true;
-                        setTimeout(() => {
-                            this.showError = false;
-                        }, 3000);
 
-                        //判断所有客户是否完成 start
-                        //new method
-                        let count = 0;
-                        let notFinishMissionFlag = false;
-                        async.whilst(
-                            function() {
-                                return count < 1;
-                            },
-                            (callback) => {
-                                this.detailDate.some(element => {
-                                    count++;
-                                    console.log(count);
-                                    if (!element.finisDate) {
-                                        notFinishMissionFlag = true;
-                                    }
-                                    return notFinishMissionFlag;
-                                });
-                                callback(null, notFinishMissionFlag);
-                            },
-                            (err, n) => {
-                                // 5 seconds have passed, n = 5
-                                if (!n) {
-                                    this.changeMissionState();
-                                }
+        confirmFinishClientMethod() {
+            if(this.updateImagePreview){
+                let payload = new FormData();
+                payload.append("mission_id", this._id);
+                payload.append("clientName", this.shippingClient.clientName);
+                let tempDate = new Date().toISOString();
+                payload.append("finisDate", tempDate);
+                payload.append("pool_id",this.shippingClient.pool_id)
+                let maxSize = 200 * 1024; //200KB
+                        lrz(this.updateImage, {
+                            quality: 0.5
+                        })
+                        .then(res => {
+                            if (this.updateImage.size > maxSize) {
+                                    this.updateImage = res.file;
                             }
-                        );
-                        //old method
-                        // let notFinishMissionFlag = false
-                        // this.detailDate.some(element => {
-                        //     if(!finisDate){
-                        //         notFinishMissionFlag = true
-                        //     }
-                        //     return notFinishMissionFlag
-                        // });
-                        // if(!notFinishMissionFlag){
-                        //     setTimeout(() => {
-                        //         this.changeMissionState()
-                        //     }, 1000);
-                        // }
-                        //判断所有客户是否完成 end
-                    } else {
-                        if (this.lang === "ch") {
-                            this.errorInfo = "任务提交失败";
-                        } else {
-                            this.errorInfo = "submit mission fail";
-                        }
-                        this.showError = true;
-                        setTimeout(() => {
-                            this.showError = false;
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                            payload.append("image", this.updateImage);
+                            axios
+                                .post(config.server + "/dsdriver/finish",payload)
+                                .then(doc => {
+                                    console.log(doc);
+                                    if (doc.data.code === 0) {
+                                        this.findMissionByID();
+                                        this.getDayShiftDriverMission();
+                                        this.showCRbox = false;
+                                        if (this.lang === "ch") {
+                                            this.errorInfo = "任务提交成功";
+                                        } else {
+                                            this.errorInfo = "submit mission success";
+                                        }
+                                        this.showError = true;
+                                        setTimeout(() => {
+                                            this.showError = false;
+                                        }, 3000);
+
+                                        //判断所有客户是否完成 start
+                                        //new method
+                                        let count = 0;
+                                        let notFinishMissionFlag = false;
+                                        async.whilst(
+                                            function() {
+                                                return count < 1;
+                                            },
+                                            (callback) => {
+                                                this.detailDate.some(element => {
+                                                    count++;
+                                                    console.log(count);
+                                                    if (!element.finisDate) {
+                                                        notFinishMissionFlag = true;
+                                                    }
+                                                    return notFinishMissionFlag;
+                                                });
+                                                callback(null, notFinishMissionFlag);
+                                            },
+                                            (err, n) => {
+                                                if (!n) {
+                                                    this.changeMissionState();
+                                                }
+                                            }
+                                        );
+                                        //old method
+                                        // let notFinishMissionFlag = false
+                                        // this.detailDate.some(element => {
+                                        //     if(!finisDate){
+                                        //         notFinishMissionFlag = true
+                                        //     }
+                                        //     return notFinishMissionFlag
+                                        // });
+                                        // if(!notFinishMissionFlag){
+                                        //     setTimeout(() => {
+                                        //         this.changeMissionState()
+                                        //     }, 1000);
+                                        // }
+                                        //判断所有客户是否完成 end
+                                    } else {
+                                        if (this.lang === "ch") {
+                                            this.errorInfo = "任务提交失败";
+                                        } else {
+                                            this.errorInfo = "submit mission fail";
+                                        }
+                                        this.showError = true;
+                                        setTimeout(() => {
+                                            this.showError = false;
+                                        }, 3000);
+                                    }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            });
+
+                        })
+                        .catch(err => {
+                            console.log(err)
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '压缩图片时发生错误'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 3000);
+                        })
+            }else{
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择照片'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }
         },
 
         finishClientMethod(clientInfo) {
-            console.log(this._id);
+            this.updateImagePreview = null
             this.shippingClient = clientInfo;
             this.boxShowFace = "finish";
             this.showCRbox = true;
         },
 
         removeClientMethod(clientInfo) {
-            console.log(clientInfo);
             this.shippingClient = clientInfo;
             this.boxShowFace = "remove";
             this.showCRbox = true;
@@ -1089,7 +1153,6 @@ export default {
                         payload.append("note", this.otherErrorText);
                     }
                     if (this.updateImage) {
-                        console.log("enter have photo method");
                         let maxSize = 200 * 1024; //200KB
                         lrz(this.updateImage, {
                             quality: 0.5
@@ -1558,5 +1621,22 @@ export default {
     width: 200px;
     margin-left: 10px;
     text-align: left;
+}
+
+.daydriver_photoarea{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+}
+
+.photoarea{
+    width: 100px;
+    height: 100px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background-color: #eee;
+    overflow: hidden;
 }
 </style>

@@ -9,7 +9,16 @@
                 <md-bottom-bar class="md-accent"
                                md-type="shift"
                                v-if="driverRole === 'dayshiftLeader'">
-                    <md-bottom-bar-item v-if="driverRole === 'dayshiftLeader'"
+                    <md-bottom-bar-item id="bottom-bar-item-home"
+                                        @click="goDayHome">
+                        <div class="md-bottom-bar-icon baseline_home"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
+                        <i class="badge"
+                           v-if="newPosts"
+                           style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
+                    </md-bottom-bar-item>
+                    <!-- <md-bottom-bar-item v-if="driverRole === 'dayshiftLeader'"
                                         id="bottom-bar-item-home"
                                         @click="goDayMissionPool">
                         <div class="md-bottom-bar-icon baseline_home"
@@ -18,7 +27,7 @@
                         <i class="badge"
                            v-if="newPosts"
                            style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
-                    </md-bottom-bar-item>
+                    </md-bottom-bar-item> -->
                     <md-bottom-bar-item id="bottom-bar-item-search"
                                         @click="gosearch">
                         <div class="md-bottom-bar-icon search_white"
@@ -44,7 +53,7 @@
                 <md-bottom-bar v-else-if="driverRole === 'dayshift'"
                                class="md-accent"
                                md-type="shift">
-                    <md-bottom-bar-item id="bottom-bar-item-home"
+                    <!-- <md-bottom-bar-item id="bottom-bar-item-home"
                                         @click="goDayHome">
                         <div class="md-bottom-bar-icon baseline_home"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
@@ -52,10 +61,10 @@
                         <i class="badge"
                            v-if="newPosts"
                            style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
-                    </md-bottom-bar-item>
+                    </md-bottom-bar-item> -->
                     <md-bottom-bar-item id="bottom-bar-item-mission"
                                         @click="goDayDriverMissionPage">
-                        <div class="md-bottom-bar-icon assignment_turned"
+                        <div class="md-bottom-bar-icon baseline_home"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span v-if="lang === 'ch'" class="md-bottom-bar-label">任务</span>
                         <span v-else class="md-bottom-bar-label">MISSION</span>
@@ -150,6 +159,12 @@
                         <i class="badge"
                            v-if="newPosts"
                            style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-report" @click="goReport">
+                        <div class="md-bottom-bar-icon assessment_outline"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">通知</span>
+                        <span v-else class="md-bottom-bar-label">NOTICE</span>
                     </md-bottom-bar-item>
                     <md-bottom-bar-item id="bottom-bar-item-mission" @click="goNotice">
                         <div class="md-bottom-bar-icon notification_outline"
@@ -442,6 +457,9 @@ export default {
         goNegineOil() {
             this.$router.push("/engineoil");
         },
+        goReport() {
+            this.$router.push("/report");
+        },
         goNotice() {
             this.$router.push("/notice");
         },
@@ -523,6 +541,14 @@ export default {
     background: #fff;
     mask-image: url(../../public/icons/engine_oil.svg);
     -webkit-mask-image: url(../../public/icons/engine_oil.svg);
+    width: 36px;
+    height: 36px;
+}
+
+.assessment_outline{
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-assessment-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-assessment-24px.svg);
     width: 36px;
     height: 36px;
 }

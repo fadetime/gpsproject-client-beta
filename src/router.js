@@ -104,7 +104,7 @@ export default new Router({
       path: '/dayshifthome',
       name: 'dayShiftHome',
       component: dayShiftHome,
-      beforeEnter: dayShiftGuard
+      // beforeEnter: dayShiftGuard
     },
     {
       path: '/dayPool',

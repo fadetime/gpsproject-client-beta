@@ -87,8 +87,12 @@
                             <span>{{item.clientAddress}}</span>
                         </div>
                     </div>
-
                     <div v-if="!item.dayMission_id">
+                        <div class="day_delbutton">
+                            <div class="search-body-center-button" style="width:42px;background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
+                                <span>删除</span>
+                            </div>
+                        </div>
                         <transition name="custom-classes-transition"
                                     enter-active-class="animated slideInUp faster"
                                     leave-active-class="animated slideOutDown faster">
@@ -149,7 +153,7 @@
                     <div class="search-body-center-button"
                          style="margin-left:10px"
                          @click="startDayShiftMission()">
-                        <span v-if="lang === 'ch'">开始</span>
+                        <span v-if="lang === 'ch'">分配</span>
                         <span v-else>Start</span>
                     </div>
                 </div>
@@ -157,6 +161,45 @@
             </div>
         </transition>
         <!-- choise confirm box end -->
+
+        <!-- choise driver box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoiseDriverBox"
+                 class="confirmstart-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoiseDriverBox"
+                 class="confirmstart-front"
+                 @click.self.prevent="isShowChoiseDriverBox = false">
+                <div class="confirmstart-box">
+                    <div class="confirmstart-box-title">
+                        <span v-if="lang === 'ch'">司机选择</span>
+                        <span v-else>Confirm Client</span>
+                    </div>
+                    <div class="confirmstart-box-body">
+                        <div class="dayshift_driverbox_body">
+                            <div class="dayshift_driverbox_body_item" v-for="(item,index) in driverArray" :key="index" @click="choiseDriverMethod(item)">
+                                <span>{{item.dirvername}}</span>
+                                <div v-if="choiseDriver === item.dirvername" class="dayshift_icon_check"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="confirmstart-box-bottom">
+                        <div class="search-body-center-button" @click="isShowChoiseDriverBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="search-body-center-button" @click="confirmChoiseDriverMethod()">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- choise driver box end -->
 
         <!-- confirm start box start -->
         <transition name="custom-classes-transition"
@@ -173,8 +216,18 @@
                  @click.self.prevent="isShowConfirmStartBox = false">
                 <div class="confirmstart-box">
                     <div class="confirmstart-box-title">
-                        <span v-if="lang === 'ch'">确认客户</span>
+                        <span v-if="lang === 'ch'">确认信息</span>
                         <span v-else>Confirm Client</span>
+                    </div>
+                    <div class="confirmstart-box-body">
+                        <div class="confirmstart-box-body-screen" style="height:30px;line-height:30px;padding:0 4px;display:flex;display:-webkit-flex;justify-content:center;font-size:16px">
+                            <div>
+                                <span>配送司机</span>
+                            </div>
+                            <div style="margin-left:10px">
+                                <span>{{choiseDriver}}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="confirmstart-box-body">
                         <div class="confirmstart-box-body-screen">
@@ -274,6 +327,103 @@
             </div>
         </transition>
         <!-- loading animation end -->
+
+        <!-- 删除提示 start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="showRemoveBox"
+                 class="removebox-back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="showRemoveBox"
+                 class="removebox-front"
+                 @click.self.prevent="showRemoveBox = false">
+                <div class="removebox-box">
+                    <div class="removebox-box-top">
+                        <span v-if="lang === 'ch'">删除任务</span>
+                        <span v-else>Remove Mission</span>
+                    </div>
+                    <div class="removebox-box-body">
+                        <div class="removebox-box-body-title">
+                            <span v-if="lang === 'ch'"
+                                  style="font-size:16px">删除原因</span>
+                            <span v-else
+                                  style="font-size:16px">Choise Reason</span>
+                        </div>
+                        <div class="removebox-box-body-item">
+                            <div>
+                                <input type="radio"
+                                       id="radio1"
+                                       value="添加错误"
+                                       v-model="radioPicked">
+                            </div>
+                            <div style="padding-left:10px">
+                                <label v-if="lang === 'ch'"
+                                       for="radio1">添加错误</label>
+                                <label v-else
+                                       for="radio1">Add error</label>
+                            </div>
+                        </div>
+                        <div class="removebox-box-body-item">
+                            <div>
+                                <input type="radio"
+                                       id="radio2"
+                                       value="送货取消"
+                                       v-model="radioPicked">
+                            </div>
+                            <div style="padding-left:10px">
+                                <label v-if="lang === 'ch'"
+                                       for="radio2">送货取消</label>
+                                <label v-else
+                                       for="radio2">chancelled</label>
+                            </div>
+                        </div>
+                        <div class="removebox-box-body-item">
+                            <div>
+                                <input type="radio"
+                                       id="radio3"
+                                       value="other"
+                                       v-model="radioPicked">
+                            </div>
+                            <div style="padding-left:10px">
+                                <label v-if="lang === 'ch'"
+                                       for="radio3">其他原因</label>
+                                <label v-else
+                                       for="radio3">other</label>
+                            </div>
+                        </div>
+                        <div class="removebox-box-body-item">
+                            <textarea :disabled="radioPicked != 'other'"
+                                      style="margin:0 10px;width: 180px;border-radius: 10px;"
+                                      name="otherreason"
+                                      id="otherreason"
+                                      cols="30"
+                                      rows="10"
+                                      v-model="otherText"></textarea>
+                        </div>
+                    </div>
+                    <div class="removebox-box-footer">
+                        <div class="removebox-body-center-button"
+                             style="width: 80px;margin-right:10px"
+                             @click="showRemoveBox = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>chancel</span>
+                        </div>
+                        <div class="removebox-body-center-button"
+                             style="width: 80px;"
+                             @click="removeMissionMtehod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 删除提示 end-->
+
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
@@ -323,10 +473,98 @@ export default {
             loadingAnimation:false,
             tipsShowColor:null,
             tipsInfo:null,
-            isShowTipsBox:null
+            isShowTipsBox:null,
+            isShowChoiseDriverBox:false,
+            driverArray:[],
+            choiseDriver:null,
+            choiseDriver_id:null,
+            showRemoveBox:false
         };
     },
     methods: {
+        removeMissionMtehod() {
+            if (this.radioPicked === null) {
+                this.showError = true;
+                if (this.lang === "ch") {
+                    this.errorInfo = "请选择删除原因";
+                } else {
+                    this.errorInfo = "Choise reason";
+                }
+                setTimeout(() => {
+                    this.showError = false;
+                }, 3000);
+            } else {
+                let tempDate;
+                if (this.radioPicked === "other") {
+                    tempDate = {
+                        _id: this.missionInfo._id,
+                        removeReason: this.otherText
+                    };
+                } else {
+                    tempDate = {
+                        _id: this.missionInfo._id,
+                        removeReason: this.radioPicked
+                    };
+                }
+                axios
+                    .post(config.server + "/dayShiftmission/remove", tempDate)
+                    .then(doc => {
+                        if (doc.data.code === 0) {
+                            this.showError = true;
+                            if (this.lang === "ch") {
+                                this.errorInfo = "删除成功";
+                            } else {
+                                this.errorInfo = "Remove success";
+                            }
+                            this.showRemoveBox = false;
+                            this.getMissionPool();
+                            setTimeout(() => {
+                                this.showError = false;
+                            }, 3000);
+                        } else {
+                            this.showError = true;
+                            if (this.lang === "ch") {
+                                this.errorInfo = "删除失败";
+                            } else {
+                                this.errorInfo = "Remove fail";
+                            }
+                            this.showRemoveBox = false;
+                            setTimeout(() => {
+                                this.showError = false;
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        },
+
+        showDelBoxMethod(item){
+            console.log(item)
+            this.showRemoveBox = true
+            this.missionInfo = item;
+        },
+
+        confirmChoiseDriverMethod(){
+            if(!this.choiseDriver){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择司机'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }else{
+                this.isShowChoiseDriverBox = false
+                this.isShowConfirmStartBox = true;
+            }
+        },
+
+        choiseDriverMethod(item){
+            this.choiseDriver = item.dirvername
+            this.choiseDriver_id = item._id
+        },
+
         findFirstPageNotice(){
             let noticeOldTime = localStorage.getItem('noticeOldTime')
             if(noticeOldTime){
@@ -395,7 +633,7 @@ export default {
             this.loadingAnimation = true
             axios
                 .post(config.server + "/dsdriver/create", {
-                    driverName: this.drivername,
+                    driverName: this.choiseDriver,
                     orderDate: tempDate,
                     clientArray: this.choiseMissionArray
                 })
@@ -443,7 +681,26 @@ export default {
         },
 
         startDayShiftMission() {
-            this.isShowConfirmStartBox = true;
+            axios
+                .post(config.server + "/dirver/findDayDriver")
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.choiseDriver = null
+                        this.choiseDriver_id = null
+                        this.isShowChoiseDriverBox = true
+                        this.driverArray = doc.data.doc
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '获取司机数据失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
         },
 
         cancelMethod() {
@@ -452,6 +709,9 @@ export default {
         },
 
         choiseMissionFromPool(client) {
+            console.log('##########')
+            console.log(client)
+            console.log('##########')
             this.choiseMissionArray.push(client);
             this.isShowChoiseConfirmBox = true;
         },
@@ -615,6 +875,7 @@ export default {
     height: 30px;
     line-height: 30px;
     transition: 0.2s;
+    border: 1px solid #eee;
 }
 
 .search-body-center-button:active {
@@ -649,14 +910,16 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .removebox-box-top {
     background: #d74342;
     color: #fff;
     font-size: 16px;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
@@ -753,6 +1016,7 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     background: #fff;
+    border-radius: 5px;
 }
 
 .choiseconfirm-box-left {
@@ -765,6 +1029,12 @@ export default {
     display: -webkit-flex;
     margin-left: 20px;
     padding: 5px 0;
+}
+
+.day_delbutton{
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
 }
 
 .daycheckbox {
@@ -1019,5 +1289,36 @@ export default {
 .spinner .rect5 {
     -webkit-animation-delay: -0.8s;
     animation-delay: -0.8s;
+}
+
+.dayshift_driverbox_body{
+    border: 1px solid #eee;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    margin: 0 10px;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.dayshift_driverbox_body_item{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    width: 160px;
+}
+
+.dayshift_icon_check{
+    mask-image: url(../../public/icons/baseline-check_circle_outline-24px.svg);
+    background-color: green;
+    -webkit-mask-image: url(../../public/icons/baseline-check_circle_outline-24px.svg);
+    width: 30px;
+    height: 30px;
+    mask-size: 30px 30px;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 </style>
