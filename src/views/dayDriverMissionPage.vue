@@ -630,18 +630,6 @@
         <input type="file" style="display:none" id="daydriver_upload_file" @change="fileChange($event)" accept="image/*">
         <!-- confirm and remove mission box end -->
 
-        <!-- 操作提示 -->
-        <transition name="tips-classes-transition"
-                    enter-active-class="animated bounceInDown"
-                    leave-active-class="animated bounceOutUp">
-            <div class="errinfo"
-                 v-if="showError"
-                 @click="showError = false">
-                <span>{{errorInfo}}</span>
-            </div>
-        </transition>
-        <!-- 操作提示 -->
-
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
@@ -679,8 +667,6 @@ export default {
             _id: null,
             carCheck_id: null,
             driverName: null,
-            showError: false,
-            errorInfo: "未知错误",
             missionArray: [],
             showCheckCarBox: false,
             carNum: null,
@@ -696,7 +682,6 @@ export default {
             tyre: true,
             backup: true,
             brake: true,
-            otherError: true,
             petrolCard: true,
             showChoiseCarBox: false,
             carInfoArray: null,
@@ -737,11 +722,12 @@ export default {
 
         confirmCheckAgain() {
             if (!this.boxNumAgain) {
-                this.showError = true;
-                this.errorInfo = this.language.homePage.boxNumErr;
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = this.language.homePage.boxNumErr;
+                this.isShowTipsBox = true
                 setTimeout(() => {
-                    this.showError = false;
-                }, 2000);
+                    this.isShowTipsBox = false
+                }, 3000);
             } else {
                 axios
                     .post(config.server + "/checkcar/editByday", {
@@ -846,24 +832,25 @@ export default {
                     if (doc.data.code === 0) {
                         this.showCRbox = false;
                         if (this.lang === "ch") {
-                            this.errorInfo = "删除任务客户成功";
+                            this.tipsInfo = "删除任务客户成功";
                         } else {
-                            this.errorInfo =
-                                "Remove client from mission success";
+                            this.tipsInfo = "Remove client from mission success"
                         }
-                        this.showError = true;
+                        this.tipsShowColor = 'green'
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
-                        }, 3000);
+                            this.isShowTipsBox = false
+                        }, 2000);
                     } else {
                         if (this.lang === "ch") {
-                            this.errorInfo = "删除任务客户失败";
+                            this.tipsInfo = "删除任务客户失败";
                         } else {
-                            this.errorInfo = "Remove client from mission fail";
+                            this.tipsInfo = "Remove client from mission fail";
                         }
-                        this.showError = true;
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
+                            this.isShowTipsBox = false
                         }, 3000);
                     }
                 })
@@ -898,15 +885,15 @@ export default {
                                         this.getDayShiftDriverMission();
                                         this.showCRbox = false;
                                         if (this.lang === "ch") {
-                                            this.errorInfo = "任务提交成功";
+                                            this.tipsInfo = "任务提交成功";
                                         } else {
-                                            this.errorInfo = "submit mission success";
+                                            this.tipsInfo = "Submit mission success";
                                         }
-                                        this.showError = true;
+                                        this.tipsShowColor = 'green'
+                                        this.isShowTipsBox = true
                                         setTimeout(() => {
-                                            this.showError = false;
-                                        }, 3000);
-
+                                            this.isShowTipsBox = false
+                                        }, 2000);
                                         //判断所有客户是否完成 start
                                         //new method
                                         let count = 0;
@@ -932,30 +919,17 @@ export default {
                                                 }
                                             }
                                         );
-                                        //old method
-                                        // let notFinishMissionFlag = false
-                                        // this.detailDate.some(element => {
-                                        //     if(!finisDate){
-                                        //         notFinishMissionFlag = true
-                                        //     }
-                                        //     return notFinishMissionFlag
-                                        // });
-                                        // if(!notFinishMissionFlag){
-                                        //     setTimeout(() => {
-                                        //         this.changeMissionState()
-                                        //     }, 1000);
-                                        // }
-                                        //判断所有客户是否完成 end
                                     } else {
                                         if (this.lang === "ch") {
-                                            this.errorInfo = "任务提交失败";
+                                            this.tipsInfo = "任务提交失败";
                                         } else {
-                                            this.errorInfo = "submit mission fail";
+                                            this.tipsInfo = "submit mission fail";
                                         }
-                                        this.showError = true;
+                                        this.tipsShowColor = 'yellow'
+                                        this.isShowTipsBox = true
                                         setTimeout(() => {
-                                            this.showError = false;
-                                        }, 3000);
+                                            this.isShowTipsBox = false
+                                        }, 2000);
                                     }
                             })
                             .catch(err => {
@@ -1020,14 +994,15 @@ export default {
                             this.showCheckCarBox = true;
                         } else {
                             if (this.lang === "ch") {
-                                this.errorInfo = "更新车辆成功";
+                                this.tipsInfo = "更新车辆成功";
                             } else {
-                                this.errorInfo = "Update car success";
+                                this.tipsInfo = "Update car success";
                             }
-                            this.showError = true;
+                            this.tipsShowColor = 'green'
+                            this.isShowTipsBox = true
                             setTimeout(() => {
-                                this.showError = false;
-                            }, 3000);
+                                this.isShowTipsBox = false
+                            }, 2000);
                         }
                     })
                     .catch(err => {
@@ -1035,13 +1010,14 @@ export default {
                     });
             } else {
                 if (this.lang === "ch") {
-                    this.errorInfo = "请选择车辆";
+                    this.tipsInfo = "请选择车辆";
                 } else {
-                    this.errorInfo = "Please choise car";
+                    this.tipsInfo = "Please choise car";
                 }
-                this.showError = true;
+                this.tipsShowColor = 'yellow'
+                this.isShowTipsBox = true
                 setTimeout(() => {
-                    this.showError = false;
+                    this.isShowTipsBox = false
                 }, 3000);
             }
         },
@@ -1059,14 +1035,14 @@ export default {
                         this.carInfoArray = doc.data.doc;
                     } else {
                         if (this.lang === "ch") {
-                            this.errorInfo = "查找车辆出错";
+                            this.tipsInfo = "查找车辆出错";
                         } else {
-                            this.errorInfo =
-                                "Catch an error while find car info";
+                            this.tipsInfo = "Catch an error while find car info";
                         }
-                        this.showError = true;
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
+                            this.isShowTipsBox = false
                         }, 3000);
                     }
                 })
@@ -1081,11 +1057,12 @@ export default {
 
         confirmCheckCar() {
             if (!this.boxNum) {
-                this.showError = true;
-                this.errorInfo = this.language.homePage.boxNumErr;
+                this.tipsInfo = this.language.homePage.boxNumErr
+                this.tipsShowColor = 'yellow'
+                this.isShowTipsBox = true
                 setTimeout(() => {
-                    this.showError = false;
-                }, 2000);
+                    this.isShowTipsBox = false
+                }, 3000);
             } else {
                 let tempData = {
                     driver: this.driverName,
@@ -1279,12 +1256,14 @@ export default {
                         this.missionArray = doc.data.doc;
                     } else {
                         if (this.lang === "ch") {
-                            this.errorInfo = "未找到任务数据";
+                            this.tipsInfo = "未找到任务数据";
                         } else {
-                            this.errorInfo = "Mission not found";
+                            this.tipsInfo = "Mission not found";
                         }
+                        this.tipsShowColor = 'yellow'
+                        this.isShowTipsBox = true
                         setTimeout(() => {
-                            this.showError = false;
+                            this.isShowTipsBox = false
                         }, 3000);
                     }
                 })
