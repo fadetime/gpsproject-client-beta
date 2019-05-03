@@ -24,11 +24,7 @@
         <div v-else
              style="margin-top:10px">
             <div class="search-body-center-item">
-                <div class="missioncard"
-                     style="position:relative"
-                     v-for="(item,index) in missionArray"
-                     :key="index"
-                     @click="startMission(item)">
+                <div class="missioncard" style="position:relative" v-for="(item,index) in missionArray" :key="index" @click="startMission(item)">
                     <div class="missioncard-topline"></div>
                     <div class="missioncard-title">
                         <span v-if="lang === 'ch'">白班任务</span>
@@ -325,11 +321,6 @@
                             {{language.homePage.other}}
                         </md-button>
                     </div>
-                    <!-- <div>
-                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="openPreviewMethod">
-                            {{language.homePage.PreviewClient}}
-                        </md-button>
-                    </div> -->
                     <div>
                         <md-button class="md-raised"
                                    style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);"
@@ -412,7 +403,7 @@
                             <textarea name="othererror"
                                       id="othererror"
                                       rows="5"
-                                      style="width:100%"
+                                      style="width:100%;border-radius:10px"
                                       :disabled="otherErrorAgain"
                                       :placeholder="language.homePage.description"
                                       v-model="otherErrorTextAgain"></textarea>
@@ -421,7 +412,7 @@
                     <div>
                         <md-button class="md-raised"
                                    style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);"
-                                   @click="confirmCheckAgain">
+                                   @click="confirmCheckAgain()">
                             {{language.homePage.confirmCheck}}
                         </md-button>
                     </div>
@@ -488,7 +479,7 @@
                  class="missiondetail">
                 <div class="missiondetail-title">
                     <div style="flex-basis:15%"
-                         @click="trunBackMethod">
+                         @click="trunBackMethod()">
                         <span style="font-size:16px">《 返回</span>
                         <span style="font-size:16px">《 Back</span>
                     </div>
@@ -711,7 +702,6 @@ export default {
             if (typeof FileReader === "undefined") {
                 return alert("浏览器不支持上传图片");
             }
-            console.log("###");
             if (!el.target.files[0].size) return; //判断是否有文件数量
             this.updateImagePreview = window.URL.createObjectURL(
                 el.target.files[0]
@@ -791,7 +781,6 @@ export default {
                     mission_id: this._id
                 })
                 .then(doc => {
-                    console.log(doc);
                     if(doc.data.code === 0){
                         this.getDayShiftDriverMission()
                     }
@@ -808,8 +797,31 @@ export default {
                 })
                 .then(doc => {
                     if (doc.data.code === 0) {
-                        console.log(doc);
                         this.detailDate = doc.data.doc.clientArray;
+                        //
+                        let count = 0;
+                        let notFinishMissionFlag = false;
+                        async.whilst(
+                            function() {
+                                return count < 1;
+                            },
+                            function(callback) {
+                                doc.data.doc.clientArray.some(element => {
+                                    count++;
+                                    if (!element.finisDate) {
+                                        notFinishMissionFlag = true;
+                                    }
+                                    return notFinishMissionFlag;
+                                });
+                                callback(null, notFinishMissionFlag);
+                            },
+                            (err, n) => {
+                                if (!n) {
+                                    this.changeMissionState();
+                                }
+                            }
+                        );
+                        //
                     } else {
                         console.log(doc);
                     }
@@ -820,7 +832,6 @@ export default {
         },
 
         confirmRemoveClientMethod() {
-            console.log("remove client");
             let tempDate = new Date().toISOString();
             axios
                 .post(config.server + "/dsdriver/remove", {
@@ -828,7 +839,6 @@ export default {
                     clientName: this.shippingClient.clientName
                 })
                 .then(doc => {
-                    console.log(doc);
                     if (doc.data.code === 0) {
                         this.showCRbox = false;
                         if (this.lang === "ch") {
@@ -882,7 +892,7 @@ export default {
                                     console.log(doc);
                                     if (doc.data.code === 0) {
                                         this.findMissionByID();
-                                        this.getDayShiftDriverMission();
+                                        // this.getDayShiftDriverMission();
                                         this.showCRbox = false;
                                         if (this.lang === "ch") {
                                             this.tipsInfo = "任务提交成功";
@@ -896,29 +906,29 @@ export default {
                                         }, 2000);
                                         //判断所有客户是否完成 start
                                         //new method
-                                        let count = 0;
-                                        let notFinishMissionFlag = false;
-                                        async.whilst(
-                                            function() {
-                                                return count < 1;
-                                            },
-                                            (callback) => {
-                                                this.detailDate.some(element => {
-                                                    count++;
-                                                    console.log(count);
-                                                    if (!element.finisDate) {
-                                                        notFinishMissionFlag = true;
-                                                    }
-                                                    return notFinishMissionFlag;
-                                                });
-                                                callback(null, notFinishMissionFlag);
-                                            },
-                                            (err, n) => {
-                                                if (!n) {
-                                                    this.changeMissionState();
-                                                }
-                                            }
-                                        );
+                                        // let count = 0;
+                                        // let notFinishMissionFlag = false;
+                                        // async.whilst(
+                                        //     function() {
+                                        //         return count < 1;
+                                        //     },
+                                        //     (callback) => {
+                                        //         this.detailDate.some(element => {
+                                        //             count++;
+                                        //             console.log(count);
+                                        //             if (!element.finisDate) {
+                                        //                 notFinishMissionFlag = true;
+                                        //             }
+                                        //             return notFinishMissionFlag;
+                                        //         });
+                                        //         callback(null, notFinishMissionFlag);
+                                        //     },
+                                        //     (err, n) => {
+                                        //         if (!n) {
+                                        //             this.changeMissionState();
+                                        //         }
+                                        //     }
+                                        // );
                                     } else {
                                         if (this.lang === "ch") {
                                             this.tipsInfo = "任务提交失败";
@@ -967,10 +977,6 @@ export default {
             this.shippingClient = clientInfo;
             this.boxShowFace = "remove";
             this.showCRbox = true;
-        },
-
-        finishClientMethodclient(client) {
-            console.log(client);
         },
 
         trunBackMethod() {
@@ -1145,9 +1151,7 @@ export default {
                                         payload
                                     )
                                     .then(doc => {
-                                        console.log(
-                                            "fix car info with photo send done"
-                                        );
+                                        console.log("fix car info with photo send done");
                                         this.updateImage = "";
                                         this.updateImagePreview = "";
                                     })
@@ -1186,37 +1190,35 @@ export default {
             }
         },
 
-        // openPreviewMethod(){
-        //     this.previewClient = true
-        //     this.$refs.mainbox.style.position='fixed'
-        // },
-
         changeOtherCheckPage() {
             this.checkPage = !this.checkPage;
         },
 
         startMission(missionInfo) {
             this._id = missionInfo._id;
+            console.log('###start###')
             if (!missionInfo.goTime) {
-                this._id = missionInfo._id;
+                console.log('###1###')
                 this.findAllCarPlate();
                 this.showChoiseCarBox = true;
             } else if (!missionInfo.carCheck_id) {
-                this._id = missionInfo._id;
+                console.log('###2###')
                 this.showCheckCarBox = true;
             } else if (missionInfo.missionFinish) {
+                console.log('###3###')
                 if (!missionInfo.backTime) {
+                    console.log('###4###')
                     this.carCheck_id = missionInfo.carCheck_id;
-                    this._id = missionInfo._id;
                     this.showCheckAgainBox = true;
                 } else {
+                    console.log('###5###')
                     this.detailDate = missionInfo.clientArray;
                     this.showMissionDetail = true;
                 }
             } else {
+                console.log('###6###')
                 this.detailDate = missionInfo.clientArray;
                 this.showMissionDetail = true;
-                //
                 let count = 0;
                 let notFinishMissionFlag = false;
                 async.whilst(
@@ -1226,7 +1228,6 @@ export default {
                     function(callback) {
                         missionInfo.clientArray.some(element => {
                             count++;
-                            console.log(count);
                             if (!element.finisDate) {
                                 notFinishMissionFlag = true;
                             }
@@ -1240,7 +1241,6 @@ export default {
                         }
                     }
                 );
-                //
             }
         },
 
@@ -1253,7 +1253,35 @@ export default {
                 })
                 .then(doc => {
                     if (doc.data.code === 0) {
+                        console.log('$$$$$$$$$$')
+                        console.log(doc.data.doc)
+                        console.log('$$$$$$$$$$')
                         this.missionArray = doc.data.doc;
+                        //
+                        // let count = 0;
+                        // let notFinishMissionFlag = false;
+                        // async.whilst(
+                        //     function() {
+                        //         return count < 1;
+                        //     },
+                        //     (callback) => {
+                        //         this.detailDate.some(element => {
+                        //             count++;
+                        //             console.log(count);
+                        //             if (!element.finisDate) {
+                        //                 notFinishMissionFlag = true;
+                        //             }
+                        //             return notFinishMissionFlag;
+                        //         });
+                        //         callback(null, notFinishMissionFlag);
+                        //     },
+                        //     (err, n) => {
+                        //         if (!n) {
+                        //             this.changeMissionState();
+                        //         }
+                        //     }
+                        // );
+                        //
                     } else {
                         if (this.lang === "ch") {
                             this.tipsInfo = "未找到任务数据";
