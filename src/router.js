@@ -23,6 +23,7 @@ import engineOil from './views/engineOil.vue'
 import tripCount from './views/tripCount.vue'
 import report from './views/report.vue'
 import report_basket from './views/report_detail/report_basket.vue'
+import report_repair from './views/report_detail/report_repair.vue'
 import carRule from './views/carRule.vue'
 
 import AuthGuard from './auth-guard'
@@ -161,6 +162,11 @@ export default new Router({
       path: '/report_basket',
       name: 'report_basket',
       component: report_basket
+    },
+    {
+      path: '/report_repair',
+      name: 'report_repair',
+      component: report_repair
     },
     {
       path: '/carRule',
