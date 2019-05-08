@@ -551,6 +551,7 @@ export default {
     display: flex;
     display: -webkit-flex;
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .report_basket_body_right_title_item{

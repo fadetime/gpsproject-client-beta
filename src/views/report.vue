@@ -27,7 +27,7 @@
 export default {
     methods:{
         goReportBill(){
-            console.log('123')
+            this.$router.push("/report_bill");
         },
 
         goReportBasket(){

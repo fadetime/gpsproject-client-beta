@@ -77,12 +77,12 @@
         <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="showDialog" class="dialog" @click.self="showDialog = false" @touchmove.prevent>
                 <div class="dialog-body">
-                    <div style="width:100%;background-color:#d74342;box-shadow: 1px 1px 5px;">
-                        <span v-if="isChangePSW" style="font-size:20px;color:#fff;line-height: 32px;">{{language.setupPage.changePsw}}</span>
-                        <span v-else style="font-size:20px;color:#fff;line-height: 32px;">{{language.setupPage.signOut}}</span>
+                    <div style="background-color:#d74342;box-shadow: 1px 1px 5px;height:30px;line-height: 30px">
+                        <span v-if="isChangePSW" style="font-size:16px;color:#fff;line-height: 32px;">{{language.setupPage.changePsw}}</span>
+                        <span v-else style="font-size:16px;color:#fff;line-height: 32px;">{{language.setupPage.signOut}}</span>
                     </div>
                     <div class="dialog-body-center">
-                        <div v-if="isChangePSW" style="width:250px;margin:10px auto;box-shadow:1px 1px 5px">
+                        <div v-if="isChangePSW" class="dialog-body-center_one" style="">
                             <div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
                                 <div class="dialog-body-center-item-left">
                                     <label for="oldpsw">{{language.setupPage.oldPsw}}</label>
@@ -114,13 +114,18 @@
                         </div>
                     </div>
                     <div class="dialog-body-bottom">
-                        <md-button class="md-raised" @click="showDialog = false">{{language.setupPage.cancel}}</md-button>
-                        <md-button class="md-raised md-primary" @click="confirmChangePsw">{{language.setupPage.confirm}}</md-button>
+                        <div class="setup_whitebutton" @click="showDialog = false">
+                            <span>{{language.setupPage.cancel}}</span>
+                        </div>
+                        <div class="setup_whitebutton" @click="confirmChangePsw">
+                            <span>{{language.setupPage.confirm}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </transition>
         <!-- 遮罩层 -->
+
         <!-- 操作提示 -->
         <transition name="custom-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
             <div class="errinfo" v-if="showError">
@@ -345,8 +350,11 @@ export default {
 .dialog-body {
     background-color: #fff;
     width: 300px;
-    height: 260px;
     margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
 .dialog-body-center-item {
@@ -360,7 +368,7 @@ export default {
 .dialog-body-center-item-left {
     flex-basis: 30%;
     text-align: left;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 32px;
 }
 
@@ -435,5 +443,31 @@ export default {
     width: 80%;
     margin: 6px 0;
     border-radius: 2px;
+}
+
+.setup_whitebutton{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.dialog-body-bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.dialog-body-center_one{
+    width:250px;
+    margin:10px auto;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    border: 1px solid #eee;
 }
 </style>

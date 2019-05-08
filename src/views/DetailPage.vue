@@ -336,8 +336,11 @@
                  @click.self.prevent="confirmBox = false"
                  @touchmove.prevent>
                 <div class="confirmBox-body">
-                    <div class="confirmBox-body-title">
+                    <div v-if="isReturnItem" class="confirmBox-body-title">
                         <span>{{language.detailPage.confirmBox_info}}</span>
+                    </div>
+                    <div v-else class="confirmBox-body-title">
+                        <span>Delivery Done</span>
                     </div>
                     <div class="confirmBox-body-frame">
                         <div class="confirmBox-body-center"
@@ -369,7 +372,7 @@
                                 @click="changeReturnAccessMethod('returnAccess')">
                                 <div class="returnbox-item">
                                     <span v-if="lang === 'ch'">退菜成功</span>
-                                    <span v-else>Done</span>
+                                    <span v-else>Yes</span>
                                 </div>
                                 <transition name="custom-classes-transition"
                                             enter-active-class="animated fadeIn faster"
@@ -384,7 +387,7 @@
                                 @click="changeReturnAccessMethod('returnFail')">
                                 <div class="returnbox-item">
                                     <span v-if="lang === 'ch'">退菜失败</span>
-                                    <span v-else>Fail</span>
+                                    <span v-else>No</span>
                                 </div>
                                 <transition name="custom-classes-transition"
                                             enter-active-class="animated fadeIn faster"
@@ -396,7 +399,7 @@
                                 </transition>
                             </div>
                         </div>
-                        <div v-if="!isReturnAccess" class="detail_reason">
+                        <div v-if="!isReturnAccess && isReturnItem" class="detail_reason">
                             <div class="detail_reason_item">
                                 <div class="detail_reason_item_left">
                                     <input id="back_failed_reason1" type="radio" value="找不到" v-model="backFailedReason">
@@ -1682,7 +1685,7 @@ export default {
 }
 
 .detail_reason_item_right{
-    width: 80px;
+    width: 180px;
     height: 30px;
     line-height: 30px;
     text-align: left;
