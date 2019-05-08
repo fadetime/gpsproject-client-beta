@@ -1,5 +1,6 @@
 <template>
     <div id="daypoolpage">
+        <!-- 本页面废弃 -->
         <div class="page-title">
             <div class="page-title-left"></div>
             <div class="page-title-center">
@@ -427,6 +428,7 @@ export default {
                 .then(doc => {
                     if (doc.data.code === 0) {
                         this.missionArray = doc.data.doc;
+                        console.log(this.missionArray)
                         this.missionArray = _.orderBy(
                             this.missionArray,
                             ["backTime"],

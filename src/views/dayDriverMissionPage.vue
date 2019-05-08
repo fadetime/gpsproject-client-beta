@@ -1599,6 +1599,7 @@ export default {
     margin-right: 20px;
     border-radius: 10px;
     position: relative;
+    border: 1px solid #eee;
 }
 
 .missiondetail-body-item-title {

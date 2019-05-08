@@ -12,8 +12,8 @@
             </div>
         </div>
 
-        <div class="center">
-            <md-card style="width:80%;margin:10px auto;">
+        <div class="setup_center">
+            <div class="setup_drivercar">
                 <div class="card-item">
                     <div class="card-item-title">
                         <span>{{language.setupPage.licenseType}}</span>
@@ -45,14 +45,15 @@
                         <span>{{driverid}}</span>
                     </div>
                 </div>
-            </md-card>
+            </div>
         </div>
         <div class="bottom">
             <md-button class="md-raised md-primary" style="width:80%" @click="languageWindow=true">{{language.setupPage.lang}}</md-button>
         </div>
         <div class="bottom" style="display: flex;justify-content: center;" @click="goCarRulePage()">
             <div class="setup_button_square">
-                <span>车辆守则</span>
+                <span v-if="lang === 'ch'">车辆守则</span>
+                <span v-else>CONDUCTS</span>
             </div>
         </div>
         <div class="bottom">
@@ -82,7 +83,7 @@
                         <span v-else style="font-size:16px;color:#fff;line-height: 32px;">{{language.setupPage.signOut}}</span>
                     </div>
                     <div class="dialog-body-center">
-                        <div v-if="isChangePSW" class="dialog-body-center_one" style="">
+                        <div v-if="isChangePSW" class="dialog-body-center_one">
                             <div class="dialog-body-center-item" style="border-bottom: 1px solid #eee;">
                                 <div class="dialog-body-center-item-left">
                                     <label for="oldpsw">{{language.setupPage.oldPsw}}</label>
@@ -109,15 +110,15 @@
                             </div>
                         </div>
 
-                        <div v-else style="width:250px;margin:10px auto;box-shadow:1px 1px 5px;height:152px;line-height:142px">
-                            <span>{{language.setupPage.quitInfo}}</span>
+                        <div v-else style="width:206px;margin:8px 12px;box-shadow:1px 1px 5px;height:100px;line-height:100px;border-radius:10px">
+                            <span style="font-size:14px;">{{language.setupPage.quitInfo}}</span>
                         </div>
                     </div>
                     <div class="dialog-body-bottom">
                         <div class="setup_whitebutton" @click="showDialog = false">
                             <span>{{language.setupPage.cancel}}</span>
                         </div>
-                        <div class="setup_whitebutton" @click="confirmChangePsw">
+                        <div class="setup_whitebutton" @click="confirmChangePsw" style="margin-left:8px;">
                             <span>{{language.setupPage.confirm}}</span>
                         </div>
                     </div>
@@ -175,24 +176,27 @@ export default {
             conpassword: '',
             showError: false,
             _id: '',
+            lang: 'ch',
             isChangePSW: true,
             languageWindow: false,
-            lang: 'ch',
             imgDefault:'/img/ebuyLogo.png'
         }
     },
     computed: {
         language() {
             return this.$store.getters.getLanguage
-        }
+        },
     },
+
     mounted() {
         this.drivername = localStorage.getItem('drivername')
         this.drivercard = localStorage.getItem('drivercard')
         this.driverphone = localStorage.getItem('driverphone')
         this.driverid = localStorage.getItem('dirverid')
         this.driverimage = localStorage.getItem('image')
+        this.lang = localStorage.getItem('lang')
     },
+
     methods: {
         goCarRulePage(){
             this.$router.push("/carRule");
@@ -208,12 +212,14 @@ export default {
         changeToCH() {
             this.lang = 'ch'
             this.$store.dispatch('setLanguage', this.lang)
+            localStorage.lang = this.lang
             this.languageWindow = false
         },
 
         changeToEN() {
             this.lang = 'en'
             this.$store.dispatch('setLanguage', this.lang)
+            localStorage.lang = this.lang
             this.languageWindow = false
         },
 
@@ -309,14 +315,14 @@ export default {
 }
 
 .card-item {
-    padding: 16px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #eee;
 }
 
 .card-item-title {
     text-align: left;
     padding: 0 0 15px 20px;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .card-item-title span {
@@ -325,9 +331,10 @@ export default {
 
 .card-item-body {
     text-align: left;
-    padding-left: 30px;
+    padding-left: 40px;
     display: flex;
     display: -webkit-flex;
+    width: 280px;
 }
 
 .card-item-body span {
@@ -349,7 +356,6 @@ export default {
 
 .dialog-body {
     background-color: #fff;
-    width: 300px;
     margin: 0 auto;
     border-radius: 10px;
     overflow: hidden;
@@ -357,27 +363,32 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
+.dialog-body-center{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
 .dialog-body-center-item {
     display: flex;
     display: -webkit-flex;
-    -webkit-flex-flow: row wrap;
-    flex-flow: row wrap;
     padding: 10px 5px;
 }
 
 .dialog-body-center-item-left {
-    flex-basis: 30%;
-    text-align: left;
+    width: 68px;
+    text-align: right;
     font-size: 14px;
     line-height: 32px;
 }
 
 .dialog-body-center-item-right {
-    flex-basis: 70%;
+    width: 120px;
+    margin-left: 8px;
 }
 
 .dialog-body-center-item-right input {
-    width: 150px;
+    width: 100%;
     border: none;
     height: 32px;
 }
@@ -453,21 +464,39 @@ export default {
     border-radius: 10px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    background-color: #fff;
 }
 
 .dialog-body-bottom{
     display: flex;
     display: -webkit-flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-bottom: 10px;
 }
 
 .dialog-body-center_one{
-    width:250px;
-    margin:10px auto;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     border-radius: 10px;
     border: 1px solid #eee;
+    background-color: #fff;
+    margin: 8px 12px;
+}
+
+.setup_center{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+}
+
+.setup_drivercar{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    background-color: #fff;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 </style>

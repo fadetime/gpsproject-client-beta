@@ -36,9 +36,6 @@
                      :key="no"
                      v-show="!x.finishdate">
                 <md-ripple>
-                    <!-- <div style="background-color: #d74342;width: 50px;height: 50px;border-radius: 0 0 50px 0;box-shadow: 1px 1px 5px;position: absolute;" @click="openImage(x)">
-                        <span style="font-size:20px;color:#fff;font-weight: 800;line-height: 40px;">{{no+1}}</span>
-                    </div> -->
                     <div>
                         <div v-if="lang === 'en'"
                              class="card-text"
@@ -404,28 +401,28 @@
                                 <div class="detail_reason_item_left">
                                     <input id="back_failed_reason1" type="radio" value="找不到" v-model="backFailedReason">
                                 </div>
-                                <div class="detail_reason_item_right">
-                                    <span v-if="lang === 'ch'">找不到</span>
+                                <label for="back_failed_reason1" class="detail_reason_item_right">
+                                    <span v-if="lang === 'ch'">找不到要退的货物</span>
                                     <span v-else>Cant find</span>
-                                </div>
+                                </label>
                             </div>
                             <div class="detail_reason_item">
                                 <div class="detail_reason_item_left">
                                     <input id="back_failed_reason2" type="radio" value="未拿出" v-model="backFailedReason">
                                 </div>
-                                <div class="detail_reason_item_right">
-                                    <span v-if="lang === 'ch'">未拿出</span>
+                                <label for="back_failed_reason2" class="detail_reason_item_right">
+                                    <span v-if="lang === 'ch'">客户并未拿出</span>
                                     <span v-else>Not in the specified location</span>
-                                </div>
+                                </label>
                             </div>
                             <div class="detail_reason_item">
                                 <div class="detail_reason_item_left">
                                     <input id="back_failed_reason3" type="radio" value="其他" v-model="backFailedReason">
                                 </div>
-                                <div class="detail_reason_item_right">
-                                    <span v-if="lang === 'ch'">其他</span>
+                                <label for="back_failed_reason3" class="detail_reason_item_right">
+                                    <span v-if="lang === 'ch'">其他原因</span>
                                     <span v-else>Other</span>
-                                </div>
+                                </label>
                             </div>
                             <textarea v-if="backFailedReason === '其他'" v-model="backFailedReason_text"></textarea>
                         </div>

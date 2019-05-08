@@ -43,6 +43,7 @@
                         <div class="search-body-center-item-body-item-right">
                             <span v-if="item.isIncreaseOrder === 'true'">加单</span>
                             <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                             <span v-else>退单</span>
                         </div>
                     </div>
@@ -64,6 +65,18 @@
                     </div>
                     <div class="search-body-center-item-body-item">
                         <div class="search-body-center-item-body-item-left">
+                            <span v-if="lang === 'ch'">任务司机:</span>
+                            <span v-else>State</span>
+                        </div>
+                        <div class="search-body-center-item-body-item-right">
+                            <div>
+                                <span v-if="item.driverName">{{item.driverName}}</span>
+                                <span v-else>未分配</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-body-center-item-body-item">
+                        <div class="search-body-center-item-body-item-left">
                             <span v-if="lang === 'ch'">任务状态:</span>
                             <span v-else>State</span>
                         </div>
@@ -76,15 +89,6 @@
                                 <span v-if="item.dayMission_id">Shipping</span>
                                 <span v-else>Waiting</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="search-body-center-item-body-item">
-                        <div class="search-body-center-item-body-item-left">
-                            <span>{{language.searchPage.address}}</span>
-                        </div>
-                        <div class="search-body-center-item-body-item-right"
-                             style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;">
-                            <span>{{item.clientAddress}}</span>
                         </div>
                     </div>
                     <div v-if="!item.dayMission_id">
@@ -765,6 +769,7 @@ export default {
                 .then(doc => {
                     if (doc.data.code === 0) {
                         this.missionArray = doc.data.doc;
+                        console.log(this.missionArray)
                         this.missionArray = _.orderBy(
                             this.missionArray,
                             ["backTime"],
@@ -864,6 +869,7 @@ export default {
 .search-body-center-item-body-item-right {
     flex-basis: 70%;
     text-align: left;
+    padding-left: 8px;
 }
 
 .search-body-center-button {
