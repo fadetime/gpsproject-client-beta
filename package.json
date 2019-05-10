@@ -1,6 +1,6 @@
 {
   "name": "driver",
-  "version": "0.23.2",
+  "version": "0.24.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

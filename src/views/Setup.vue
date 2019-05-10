@@ -194,7 +194,11 @@ export default {
         this.driverphone = localStorage.getItem('driverphone')
         this.driverid = localStorage.getItem('dirverid')
         this.driverimage = localStorage.getItem('image')
-        this.lang = localStorage.getItem('lang')
+        if(localStorage.lang){
+            this.lang = localStorage.getItem('lang')
+        }else{
+            localStorage.lang = this.lang
+        }
     },
 
     methods: {

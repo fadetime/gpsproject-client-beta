@@ -8,14 +8,29 @@
             <div class="report_icon_item" style="margin-top: 50px;">
                 <div class="report_icon_frame" @click="goReportBasket()">
                     <div class="report_icon_basket"></div>
+                    <div>
+                        <span>菜框</span>
+                    </div>
                 </div>
                 <div class="report_icon_frame" @click="goReportRepair()">
                     <div class="report_icon_carRepair"></div>
+                    <div>
+                        <span>维修</span>
+                    </div>
                 </div>
             </div>
             <div class="report_icon_item" style="margin-top: 30px;">
                 <div class="report_icon_frame" @click="goReportBill()">
                     <div class="report_icon_bill"></div>
+                    <div>
+                        <span>账单</span>
+                    </div>
+                </div>
+                <div class="report_icon_frame" @click="goDayshift()">
+                    <div class="report_icon_sun"></div>
+                    <div>
+                        <span>白班</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -26,6 +41,10 @@
 <script>
 export default {
     methods:{
+        goDayshift(){
+            this.$router.push("/report_day");
+        },
+
         goReportBill(){
             this.$router.push("/report_bill");
         },
@@ -83,10 +102,13 @@ export default {
     background-color: #d74342;
     -webkit-mask-image: url(../../public/icons/icon-basket.svg);
     width: 80px;
-    height: 80px;
-    mask-size: 72px 72px;
+    height: 60px;
+    mask-size: 54px 54px;
+    -webkit-mask-size: 54px 54px;
     mask-repeat: no-repeat;
-    mask-position: center
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
 }
 
 .report_icon_carRepair{
@@ -94,21 +116,41 @@ export default {
     background-color: #d74342;
     -webkit-mask-image: url(../../public/icons/carRepair.svg);
     width: 80px;
-    height: 80px;
-    mask-size: 72px 72px;
+    height: 60px;
+    mask-size: 54px 54px;
+    -webkit-mask-size: 54px 54px;
     mask-repeat: no-repeat;
-    mask-position: center
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
 }
 
 .report_icon_bill{
     mask-image: url(../../public/icons/icon_bill.svg);
-    background-color: #d74342;
     -webkit-mask-image: url(../../public/icons/icon_bill.svg);
+    background-color: #d74342;
     width: 80px;
-    height: 80px;
-    mask-size: 72px 72px;
+    height: 60px;
+    mask-size: 54px 54px;
+    -webkit-mask-size: 54px 54px;
     mask-repeat: no-repeat;
-    mask-position: center
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.report_icon_sun{
+    mask-image: url(../../public/icons/cion_sun.svg);
+    -webkit-mask-image: url(../../public/icons/cion_sun.svg);
+    background-color: #d74342;
+    width: 80px;
+    height: 60px;
+    mask-size: 54px 54px;
+    -webkit-mask-size: 54px 54px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
 }
 
 .report_emptyspace_bottom{

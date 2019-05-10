@@ -25,6 +25,7 @@ import report from './views/report.vue'
 import report_basket from './views/report_detail/report_basket.vue'
 import report_repair from './views/report_detail/report_repair.vue'
 import report_bill from './views/report_detail/report_bill.vue'
+import report_day from './views/report_detail/report_day.vue'
 import carRule from './views/carRule.vue'
 
 import AuthGuard from './auth-guard'
@@ -178,7 +179,11 @@ export default new Router({
       path: '/report_bill',
       name: 'report_bill',
       component: report_bill
+    },
+    {
+      path: '/report_day',
+      name: 'report_day',
+      component: report_day
     }
-    
   ]
 })
