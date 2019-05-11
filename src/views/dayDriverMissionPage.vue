@@ -536,12 +536,12 @@
                         <div v-else>
                             <div class="findcar-bottom"
                                  style="padding-bottom: 10px;">
-                                <div class="removebox-body-center-button"
+                                <!-- <div class="removebox-body-center-button"
                                      style="width: 80px;margin-right:10px"
                                      @click="removeClientMethod(item)">
                                     <span v-if="lang === 'ch'">删除</span>
                                     <span v-else>chancel</span>
-                                </div>
+                                </div> -->
                                 <div class="removebox-body-center-button"
                                      style="width: 80px;"
                                      @click="finishClientMethod(item)">
