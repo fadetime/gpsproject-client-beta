@@ -489,6 +489,7 @@
                     </div>
                     <div style="flex-basis:15%"></div>
                 </div>
+                <div style="height:40px"></div>
                 <div class="missiondetail-body">
                     <div v-for="(item,index) in detailDate"
                          :key="index"
@@ -551,7 +552,7 @@
                         </div>
                     </div>
                 </div>
-
+                <div style="height:60px"></div>
             </div>
         </transition>
         <!-- mission detail page end -->
@@ -1577,6 +1578,9 @@ export default {
     left: 0;
     right: 0;
     z-index: 24;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .missiondetail-title {
@@ -1589,6 +1593,11 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     display: flex;
     display: -webkit-flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 25;
 }
 
 .missiondetail-body-item {

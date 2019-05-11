@@ -115,17 +115,16 @@
                             <div v-if="isShowChoiseConfirmBox"
                                  class="daycheckbox">
                                 <!-- check box  -->
-                                <input type="checkbox"
-                                       :value="item"
-                                       v-model="choiseMissionArray" />
+                                <input type="checkbox" :value="item" v-model="choiseMissionArray" />
                                 <!-- check box  -->
                             </div>
                         </transition>
                     </div>
-                    <div v-else>
-                        <img src="../../public/img/shipping.gif" alt="shippingicon">
+                    <div v-else style="padding-top:6px;">
+                        <div class="search-body-center-button" style="background-color:#d74342;color:#fff;border: unset;" @click="delConfiguredClientMethod(item)">
+                            <span>删除</span>
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -428,6 +427,45 @@
         </transition>
         <!-- 删除提示 end-->
 
+        <!-- 配置司机后的删除确认框 start-->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowConfiguredRemoveBox"
+                 class="removebox-back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowConfiguredRemoveBox"
+                 class="removebox-front"
+                 @click.self.prevent="isShowConfiguredRemoveBox = false">
+                <div class="removebox-box">
+                    <div class="removebox-box-top">
+                        <span v-if="lang === 'ch'">删除已分配任务</span>
+                        <span v-else>Remove Mission</span>
+                    </div>
+                    <div class="dayshift_configureddel_body">
+                        <div class="dayshift_configureddel_body_title">
+                            <span>{{shippingDate.clientName}}</span>
+                        </div>
+                        <div class="dayshift_configureddel_body_content">
+                            <span>是否确认删除?</span>
+                        </div>
+                    </div>
+                    <div class="dayshift_configureddel_bottom">
+                        <div class="removebox-body-center-button" style="background-color:#fff;" @click="isShowConfiguredRemoveBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="removebox-body-center-button" style="background-color:#fff;margin-left:8px" @click="confirmRemoveConfiguredClientMethod()">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- 配置司机后的删除确认框 end-->
+
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
@@ -482,10 +520,62 @@ export default {
             driverArray:[],
             choiseDriver:null,
             choiseDriver_id:null,
-            showRemoveBox:false
+            showRemoveBox:false,
+            isShowConfiguredRemoveBox:false,
+            shippingDate:null
         };
     },
     methods: {
+        confirmRemoveConfiguredClientMethod(){
+            axios
+                .post(config.server + "/dayShiftmission/removeConfiguredClient", {
+                    dayMission_id:this.shippingDate.dayMission_id,
+                    pool_id:this.shippingDate.pool_id
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.isShowConfiguredRemoveBox = false
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '删除成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                        this.getMissionPool()
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '删除时发生错误'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        delConfiguredClientMethod(item){
+            console.log(item)
+            if(item.dayMission_id){
+                this.isShowConfiguredRemoveBox = true
+                this.shippingDate={
+                    dayMission_id: item.dayMission_id,
+                    clientName: item.clientName,
+                    pool_id:item._id
+                }
+            }else{
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '删除已分配任务发生错误'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }
+        },
+
         removeMissionMtehod() {
             if (this.radioPicked === null) {
                 this.showError = true;
@@ -545,7 +635,6 @@ export default {
         },
 
         showDelBoxMethod(item){
-            console.log(item)
             this.showRemoveBox = true
             this.missionInfo = item;
         },
@@ -713,9 +802,6 @@ export default {
         },
 
         choiseMissionFromPool(client) {
-            console.log('##########')
-            console.log(client)
-            console.log('##########')
             this.choiseMissionArray.push(client);
             this.isShowChoiseConfirmBox = true;
         },
@@ -758,6 +844,7 @@ export default {
         },
 
         getMissionPool() {
+            this.missionArray = []
             let b = new Date().toISOString();
             this.needDoNum = 0;
             this.$store.dispatch("setDoNum", this.needDoNum);
@@ -769,7 +856,6 @@ export default {
                 .then(doc => {
                     if (doc.data.code === 0) {
                         this.missionArray = doc.data.doc;
-                        console.log(this.missionArray)
                         this.missionArray = _.orderBy(
                             this.missionArray,
                             ["backTime"],
@@ -838,6 +924,7 @@ export default {
     margin-bottom: 10px;
     overflow: hidden;
     border-radius: 10px;
+    background-color: #fff;
 }
 
 .search-body-center-item-title {
@@ -1326,5 +1413,31 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.dayshift_configureddel_body{
+    margin: 10px 12px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    border: 1px solid #eee;
+    padding: 10px;
+}
+
+.dayshift_configureddel_body_title{
+    line-height: 30px;
+    height: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.dayshift_configureddel_body_content{
+    height: 50px;
+    line-height: 60px;
+}
+
+.dayshift_configureddel_bottom{
+    display: flex;
+    display: -webkit-flex;
+    margin: 0 8px 10px 8px
 }
 </style>
