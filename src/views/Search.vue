@@ -130,6 +130,7 @@
             </div>
         </transition>
         <!-- show increase order box end -->
+
         <!-- 操作提示 -->
         <transition name="tips-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
             <div class="errinfo" v-if="showError" @click="showError = false">
@@ -137,6 +138,29 @@
             </div>
         </transition>
         <!-- 操作提示 -->
+
+        <!-- loading animation start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowLoadingAnimation" class="tripcount_loading_back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowLoadingAnimation" class="tripcount_loading_front" @touchmove.prevent>
+                <div class="tripcount_loading_box">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- loading animation end -->
     </div>
 </template>
 
@@ -170,7 +194,8 @@ export default {
             choiseOtherText:'textcolor',
             showError:false,
             errorInfo:'未知错误',
-            driverName:null
+            driverName:null,
+            isShowLoadingAnimation:false
         }
     },
     mounted() {
@@ -184,6 +209,7 @@ export default {
             return this.$store.state.lang
         }
     },
+
     methods:{
         confirmIncreaseOrder(){
             if(this.isIncreaseOrder === null){
@@ -197,6 +223,7 @@ export default {
                     this.showError = false
                 }, 3000);
             }else{
+                this.isShowLoadingAnimation = true
                 let orderDate = new Date().toISOString()
                 console.log(orderDate)
                 axios.post(config.server + '/dayshiftmission/create',{
@@ -213,7 +240,7 @@ export default {
                     orderDate:orderDate
                 })
                 .then(doc => {
-                    console.log(doc)
+                    this.isShowLoadingAnimation = false
                     if(doc.data.code === 0){
                         this.showIncreaseOrderBox = false
                         this.showError = true
@@ -239,6 +266,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    this.isShowLoadingAnimation = false
                     console.log(err)
                 })
             }
@@ -315,7 +343,9 @@ export default {
             this.showIncreaseOrderBox = true
             this.clientShipping = client
         },
+
         searchMethod(){
+            this.isShowLoadingAnimation = true
             this.returnNull = false
             this.pageNow = 1
             this.clientArray = []
@@ -325,6 +355,7 @@ export default {
                     word:this.keyWord
                 })
             .then(doc => {
+                this.isShowLoadingAnimation = false
                 if(doc.data.code === 0){
                     this.countNum = doc.data.count
                     this.clientArray=this.clientArray.concat(doc.data.doc)
@@ -334,9 +365,11 @@ export default {
                 }
             })
             .catch(err => {
+                this.isShowLoadingAnimation = false
                 console.log(err)
             })
         },
+
         getMoreMethod(){
             this.pageNow += 1
             axios.post(config.server + '/clientb/find',{
@@ -678,6 +711,72 @@ export default {
 .errinfo span {
     font-size: 16px;
     line-height: 32px;
+}
+
+.tripcount_loading_back {
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.tripcount_loading_front {
+    position: fixed;
+    z-index: 102;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tripcount_loading_box{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+}
+
+.spinner {
+    margin: 32px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: rgba(212, 50, 49, 1);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
 }
 </style>
 
