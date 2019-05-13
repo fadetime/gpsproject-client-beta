@@ -92,16 +92,14 @@
                         </div>
                     </div>
                     <div v-if="!item.dayMission_id">
-                        <div class="day_delbutton">
-                            <div class="search-body-center-button" style="width:42px;background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
-                                <span>删除</span>
-                            </div>
-                        </div>
                         <transition name="custom-classes-transition"
                                     enter-active-class="animated slideInUp faster"
                                     leave-active-class="animated slideOutDown faster">
                             <div v-if="!isShowChoiseConfirmBox"
                                  style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
+                                <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
+                                    <span>删除任务</span>
+                                </div>
                                 <div class="search-body-center-button"
                                      @click="choiseMissionFromPool(item)">
                                     <span v-if="lang === 'ch'">选择任务</span>
@@ -149,7 +147,7 @@
                 </div>
                 <div class="choiseconfirm-box-right">
                     <div class="search-body-center-button"
-                         @click="cancelMethod">
+                         @click="cancelMethod()">
                         <span v-if="lang === 'ch'">取消</span>
                         <span v-else>Cancel</span>
                     </div>
