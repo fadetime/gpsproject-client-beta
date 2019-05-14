@@ -13,11 +13,7 @@
         <div style="height:40px">
             <!-- empty space area -->
         </div>
-        <input type="file"
-                style="display:none"
-                id="upload_pic"
-                @change="fileChange($event)"
-                accept="image/*">
+        <input type="file" style="display:none" id="upload_pic" @change="fileChange($event)" accept="image/*">
         <div v-if="breakBasketArray != 0" class="break_page_body">
             <div class="page_body_item" v-for="(item,index) in breakBasketArray" :key="index">
                 <div class="page_body_item_top" @click="openDetail(index)">
@@ -183,7 +179,8 @@
                 </div> 
                 <div class="first_notic_back_center">
                     <div class="first_notic_back_center_frame" @click="isShowBigImageDialog = true">
-                        <img :src="firstPageImage | imgurl" alt="notice_pic">
+                        <img v-if="lang === 'ch'" :src="firstPageImage | imgurl" alt="notice_pic">
+                        <img v-else :src="firstPageImageEN | imgurl" alt="notice_pic">
                     </div>
                 </div>
                 <div class="first_notic_back_bottom">
@@ -205,7 +202,8 @@
                     <span style="font-size: 24px;line-height: 36px;">x</span>
                 </div>
                 <div class="bigimg_dialog_frame">
-                    <img :src="firstPageImage | imgurl" alt="notice_pic">
+                    <img v-if="lang === 'ch'" :src="firstPageImage | imgurl" alt="notice_pic">
+                    <img v-else :src="firstPageImageEN | imgurl" alt="notice_pic">
                 </div>
             </div>
         </transition>
@@ -239,7 +237,9 @@ export default {
             isShowFirstPageNotice:false,
             isShowBigImageDialog:false,
             firstPageTextEN:null,
-            firstPageText:null
+            firstPageText:null,
+            firstPageImage: null,
+            firstPageImageEN: null
         }
     },
 
@@ -267,6 +267,7 @@ export default {
                                 this.firstPageText = doc.data.text
                                 this.firstPageTextEN = doc.data.textEN
                                 this.firstPageImage = doc.data.image
+                                this.firstPageImageEN = doc.data.imageEN
                                 this.isShowFirstPageNotice = true
                                 localStorage.noticeOldTime = tempdate
                             }else{
@@ -295,6 +296,7 @@ export default {
                             this.firstPageText = doc.data.text
                             this.firstPageTextEN = doc.data.textEN
                             this.firstPageImage = doc.data.image
+                            this.firstPageImageEN = doc.data.imageEN
                             this.isShowFirstPageNotice = true
                             localStorage.noticeOldTime = noticeOldTime
                         }else{

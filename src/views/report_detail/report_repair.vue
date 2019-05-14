@@ -182,6 +182,7 @@
                     </div>
                     <div class="report_repair_title_right"></div>
                 </div>
+                <div style="height:40px;"></div>
                 <div class="report_report_maxbreak_body">
                     <div class="report_report_maxbreak_body_carname">
                         <span>{{carMaxName}}</span>
@@ -329,6 +330,7 @@
                         </div>
                     </div>
                 </div>
+                <div style="height:56px;"></div>
             </div>
         </transition>
         <!-- max break car report in this month end -->
@@ -433,8 +435,8 @@
                             <span>{{item.logStartTime | timefilter}}</span>
                         </div>
                     </div>
-                    
                 </div>
+                <div style="height:56px"></div>
             </div>
         </transition>
         <!-- this month info dialog end -->
@@ -589,7 +591,7 @@ export default {
                                     this.otherNum ++
                                     this.otherErrArray.push({
                                         note:element.note,
-                                        img:element.image
+                                        img:element.car_id.image
                                     })
                                 }
                                 if(element.tyre === 1){
@@ -745,7 +747,7 @@ export default {
 
 .report_repair_body_item_frame_right{
     text-align: right;
-    width: 84px;
+    width: 120px;
 }
 
 .report_repair_empty_bottom{
@@ -934,6 +936,9 @@ export default {
     left: 0;
     right: 0;
     background-color: #f7f7f7;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
 }
 
 .report_report_maxbreak_title{
@@ -947,6 +952,11 @@ export default {
     display: flex;
     display: -webkit-flex;
     justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 25;
 }
 
 .report_report_maxbreak_body{

@@ -293,7 +293,8 @@
                 </div> 
                 <div class="first_notic_back_center">
                     <div class="first_notic_back_center_frame" @click="isShowBigImageDialog = true">
-                        <img :src="firstPageImage | imgurl" alt="notice_pic">
+                        <img v-if="lang === 'ch'" :src="firstPageImage | imgurl" alt="notice_pic">
+                        <img v-else :src="firstPageImageEN | imgurl" alt="notice_pic">
                     </div>
                 </div>
                 <div class="first_notic_back_bottom">
@@ -315,7 +316,8 @@
                     <span style="font-size: 24px;line-height: 36px;">x</span>
                 </div>
                 <div class="bigimg_dialog_frame">
-                    <img :src="firstPageImage | imgurl" alt="notice_pic">
+                    <img v-if="lang === 'ch'" :src="firstPageImage | imgurl" alt="notice_pic">
+                    <img v-else :src="firstPageImageEN | imgurl" alt="notice_pic">
                 </div>
             </div>
         </transition>
@@ -368,7 +370,9 @@ export default {
             isShowFirstPageNotice:false,
             isShowBigImageDialog:false,
             firstPageText:null,
-            firstPageTextEN:null
+            firstPageTextEN:null,
+            firstPageImage: null,
+            firstPageImageEN: null
         };
     },
     methods: {
@@ -385,6 +389,7 @@ export default {
                                 this.firstPageText = doc.data.text
                                 this.firstPageTextEN = doc.data.textEN
                                 this.firstPageImage = doc.data.image
+                                this.firstPageImageEN = doc.data.imageEN
                                 this.isShowFirstPageNotice = true
                                 localStorage.noticeOldTime = tempdate
                             }else{
@@ -413,6 +418,7 @@ export default {
                             this.firstPageText = doc.data.text
                             this.firstPageTextEN = doc.data.textEN
                             this.firstPageImage = doc.data.image
+                            this.firstPageImageEN = doc.data.imageEN
                             this.isShowFirstPageNotice = true
                             localStorage.noticeOldTime = noticeOldTime
                         }else{
