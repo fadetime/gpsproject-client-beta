@@ -303,6 +303,20 @@
                                         <div v-else
                                              class="redtext">SD Card</div>
                                     </div>
+                                    <div v-if="tempData.flashLight" style="font-size:14px;width: 80px;" @click="checkButtonMethod('flashLight')">
+                                        <div class="flash_light"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="greentext">手电筒</div>
+                                        <div v-else
+                                             class="greentext">flashLight</div>
+                                    </div>
+                                    <div v-else style="font-size:14px;width: 80px;" @click="checkButtonMethod('flashLight')">
+                                        <div class="flash_light-red"></div>
+                                        <div v-if="lang === 'ch'"
+                                             class="redtext">手电筒</div>
+                                        <div v-else
+                                             class="redtext">flashLight</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -593,7 +607,7 @@
                                 <div class="confirmbox-box-body-center-item-right">
                                     <div class="confirmbox-box-body-center-item-name">
                                         <span v-if="lang === 'ch'">SD卡:</span>
-                                        <span v-else>Back light:</span>
+                                        <span v-else>SD Card:</span>
                                     </div>
                                     <div class="confirmbox-box-body-center-item-content">
                                         <div v-if="lang === 'ch'">
@@ -602,6 +616,25 @@
                                         </div>
                                         <div v-else>
                                             <span v-if="tempData.SD_card" style="color:#2f9514">OK</span>
+                                            <span v-else style="color:#d74342">ERR</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="confirmbox-box-body-center-item">
+                                <div class="confirmbox-box-body-center-item-right">
+                                    <div class="confirmbox-box-body-center-item-name">
+                                        <span v-if="lang === 'ch'">手电筒:</span>
+                                        <span v-else>flashLight:</span>
+                                    </div>
+                                    <div class="confirmbox-box-body-center-item-content">
+                                        <div v-if="lang === 'ch'">
+                                            <span v-if="tempData.flashLight" style="color:#2f9514">正常</span>
+                                            <span v-else style="color:#d74342">损坏</span>
+                                        </div>
+                                        <div v-else>
+                                            <span v-if="tempData.flashLight" style="color:#2f9514">OK</span>
                                             <span v-else style="color:#d74342">ERR</span>
                                         </div>
                                     </div>
@@ -1106,6 +1139,8 @@ export default {
                 this.tempData.sideMirror = !this.tempData.sideMirror;
             }else if (item === "SD_card") {
                 this.tempData.SD_card = !this.tempData.SD_card;
+            }else if (item === "flashLight") {
+                this.tempData.flashLight = !this.tempData.flashLight;
             } else {
                 this.tempData.petrolCard = !this.tempData.petrolCard;
             }
@@ -1365,6 +1400,36 @@ export default {
     width: 46px;
     height: 46px;
     margin: 0 auto;
+}
+
+.flash_light {
+    background: #2f9514;
+    mask-image: url(../../public/icons/icon_flashLight.svg);
+    -webkit-mask-image: url(../../public/icons/icon_flashLight.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+    mask-size: 46px 46px;
+    -webkit-mask-size: 46px 46px;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.flash_light-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/icon_flashLight.svg);
+    -webkit-mask-image: url(../../public/icons/icon_flashLight.svg);
+    width: 46px;
+    height: 46px;
+    margin: 0 auto;
+    mask-size: 46px 46px;
+    -webkit-mask-size: 46px 46px;
+    mask-position: center;
+    -webkit-mask-position: center;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
 }
 
 .tyre-icon {
