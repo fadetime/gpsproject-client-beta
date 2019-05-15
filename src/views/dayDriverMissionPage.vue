@@ -914,10 +914,8 @@ export default {
                             axios
                                 .post(config.server + "/dsdriver/finish",payload)
                                 .then(doc => {
-                                    console.log(doc);
                                     if (doc.data.code === 0) {
                                         this.findMissionByID();
-                                        // this.getDayShiftDriverMission();
                                         this.showCRbox = false;
                                         if (this.lang === "ch") {
                                             this.tipsInfo = "任务提交成功";
@@ -929,31 +927,6 @@ export default {
                                         setTimeout(() => {
                                             this.isShowTipsBox = false
                                         }, 2000);
-                                        //判断所有客户是否完成 start
-                                        //new method
-                                        // let count = 0;
-                                        // let notFinishMissionFlag = false;
-                                        // async.whilst(
-                                        //     function() {
-                                        //         return count < 1;
-                                        //     },
-                                        //     (callback) => {
-                                        //         this.detailDate.some(element => {
-                                        //             count++;
-                                        //             console.log(count);
-                                        //             if (!element.finisDate) {
-                                        //                 notFinishMissionFlag = true;
-                                        //             }
-                                        //             return notFinishMissionFlag;
-                                        //         });
-                                        //         callback(null, notFinishMissionFlag);
-                                        //     },
-                                        //     (err, n) => {
-                                        //         if (!n) {
-                                        //             this.changeMissionState();
-                                        //         }
-                                        //     }
-                                        // );
                                     } else {
                                         if (this.lang === "ch") {
                                             this.tipsInfo = "任务提交失败";
@@ -982,12 +955,44 @@ export default {
                             }, 3000);
                         })
             }else{
-                this.tipsShowColor = 'yellow'
-                this.tipsInfo = '请选择照片'
-                this.isShowTipsBox = true
-                setTimeout(() => {
-                    this.isShowTipsBox = false
-                }, 3000);
+                let payload = new FormData();
+                payload.append("mission_id", this._id);
+                payload.append("clientName", this.shippingClient.clientName);
+                let tempDate = new Date().toISOString();
+                payload.append("finisDate", tempDate);
+                payload.append("pool_id",this.shippingClient.pool_id)
+                axios
+                    .post(config.server + "/dsdriver/finish",payload)
+                    .then(doc => {
+                        if (doc.data.code === 0) {
+                            this.findMissionByID();
+                            this.showCRbox = false;
+                            if (this.lang === "ch") {
+                                this.tipsInfo = "任务提交成功";
+                            } else {
+                                this.tipsInfo = "Submit mission success";
+                            }
+                            this.tipsShowColor = 'green'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        } else {
+                            if (this.lang === "ch") {
+                                this.tipsInfo = "任务提交失败";
+                            } else {
+                                this.tipsInfo = "submit mission fail";
+                            }
+                            this.tipsShowColor = 'yellow'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             }
         },
 

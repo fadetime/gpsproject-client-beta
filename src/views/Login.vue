@@ -84,11 +84,13 @@ export default {
         changeToCH() {
             this.lang = 'ch'
             this.$store.dispatch('setLanguage', this.lang)
+            localStorage.lang = 'ch'
             this.languageWindow = false
         },
         changeToEN() {
             this.lang = 'en'
             this.$store.dispatch('setLanguage', this.lang)
+            localStorage.lang = 'en'
             this.languageWindow = false
         },
         loginMethod() {

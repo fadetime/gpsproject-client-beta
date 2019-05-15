@@ -225,7 +225,6 @@ export default {
             }else{
                 this.isShowLoadingAnimation = true
                 let orderDate = new Date().toISOString()
-                console.log(orderDate)
                 axios.post(config.server + '/dayshiftmission/create',{
                     client_id:this.clientShipping._id,
                     clientName:this.clientShipping.clientbname,
