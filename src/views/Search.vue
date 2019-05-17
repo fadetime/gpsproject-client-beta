@@ -1,9 +1,16 @@
 <template>
     <div id="searchpage">
         <div class="search-title">
-            <span>{{language.searchPage.searchClient}}</span>
+            <div class="search-title-left"></div>
+            <div class="search-title-center">
+                <span>{{language.searchPage.searchClient}}</span>
+            </div>
+            <div class="search-title-right" @click="goTemplateMetodh()">
+                <div class="search_icon_add"></div>
+            </div>
         </div>
         <div class="search-body">
+            <router-view></router-view>
             <div class="search-body-top">
                 <input type="text" :placeholder="language.searchPage.inputClientName" v-model="keyWord" @keyup.enter="searchMethod">
             </div>
@@ -211,6 +218,10 @@ export default {
     },
 
     methods:{
+        goTemplateMetodh(){
+            this.$router.push("/template");
+        },
+
         confirmIncreaseOrder(){
             if(this.isIncreaseOrder === null){
                 this.showError = true
@@ -393,12 +404,26 @@ export default {
     background: #d74342;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-between;
 }
 
-.search-title span{
+.search-title-left{
+    width: 80px;
+}
+
+.search-title-center span{
     color: #fff;
     font-size: 18px;
     line-height: 40px;
+}
+
+.search-title-right{
+    width: 80px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
 }
 
 .search-body {
@@ -776,6 +801,20 @@ export default {
 .spinner .rect5 {
     -webkit-animation-delay: -0.8s;
     animation-delay: -0.8s;
+}
+
+.search_icon_add{
+    background-color: #fff;
+    mask-image: url(../../public/icons/baseline-add-24px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-add-24px.svg);
+    width: 40px;
+    height: 40px;
+    mask-size: 40px;
+    -webkit-mask-size: 40px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
 }
 </style>
 

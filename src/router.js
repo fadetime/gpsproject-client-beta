@@ -26,6 +26,9 @@ import report_basket from './views/report_detail/report_basket.vue'
 import report_repair from './views/report_detail/report_repair.vue'
 import report_bill from './views/report_detail/report_bill.vue'
 import report_day from './views/report_detail/report_day.vue'
+import search_template from './views/dayShift/dayShift_template.vue'
+import template_newclient from './views/dayShift/dayShift_newClient.vue'
+
 import carRule from './views/carRule.vue'
 
 import AuthGuard from './auth-guard'
@@ -102,6 +105,18 @@ export default new Router({
       name: 'search',
       component: search,
       beforeEnter: searchGuard
+    },
+    {
+      path: '/template',
+      name: 'template',
+      component: search_template,
+      // beforeEnter: dayShiftGuard
+    },
+    {
+      path: '/template_newclient',
+      name: 'template_newclient',
+      component: template_newclient,
+      // beforeEnter: dayShiftGuard
     },
     {
       path: '/dayshifthome',

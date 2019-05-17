@@ -43,6 +43,7 @@
                         <div class="search-body-center-item-body-item-right">
                             <span v-if="item.isIncreaseOrder === 'true'">加单</span>
                             <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                             <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                             <span v-else>退单</span>
                         </div>
@@ -238,9 +239,16 @@
                                 <div class="confirmstart-box-body-item-left">
                                     {{index + 1}}
                                 </div>
-                                <div class="confirmstart-box-body-item-right">
+                                <div class="confirmstart-box-body-item-center">
                                     <span v-if="lang === 'ch'">{{item.clientName}}</span>
                                     <span v-else>{{item.clientNameEN}}</span>
+                                </div>
+                                <div class="confirmstart-box-body-item-right">
+                                    <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                                    <span v-else>退单</span>
                                 </div>
                             </div>
                         </div>
@@ -649,6 +657,7 @@ export default {
             }else{
                 this.isShowChoiseDriverBox = false
                 this.isShowConfirmStartBox = true;
+                console.log(this.choiseMissionArray)
             }
         },
 
@@ -1195,6 +1204,7 @@ export default {
     overflow: auto;
     padding: 8px;
     border-radius: 10px;
+    border: 1px solid #eee;
 }
 
 .confirmstart-box-body-item {
@@ -1203,18 +1213,25 @@ export default {
     font-size: 16px;
     height: 30px;
     line-height: 30px;
+    border-bottom: 1px solid #eee;
 }
 
 .confirmstart-box-body-item-left {
     width: 20px;
-    margin-left: 10px;
     text-align: right;
 }
 
-.confirmstart-box-body-item-right {
+.confirmstart-box-body-item-center {
     width: 180px;
-    margin-left: 20px;
+    margin-left: 8px;
     text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.confirmstart-box-body-item-right{
+    padding-left: 8px;
 }
 
 .confirmstart-box-bottom {

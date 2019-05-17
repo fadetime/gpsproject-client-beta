@@ -6,8 +6,8 @@
                 <span v-if="lang === 'ch'">白班任务</span>
                 <span v-else>Day Shift Mission</span>
             </div>
-            <div class="page-title-right">
-                <div class="dateicon"></div>
+            <div class="page-title-right" @click="refresh()">
+                <img src="../../public/icons/refresh.png" id="arrow">
             </div>
         </div>
 
@@ -478,8 +478,7 @@
             <div v-if="showMissionDetail"
                  class="missiondetail">
                 <div class="missiondetail-title">
-                    <div style="flex-basis:15%"
-                         @click="trunBackMethod()">
+                    <div style="flex-basis:15%" @click="trunBackMethod()">
                         <span style="font-size:16px">《 返回</span>
                         <span style="font-size:16px">《 Back</span>
                     </div>
@@ -496,6 +495,18 @@
                          class="missiondetail-body-item">
                         <div class="missiondetail-body-item-title">
                             <span>{{item.clientName}}</span>
+                        </div>
+                        <div class="missiondetail-body-item-body">
+                            <div class="missiondetail-body-item-body-left">
+                                <span>任务类型</span>
+                            </div>
+                            <div class="missiondetail-body-item-body-right">
+                                <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                                <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                                <span v-else>退单</span>
+                            </div>
                         </div>
                         <div class="missiondetail-body-item-body">
                             <div class="missiondetail-body-item-body-left">
@@ -525,23 +536,15 @@
                         <div v-if="item.finisDate"
                              style="position: absolute;transform:rotate(-30deg);top:30px">
                             <div v-if="lang === 'ch'">
-                                <img src="../../public/img/missionCompleteCH.png"
-                                     style="height:100px">
+                                <img src="../../public/img/missionCompleteCH.png" style="height:100px">
                             </div>
                             <div v-else>
-                                <img src="../../public/img/missionComplete.png"
-                                     style="height:100px">
+                                <img src="../../public/img/missionComplete.png" style="height:100px">
                             </div>
                         </div>
                         <div v-else>
                             <div class="findcar-bottom"
                                  style="padding-bottom: 10px;">
-                                <!-- <div class="removebox-body-center-button"
-                                     style="width: 80px;margin-right:10px"
-                                     @click="removeClientMethod(item)">
-                                    <span v-if="lang === 'ch'">删除</span>
-                                    <span v-else>chancel</span>
-                                </div> -->
                                 <div class="removebox-body-center-button"
                                      style="width: 80px;"
                                      @click="finishClientMethod(item)">
@@ -719,6 +722,17 @@ export default {
     },
 
     methods: {
+        refresh() {
+            let arrow = document.querySelector('#arrow')
+            arrow.style.transform = 'rotate(360deg)'
+            arrow.style.transition = '0.5s'
+            setTimeout(() => {
+                arrow.style.transform = 'rotate(0deg)'
+                arrow.style.transition = '0.5s'
+            }, 300)
+            this.getDayShiftDriverMission();
+        },
+
         uploadImgFile() {
             document.getElementById("daydriver_upload_file").click();
         },
@@ -1003,12 +1017,6 @@ export default {
             this.showCRbox = true;
         },
 
-        removeClientMethod(clientInfo) {
-            this.shippingClient = clientInfo;
-            this.boxShowFace = "remove";
-            this.showCRbox = true;
-        },
-
         trunBackMethod() {
             this.showMissionDetail = false;
         },
@@ -1226,29 +1234,23 @@ export default {
 
         startMission(missionInfo) {
             this._id = missionInfo._id;
-            console.log('###start###')
             if (!missionInfo.goTime) {
-                console.log('###1###')
                 this.findAllCarPlate();
                 this.showChoiseCarBox = true;
             } else if (!missionInfo.carCheck_id) {
-                console.log('###2###')
                 this.showCheckCarBox = true;
             } else if (missionInfo.missionFinish) {
-                console.log('###3###')
                 if (!missionInfo.backTime) {
-                    console.log('###4###')
                     this.carCheck_id = missionInfo.carCheck_id;
                     this.showCheckAgainBox = true;
                 } else {
-                    console.log('###5###')
                     this.detailDate = missionInfo.clientArray;
                     this.showMissionDetail = true;
                 }
             } else {
-                console.log('###6###')
                 this.detailDate = missionInfo.clientArray;
                 this.showMissionDetail = true;
+                console.log(this.detailDate)
                 let count = 0;
                 let notFinishMissionFlag = false;
                 async.whilst(
@@ -1283,35 +1285,7 @@ export default {
                 })
                 .then(doc => {
                     if (doc.data.code === 0) {
-                        console.log('$$$$$$$$$$')
-                        console.log(doc.data.doc)
-                        console.log('$$$$$$$$$$')
                         this.missionArray = doc.data.doc;
-                        //
-                        // let count = 0;
-                        // let notFinishMissionFlag = false;
-                        // async.whilst(
-                        //     function() {
-                        //         return count < 1;
-                        //     },
-                        //     (callback) => {
-                        //         this.detailDate.some(element => {
-                        //             count++;
-                        //             console.log(count);
-                        //             if (!element.finisDate) {
-                        //                 notFinishMissionFlag = true;
-                        //             }
-                        //             return notFinishMissionFlag;
-                        //         });
-                        //         callback(null, notFinishMissionFlag);
-                        //     },
-                        //     (err, n) => {
-                        //         if (!n) {
-                        //             this.changeMissionState();
-                        //         }
-                        //     }
-                        // );
-                        //
                     } else {
                         if (this.lang === "ch") {
                             this.tipsInfo = "未找到任务数据";
@@ -1351,17 +1325,20 @@ export default {
 }
 
 .page-title-left {
-    flex-basis: 10%;
+    flex-basis: 20%;
 }
 
 .page-title-center {
-    flex-basis: 80%;
+    flex-basis: 60%;
 }
 
 .page-title-right {
-    flex-basis: 10%;
+    flex-basis: 20%;
 }
 
+.page-title-right img{
+    height: 30px;
+}
 .emptyArea {
     height: 40px;
 }
