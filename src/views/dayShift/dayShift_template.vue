@@ -112,7 +112,7 @@
                 <div class="confirmstart-box">
                     <div class="confirmstart-box-title">
                         <span v-if="lang === 'ch'">司机选择</span>
-                        <span v-else>Confirm Client</span>
+                        <span v-else>Confirm Driver</span>
                     </div>
                     <div class="confirmstart-box-body">
                         <div class="dayshift_driverbox_body">
@@ -135,9 +135,73 @@
         </transition>
         <!-- choise driver box end -->
 
+        <!-- show choose client start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChooseClientBox" class="confirmstart-back"></div>
+        </transition>
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChooseClientBox" class="confirmstart-front"
+                 @click.self.prevent="isShowChooseClientBox = false">
+                <div class="confirmstart-box">
+                    <div class="confirmstart-box-title">
+                        <span v-if="lang === 'ch'">已选任务确认</span>
+                        <span v-else>Confirm Client</span>
+                    </div>
+                    <div class="confirmstart-box-body">
+                        <div class="dayshift_driverbox_body">
+                            <div class="dayshift_checkclientbox_body_item" v-for="(item,index) in tempArray" :key="index" @click="choiseDriverMethod(item)">
+                                <div class="dayshift_checkclientbox_body_item_left">
+                                    <input :id="'checkclientbox' + index " type="checkbox" :value="item" v-model="confirmClientArray">
+                                </div>
+                                <label :for="'checkclientbox' + index" class="dayshift_checkclientbox_body_item_center">
+                                    <span>{{item.clientName}}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dayshift_driverbox_bottom">
+                        <div class="day_whitebutton" @click="isShowChooseClientBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="day_whitebutton" @click="confirmChooseClientMethod()" style="margin-left:8px;">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- show choose client end -->
+
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
+
+        <!-- loading animation start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowLoadingAnimation" class="tripcount_loading_back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowLoadingAnimation" class="tripcount_loading_front" @touchmove.prevent>
+                <div class="tripcount_loading_box">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- loading animation end -->
     </div>
 </template>
 
@@ -177,40 +241,79 @@ export default {
             driverArray: [],
             choiseDriver: null,
             choiseDriver_id: null,
-            tempArray: null
+            tempArray: [],
+            isShowChooseClientBox: false,
+            confirmClientArray: [],
+            isShowLoadingAnimation: false
         }
     },
 
     methods:{
+        confirmChooseClientMethod() {
+            if(this.choiseDriver || this.choiseDriver_id){
+                this.isShowLoadingAnimation = true
+                let shippingDate = []
+                let allClientArray = this.tempArray
+                let chooseClientArray = this.confirmClientArray
+                async function changeQueueMethod() {
+                    return new Promise(() => {
+                        allClientArray.forEach(allClient => {
+                            chooseClientArray.forEach(chooseClient => {
+                                if(allClient === chooseClient){
+                                    shippingDate.push(allClient)
+                                }
+                            })
+                        });
+                    })
+                }
+                async function waitQueueMethod() {
+                    await changeQueueMethod()
+                }
+                waitQueueMethod()
+                axios
+                    .post(config.server + '/template/createMission',{
+                        clientArray: shippingDate,
+                        driverName: this.choiseDriver,
+                        driver_id: this.choiseDriver_id,
+                        date: new Date().toISOString()
+                    })
+                    .then(doc => {
+                        this.isShowLoadingAnimation = false
+                        if(doc.data.code === 0){
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = '司机任务建立成功'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 3000);
+                            this.isShowChooseClientBox = false
+                        }else{
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '司机任务建立失败'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        this.isShowLoadingAnimation = false
+                        console.log(err)
+                    })
+            }else{
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '提交时出现问题'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = true  
+                }, 3000);
+            }
+        },
+
         confirmChoiseDriverMethod(){
-            axios
-                .post(config.server + '/template/createMission',{
-                    clientArray: this.tempArray,
-                    driverName: this.choiseDriver,
-                    driver_id: this.choiseDriver_id,
-                    date: new Date().toISOString()
-                })
-                .then(doc => {
-                    if(doc.data.code === 0){
-                        this.tipsShowColor = 'green'
-                        this.tipsInfo = '司机任务建立成功'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 3000);
-                        this.isShowChoiseDriverBox = false
-                    }else{
-                        this.tipsShowColor = 'yellow'
-                        this.tipsInfo = '司机任务建立失败'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            this.isShowChoiseDriverBox = false
+            this.isShowChooseClientBox = true
+            this.confirmClientArray = this.tempArray
         },
 
         choiseDriverMethod(item){
@@ -477,6 +580,7 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     width: 100px;
+    background-color: #fff;
 }
 
 .daytemplate_addnew_box_body{
@@ -624,5 +728,99 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.dayshift_checkclientbox_body_item{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+}
+
+.dayshift_checkclientbox_body_item_left input{
+    height: 24px;
+    width: 24px;
+}
+
+.dayshift_checkclientbox_body_item_center{
+    width: 146px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-left: 8px;
+}
+
+.dayshift_driverbox_bottom{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    margin: 8px 0
+}
+
+.tripcount_loading_back {
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.tripcount_loading_front {
+    position: fixed;
+    z-index: 102;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tripcount_loading_box{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+}
+
+.spinner {
+    margin: 32px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: rgba(212, 50, 49, 1);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
 }
 </style>

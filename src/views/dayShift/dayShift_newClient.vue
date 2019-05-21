@@ -50,6 +50,14 @@
                 </div>
                 <div class="daynew_bottom_content">
                     <div v-for="(item,index) in chooseClientList" :key="index" class="daynew_bottom_content_frame">
+                        <div class="daynew_bottom_content_frame_button">
+                            <div class="changequeue_button" @click="moveClientUpMethod(item,index)">
+                                <span>↑</span>
+                            </div>
+                            <div class="changequeue_button" @click="moveClientDownMethod(item,index)" style="margin-left:4px;">
+                                <span>↓</span>
+                            </div>
+                        </div>
                         <span>{{item.clientbname}}</span>
                         <div class="daynew_bottom_content_frame_x" @click="pullClientMethod(index)">
                             <span>x</span>
@@ -179,6 +187,21 @@ export default {
     },
 
     methods:{
+        moveClientDownMethod(item,index){
+            if(index != this.chooseClientList.length - 1){
+                this.chooseClientList.splice(index,1)
+                this.chooseClientList.splice(index + 1,0,item)
+            }
+            
+        },
+
+        moveClientUpMethod(item,index){
+            if(index != 0){
+                this.chooseClientList.splice(index,1)
+                this.chooseClientList.splice(index - 1,0,item)
+            }
+        },
+
         confirmAddNewMission(){
             if(this.newClientName){
                 this.chooseClientList.push({
@@ -481,6 +504,29 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     margin: 4px 8px;
     position: relative;
+}
+
+.daynew_bottom_content_frame_button{
+    position: absolute;
+    left: 4px;
+    top: 0;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    height: 30px;
+}
+
+.changequeue_button{
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 34px;
+    height: 24px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    line-height: 24px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #fff;
 }
 
 .daynew_bottom_content_frame_x{

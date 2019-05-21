@@ -479,8 +479,8 @@
                  class="missiondetail">
                 <div class="missiondetail-title">
                     <div style="flex-basis:15%" @click="trunBackMethod()">
-                        <span style="font-size:16px">《 返回</span>
-                        <span style="font-size:16px">《 Back</span>
+                        <span v-if="lang === 'ch'" style="font-size:16px">《 返回</span>
+                        <span v-else style="font-size:16px">《 Back</span>
                     </div>
                     <div style="flex-basis:70%">
                         <span v-if="lang === 'ch'">任务详情</span>

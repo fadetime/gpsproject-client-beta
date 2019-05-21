@@ -18,6 +18,13 @@
                            v-if="newPosts"
                            style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
                     </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-mission"
+                                        @click="goDayDriverMissionPage">
+                        <div class="md-bottom-bar-icon assignment_turned"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">任务</span>
+                        <span v-else class="md-bottom-bar-label">MISSION</span>
+                    </md-bottom-bar-item>
                     <!-- <md-bottom-bar-item v-if="driverRole === 'dayshiftLeader'"
                                         id="bottom-bar-item-home"
                                         @click="goDayMissionPool">
