@@ -14,6 +14,9 @@
         <div class="daynew_search">
             <div class="daynew_search_frame">
                 <input type="text" @keyup.enter="searchClientMethod()" v-model="keyWord">
+                <div v-if="keyWord" class="daynew_search_frame_clearbutton" @click="clearKeyWordMethod()">
+                    <span>清除</span>
+                </div>
             </div>
         </div>
         <div style="height:70px;"></div>
@@ -187,6 +190,11 @@ export default {
     },
 
     methods:{
+        clearKeyWordMethod(){
+            this.keyWord = null
+            this.clientArray = []
+        },
+
         moveClientDownMethod(item,index){
             if(index != this.chooseClientList.length - 1){
                 this.chooseClientList.splice(index,1)
@@ -373,6 +381,7 @@ export default {
 
 .daynew_search_frame{
     width: 100%;
+    position: relative;
 }
 
 .daynew_search_frame input{
@@ -382,6 +391,17 @@ export default {
     border-radius: 10px;
     width: 100%;
     text-align: center;
+}
+
+.daynew_search_frame_clearbutton{
+    position: absolute;
+    border: 1px solid #eee;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    top: 2px;
+    right: 2px;
+    border-radius: 10px;
+    padding:2px;
 }
 
 .daynew_info{

@@ -780,7 +780,6 @@ export default {
         };
     },
     methods: {
-        
         getFinishMissionPool(){
             this.finishArray = []
             let b = new Date().toISOString();
@@ -798,21 +797,13 @@ export default {
                             ["backTime"],
                             ["desc"]
                         );
-                    } else if (doc.data.code === 1) {
-                        if (this.lang === "ch") {
-                            this.tipsInfo = "未找该日任务";
-                        } else {
-                            this.tipsInfo = "Mission not found in today";
-                        }
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false;
-                        }, 3000);
+                    } else if (doc.data.code === 1) { 
+                        this.finishArray = []
                     } else {
                         if (this.lang === "ch") {
-                            this.tipsInfo = "未找到白班任务";
+                            this.tipsInfo = "查找时出现错误";
                         } else {
-                            this.tipsInfo = "Mission not found";
+                            this.tipsInfo = "Catch an error while find info";
                         }
                         this.isShowTipsBox = true
                         setTimeout(() => {
@@ -843,20 +834,12 @@ export default {
                             ["desc"]
                         );
                     } else if (doc.data.code === 1) {
-                        if (this.lang === "ch") {
-                            this.tipsInfo = "未找该日任务";
-                        } else {
-                            this.tipsInfo = "Mission not found in today";
-                        }
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false;
-                        }, 3000);
+                        this.shippingArray = []
                     } else {
                         if (this.lang === "ch") {
-                            this.tipsInfo = "未找到白班任务";
+                            this.tipsInfo = "查找时出现错误";
                         } else {
-                            this.tipsInfo = "Mission not found";
+                            this.tipsInfo = "Catch an error while find info";
                         }
                         this.isShowTipsBox = true
                         setTimeout(() => {
@@ -1243,20 +1226,12 @@ export default {
                         });
                         this.$store.dispatch("setDoNum", this.needDoNum);
                     } else if (doc.data.code === 1) {
-                        if (this.lang === "ch") {
-                            this.tipsInfo = "未找该日任务";
-                        } else {
-                            this.tipsInfo = "Mission not found in today";
-                        }
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false;
-                        }, 3000);
+                        this.missionArray = []
                     } else {
                         if (this.lang === "ch") {
-                            this.tipsInfo = "未找到白班任务";
+                            this.tipsInfo = "查找时出现错误";
                         } else {
-                            this.tipsInfo = "Mission not found";
+                            this.tipsInfo = "Catch an error while find info";
                         }
                         this.isShowTipsBox = true
                         setTimeout(() => {

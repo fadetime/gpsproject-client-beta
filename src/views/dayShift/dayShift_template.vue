@@ -1,7 +1,11 @@
 <template>
     <div id="daytemplate">
         <div class="daytemplate_title">
-            <div class="daytemplate_title_left"></div>
+            <div class="daytemplate_title_left" @click="goBackMethod()">
+                <div>
+                    <img src="../../../public/icons/left.png" alt="exit" style="width: 20px;">
+                </div>
+            </div>
             <div class="daytemplate_title_center">
                 <span>任务模板</span>
             </div>
@@ -56,7 +60,7 @@
                         <div class="day_whitebutton" @click="isShowDelDialog = false">
                             <span>取消</span>
                         </div>
-                        <div class="day_whitebutton" style="margin-left:8px;">
+                        <div class="day_whitebutton" style="margin-left:8px;" @click="confirmDelMethod()">
                             <span>确定</span>
                         </div>
                     </div>
@@ -281,6 +285,42 @@ export default {
     },
 
     methods:{
+        goBackMethod(){
+            this.$router.push({path:'/search'})
+        },
+
+        confirmDelMethod(){
+            this.isShowLoadingAnimation = true
+            axios
+                .post(config.server + '/template/del',{
+                    _id:this.delInfo._id
+                })
+                .then(doc => {
+                    this.isShowLoadingAnimation = false
+                    if(doc.data.code === 0){
+                        this.isShowDelDialog = false
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '删除成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                        this.findAllTemplateMethod()
+                    }else{
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '删除失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    this.isShowLoadingAnimation = false
+                    console.log(err)
+                })
+        },
+
         confirmChooseClientMethod() {
             if(this.choiseDriver || this.choiseDriver_id){
                 this.isShowLoadingAnimation = true
@@ -382,31 +422,6 @@ export default {
             console.log(item)
             this.delInfo = item
             this.isShowDelDialog = true
-            // axios
-            //     .post(config.server + '/template/del',{
-            //         _id:item._id
-            //     })
-            //     .then(doc => {
-            //         if(doc.data.code === 0){
-            //             this.tipsShowColor = 'green'
-            //             this.tipsInfo = '删除成功'
-            //             this.isShowTipsBox = true
-            //             setTimeout(() => {
-            //                 this.isShowTipsBox = false
-            //             }, 2000);
-            //             this.findAllTemplateMethod()
-            //         }else{
-            //             this.tipsShowColor = 'green'
-            //             this.tipsInfo = '删除失败'
-            //             this.isShowTipsBox = true
-            //             setTimeout(() => {
-            //                 this.isShowTipsBox = false
-            //             }, 2000);
-            //         }
-            //     })
-            //     .catch(err => {
-            //         console.log(err)
-            //     })
         },
 
         changeTemplateMethod(item){

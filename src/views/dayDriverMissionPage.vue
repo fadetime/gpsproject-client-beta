@@ -1286,11 +1286,13 @@ export default {
                 .then(doc => {
                     if (doc.data.code === 0) {
                         this.missionArray = doc.data.doc;
-                    } else {
+                    } else if(doc.data.code === 1){
+                        this.missionArray = []
+                    }else{
                         if (this.lang === "ch") {
-                            this.tipsInfo = "未找到任务数据";
+                            this.tipsInfo = "查找时出现问题";
                         } else {
-                            this.tipsInfo = "Mission not found";
+                            this.tipsInfo = "Catch an error while find info";
                         }
                         this.tipsShowColor = 'yellow'
                         this.isShowTipsBox = true
