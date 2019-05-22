@@ -6,128 +6,368 @@
         <div style="height:40px">
             <!-- 顶部占位符 -->
         </div>
-        <div v-if="missionArray.length === 0"
-             style="width: 50%;margin: 0 auto;padding-top: 17.5vh;">
-            <img src="../../public/img/ebuyLogo.png"
-                 alt="logo">
-            <br>
-            <span>~{{language.homePage.whenEmpty}}~</span>
+        <div class="dayhome_topbutton">
+            <div :class="dayhome_topbutton_left" @click="changeShowMode('left')">
+                <span>未分配</span>
+            </div>
+            <div :class="dayhome_topbutton_center" @click="changeShowMode('center')">
+                <span>已分配</span>
+            </div>
+            <div :class="dayhome_topbutton_right" @click="changeShowMode('right')">
+                <span>已完成</span>
+            </div>
         </div>
-        <div v-else
-             style="margin-top:10px">
-            <div class="search-body-center-item"
-                 v-for="(item,index) in missionArray"
-                 :key="index">
-                <div class="search-body-center-item-title">
-                    <span v-if="lang === 'ch'">{{item.clientName}}</span>
-                    <span v-else>{{item.clientNameEN}}</span>
-                </div>
-                <div class="search-body-center-item-body">
-                    <div v-if="item.backTime">
-                        <div v-if="lang === 'en'"
-                             class="completediv">
-                            <img src="../../public/img/missionComplete.png"
-                                 alt="complete">
-                        </div>
-                        <div v-else
-                             class="completediv">
-                            <img src="../../public/img/missionCompleteCH.png"
-                                 alt="complete">
-                        </div>
+        <div v-if="isShowLeftWindow">
+            <div v-if="missionArray.length === 0" style="width: 50%;margin: 0 auto;padding-top: 17.5vh;">
+                <img src="../../public/img/ebuyLogo.png" alt="logo">
+                <br>
+                <span>~{{language.homePage.whenEmpty}}~</span>
+            </div>
+            <div v-else
+                style="margin-top:10px">
+                <div class="search-body-center-item"
+                    v-for="(item,index) in missionArray"
+                    :key="index">
+                    <div class="search-body-center-item-title">
+                        <span v-if="lang === 'ch'">{{item.clientName}}</span>
+                        <span v-else>{{item.clientNameEN}}</span>
                     </div>
-                    <div class="search-body-center-item-body-item">
-                        <div class="search-body-center-item-body-item-left">
-                            <span v-if="lang === 'ch'">任务类型:</span>
-                            <span v-else>Types:</span>
-                        </div>
-                        <div class="search-body-center-item-body-item-right">
-                            <span v-if="item.isIncreaseOrder === 'true'">加单</span>
-                            <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
-                            <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
-                            <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
-                            <span v-else>退单</span>
-                        </div>
-                    </div>
-                    <div class="search-body-center-item-body-item">
-                        <div class="search-body-center-item-body-item-left">
-                            <span>{{language.searchPage.clientPhone}}</span>
-                        </div>
-                        <div class="search-body-center-item-body-item-right">
-                            <span>{{item.clientPhone}}</span>
-                        </div>
-                    </div>
-                    <div class="search-body-center-item-body-item">
-                        <div class="search-body-center-item-body-item-left">
-                            <span>{{language.searchPage.postCode}}</span>
-                        </div>
-                        <div class="search-body-center-item-body-item-right">
-                            <span>{{item.clientPostcode}}</span>
-                        </div>
-                    </div>
-                    <div class="search-body-center-item-body-item">
-                        <div class="search-body-center-item-body-item-left">
-                            <span v-if="lang === 'ch'">任务司机:</span>
-                            <span v-else>State</span>
-                        </div>
-                        <div class="search-body-center-item-body-item-right">
-                            <div>
-                                <span v-if="item.driverName">{{item.driverName}}</span>
-                                <span v-else>未分配</span>
+                    <div class="search-body-center-item-body">
+                        <div v-if="item.backTime">
+                            <div v-if="lang === 'en'"
+                                class="completediv">
+                                <img src="../../public/img/missionComplete.png"
+                                    alt="complete">
+                            </div>
+                            <div v-else
+                                class="completediv">
+                                <img src="../../public/img/missionCompleteCH.png"
+                                    alt="complete">
                             </div>
                         </div>
-                    </div>
-                    <div class="search-body-center-item-body-item">
-                        <div class="search-body-center-item-body-item-left">
-                            <span v-if="lang === 'ch'">任务状态:</span>
-                            <span v-else>State</span>
-                        </div>
-                        <div class="search-body-center-item-body-item-right">
-                            <div v-if="lang === 'ch'">
-                                <span v-if="item.dayMission_id">配送中</span>
-                                <span v-else>等待中</span>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务类型:</span>
+                                <span v-else>Types:</span>
                             </div>
-                            <div v-else>
-                                <span v-if="item.dayMission_id">Shipping</span>
-                                <span v-else>Waiting</span>
+                            <div class="search-body-center-item-body-item-right">
+                                <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                                <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                                <span v-else>退单</span>
                             </div>
                         </div>
-                    </div>
-                    <div v-if="!item.dayMission_id">
-                        <transition name="custom-classes-transition"
-                                    enter-active-class="animated slideInUp faster"
-                                    leave-active-class="animated slideOutDown faster">
-                            <div v-if="!isShowChoiseConfirmBox"
-                                 style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
-                                <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
-                                    <span>删除任务</span>
-                                </div>
-                                <div class="search-body-center-button"
-                                     @click="choiseMissionFromPool(item)">
-                                    <span v-if="lang === 'ch'">选择任务</span>
-                                    <span v-else>Choise</span>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span>{{language.searchPage.clientPhone}}</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span>{{item.clientPhone}}</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span>{{language.searchPage.postCode}}</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span>{{item.clientPostcode}}</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务司机:</span>
+                                <span v-else>State</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <div>
+                                    <span v-if="item.driverName">{{item.driverName}}</span>
+                                    <span v-else>未分配</span>
                                 </div>
                             </div>
-                        </transition>
-                        <transition name="custom-classes-transition"
-                                    enter-active-class="animated slideInRight faster"
-                                    leave-active-class="animated slideOutRight faster">
-                            <div v-if="isShowChoiseConfirmBox"
-                                 class="daycheckbox">
-                                <!-- check box  -->
-                                <input type="checkbox" :value="item" v-model="choiseMissionArray" />
-                                <!-- check box  -->
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务状态:</span>
+                                <span v-else>State</span>
                             </div>
-                        </transition>
-                    </div>
-                    <div v-else style="padding-top:6px;">
-                        <div class="search-body-center-button" style="background-color:#d74342;color:#fff;border: unset;" @click="delConfiguredClientMethod(item)">
-                            <span>删除</span>
+                            <div class="search-body-center-item-body-item-right">
+                                <div v-if="lang === 'ch'">
+                                    <span v-if="item.dayMission_id">配送中</span>
+                                    <span v-else>等待中</span>
+                                </div>
+                                <div v-else>
+                                    <span v-if="item.dayMission_id">Shipping</span>
+                                    <span v-else>Waiting</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="!item.dayMission_id">
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated slideInUp faster"
+                                        leave-active-class="animated slideOutDown faster">
+                                <div v-if="!isShowChoiseConfirmBox"
+                                    style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
+                                    <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
+                                        <span>删除任务</span>
+                                    </div>
+                                    <div class="search-body-center-button"
+                                        @click="choiseMissionFromPool(item)">
+                                        <span v-if="lang === 'ch'">选择任务</span>
+                                        <span v-else>Choise</span>
+                                    </div>
+                                </div>
+                            </transition>
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated slideInRight faster"
+                                        leave-active-class="animated slideOutRight faster">
+                                <div v-if="isShowChoiseConfirmBox"
+                                    class="daycheckbox">
+                                    <!-- check box  -->
+                                    <input type="checkbox" :value="item" v-model="choiseMissionArray" />
+                                    <!-- check box  -->
+                                </div>
+                            </transition>
+                        </div>
+                        <div v-else style="padding-top:6px;">
+                            <div class="search-body-center-button" style="background-color:#d74342;color:#fff;border: unset;" @click="delConfiguredClientMethod(item)">
+                                <span>删除</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div v-if="isShowCenterWindow">
+            <div v-if="shippingArray.length === 0" style="width: 50%;margin: 0 auto;padding-top: 17.5vh;">
+                <img src="../../public/img/ebuyLogo.png"
+                    alt="logo">
+                <br>
+                <span>~{{language.homePage.whenEmpty}}~</span>
+            </div>
+            <div v-else
+                style="margin-top:10px">
+                <div class="search-body-center-item"
+                    v-for="(item,index) in shippingArray"
+                    :key="index">
+                    <div class="search-body-center-item-title">
+                        <span v-if="lang === 'ch'">{{item.clientName}}</span>
+                        <span v-else>{{item.clientNameEN}}</span>
+                    </div>
+                    <div class="search-body-center-item-body">
+                        <div v-if="item.backTime">
+                            <div v-if="lang === 'en'" class="completediv">
+                                <img src="../../public/img/missionComplete.png" alt="complete">
+                            </div>
+                            <div v-else class="completediv">
+                                <img src="../../public/img/missionCompleteCH.png" alt="complete">
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务类型:</span>
+                                <span v-else>Types:</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                                <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                                <span v-else>退单</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span>{{language.searchPage.clientPhone}}</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span>{{item.clientPhone}}</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span>{{language.searchPage.postCode}}</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span>{{item.clientPostcode}}</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务司机:</span>
+                                <span v-else>State</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <div>
+                                    <span v-if="item.driverName">{{item.driverName}}</span>
+                                    <span v-else>未分配</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务状态:</span>
+                                <span v-else>State</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <div v-if="lang === 'ch'">
+                                    <span v-if="item.dayMission_id">配送中</span>
+                                    <span v-else>等待中</span>
+                                </div>
+                                <div v-else>
+                                    <span v-if="item.dayMission_id">Shipping</span>
+                                    <span v-else>Waiting</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="!item.dayMission_id">
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated slideInUp faster"
+                                        leave-active-class="animated slideOutDown faster">
+                                <div v-if="!isShowChoiseConfirmBox"
+                                    style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
+                                    <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
+                                        <span>删除任务</span>
+                                    </div>
+                                    <div class="search-body-center-button"
+                                        @click="choiseMissionFromPool(item)">
+                                        <span v-if="lang === 'ch'">选择任务</span>
+                                        <span v-else>Choise</span>
+                                    </div>
+                                </div>
+                            </transition>
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated slideInRight faster"
+                                        leave-active-class="animated slideOutRight faster">
+                                <div v-if="isShowChoiseConfirmBox"
+                                    class="daycheckbox">
+                                    <!-- check box  -->
+                                    <input type="checkbox" :value="item" v-model="choiseMissionArray" />
+                                    <!-- check box  -->
+                                </div>
+                            </transition>
+                        </div>
+                        <div v-else style="padding-top:6px;">
+                            <div class="search-body-center-button" style="background-color:#d74342;color:#fff;border: unset;" @click="delConfiguredClientMethod(item)">
+                                <span>删除</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="isShowRightWindow">
+            <div v-if="finishArray.length === 0" style="width: 50%;margin: 0 auto;padding-top: 17.5vh;">
+                <img src="../../public/img/ebuyLogo.png" alt="logo">
+                <br>
+                <span>~{{language.homePage.whenEmpty}}~</span>
+            </div>
+            <div v-else style="margin-top:10px">
+                <div class="search-body-center-item" v-for="(item,index) in finishArray" :key="index">
+                    <div class="search-body-center-item-title">
+                        <span v-if="lang === 'ch'">{{item.clientName}}</span>
+                        <span v-else>{{item.clientNameEN}}</span>
+                    </div>
+                    <div class="search-body-center-item-body">
+                        <div v-if="item.backTime">
+                            <div v-if="lang === 'en'" class="completediv">
+                                <img src="../../public/img/missionComplete.png" alt="complete">
+                            </div>
+                            <div v-else class="completediv">
+                                <img src="../../public/img/missionCompleteCH.png" alt="complete">
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务类型:</span>
+                                <span v-else>Types:</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                                <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                                <span v-else>退单</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span>{{language.searchPage.clientPhone}}</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span>{{item.clientPhone}}</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span>{{language.searchPage.postCode}}</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <span>{{item.clientPostcode}}</span>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务司机:</span>
+                                <span v-else>State</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <div>
+                                    <span v-if="item.driverName">{{item.driverName}}</span>
+                                    <span v-else>未分配</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search-body-center-item-body-item">
+                            <div class="search-body-center-item-body-item-left">
+                                <span v-if="lang === 'ch'">任务状态:</span>
+                                <span v-else>State</span>
+                            </div>
+                            <div class="search-body-center-item-body-item-right">
+                                <div v-if="lang === 'ch'">
+                                    <span v-if="item.dayMission_id">已完成</span>
+                                </div>
+                                <div v-else>
+                                    <span v-if="item.dayMission_id">Done</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="!item.dayMission_id">
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated slideInUp faster"
+                                        leave-active-class="animated slideOutDown faster">
+                                <div v-if="!isShowChoiseConfirmBox"
+                                    style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
+                                    <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
+                                        <span>删除任务</span>
+                                    </div>
+                                    <div class="search-body-center-button"
+                                        @click="choiseMissionFromPool(item)">
+                                        <span v-if="lang === 'ch'">选择任务</span>
+                                        <span v-else>Choise</span>
+                                    </div>
+                                </div>
+                            </transition>
+                            <transition name="custom-classes-transition"
+                                        enter-active-class="animated slideInRight faster"
+                                        leave-active-class="animated slideOutRight faster">
+                                <div v-if="isShowChoiseConfirmBox"
+                                    class="daycheckbox">
+                                    <!-- check box  -->
+                                    <input type="checkbox" :value="item" v-model="choiseMissionArray" />
+                                    <!-- check box  -->
+                                </div>
+                            </transition>
+                        </div>
+                        <div v-else style="padding-top:6px;">
+                            <div class="search-body-center-button" style="background-color:#d74342;color:#fff;border: unset;" @click="delConfiguredClientMethod(item)">
+                                <span>删除</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div style="height:60px">
             <!-- 底部占位符 -->
         </div>
@@ -506,6 +746,8 @@ export default {
         return {
             drivername: null,
             missionArray: [],
+            shippingArray: [],
+            finishArray: [],
             finishNumber: [],
             radioPicked: null,
             otherText: null,
@@ -528,10 +770,133 @@ export default {
             showRemoveBox:false,
             isShowConfiguredRemoveBox:false,
             shippingDate:null,
-            isShowLoadingAnimation:false
+            isShowLoadingAnimation:false,
+            dayhome_topbutton_left: 'dayhome_topbutton_redline',
+            dayhome_topbutton_center: 'dayhome_topbutton_whiteline',
+            dayhome_topbutton_right: 'dayhome_topbutton_whiteline',
+            isShowLeftWindow: true,
+            isShowCenterWindow: false,
+            isShowRightWindow: false
         };
     },
     methods: {
+        
+        getFinishMissionPool(){
+            this.finishArray = []
+            let b = new Date().toISOString();
+            axios
+                .post(config.server + "/dayShiftmission/find", {
+                    driverName: this.drivername,
+                    orderDate: b,
+                    mode:'finish'
+                })
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.finishArray = doc.data.doc;
+                        this.finishArray = _.orderBy(
+                            this.finishArray,
+                            ["backTime"],
+                            ["desc"]
+                        );
+                    } else if (doc.data.code === 1) {
+                        if (this.lang === "ch") {
+                            this.tipsInfo = "未找该日任务";
+                        } else {
+                            this.tipsInfo = "Mission not found in today";
+                        }
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false;
+                        }, 3000);
+                    } else {
+                        if (this.lang === "ch") {
+                            this.tipsInfo = "未找到白班任务";
+                        } else {
+                            this.tipsInfo = "Mission not found";
+                        }
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        getShippingMissionPool(){
+            this.shippingArray = []
+            let b = new Date().toISOString();
+            axios
+                .post(config.server + "/dayShiftmission/find", {
+                    driverName: this.drivername,
+                    orderDate: b,
+                    mode:'shipping'
+                })
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.shippingArray = doc.data.doc;
+                        this.shippingArray = _.orderBy(
+                            this.shippingArray,
+                            ["backTime"],
+                            ["desc"]
+                        );
+                    } else if (doc.data.code === 1) {
+                        if (this.lang === "ch") {
+                            this.tipsInfo = "未找该日任务";
+                        } else {
+                            this.tipsInfo = "Mission not found in today";
+                        }
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false;
+                        }, 3000);
+                    } else {
+                        if (this.lang === "ch") {
+                            this.tipsInfo = "未找到白班任务";
+                        } else {
+                            this.tipsInfo = "Mission not found";
+                        }
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
+        changeShowMode(mode){
+            if(mode === 'left'){
+                this.getMissionPool()
+                this.isShowLeftWindow = true
+                this.isShowCenterWindow = false
+                this.isShowRightWindow = false
+                this.dayhome_topbutton_left = 'dayhome_topbutton_redline'
+                this.dayhome_topbutton_center = 'dayhome_topbutton_whiteline'
+                this.dayhome_topbutton_right = 'dayhome_topbutton_whiteline'
+            }else if(mode === 'center'){
+                this.getShippingMissionPool()
+                this.isShowLeftWindow = false
+                this.isShowCenterWindow = true
+                this.isShowRightWindow = false
+                this.dayhome_topbutton_left = 'dayhome_topbutton_whiteline'
+                this.dayhome_topbutton_center = 'dayhome_topbutton_redline'
+                this.dayhome_topbutton_right = 'dayhome_topbutton_whiteline'
+            }else{
+                this.getFinishMissionPool()
+                this.isShowLeftWindow = false
+                this.isShowCenterWindow = false
+                this.isShowRightWindow = true
+                this.dayhome_topbutton_left = 'dayhome_topbutton_whiteline'
+                this.dayhome_topbutton_center = 'dayhome_topbutton_whiteline'
+                this.dayhome_topbutton_right = 'dayhome_topbutton_redline'
+            }
+        },
+
         confirmRemoveConfiguredClientMethod(){
             this.isShowLoadingAnimation = true
             axios
@@ -860,7 +1225,8 @@ export default {
             axios
                 .post(config.server + "/dayShiftmission/find", {
                     driverName: this.drivername,
-                    orderDate: b
+                    orderDate: b,
+                    mode:'mission'
                 })
                 .then(doc => {
                     if (doc.data.code === 0) {
@@ -923,6 +1289,31 @@ export default {
     color: #fff;
     font-size: 18px;
     line-height: 40px;
+}
+
+.dayhome_topbutton{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    height: 38px;
+    border-bottom: 1px solid #eee;
+}
+
+.dayhome_topbutton div{
+    height: 30px;
+    line-height: 38px;
+    width: 68px;
+    font-size: 16px;
+}
+
+.dayhome_topbutton_whiteline{
+    border-bottom: 1px solid #fff;
+    transition: 0.5s
+}
+
+.dayhome_topbutton_redline{
+    border-bottom: 1px solid #d74342;
+    transition: 0.5s
 }
 
 .search-body-center-item {

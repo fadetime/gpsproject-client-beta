@@ -36,6 +36,36 @@
                 </div>
             </div>
         </div>
+
+        <!-- confirm del box start -->
+        <transition name="day-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowDelDialog" class="daytemplate_template_back"></div>
+        </transition>
+        <transition name="day-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowDelDialog" class="daytemplate_template_front" @click.self.prevent="isShowDelDialog = false">
+                <div class="daytemplate_del_box">
+                    <div class="daytemplate_del_box_title">
+                        <span>{{delInfo.templateName}}</span>
+                    </div>
+                    <div class="daytemplate_del_box_body">
+                        <span>是否确认删除该模板?</span>
+                    </div>
+                    <div class="daytemplate_del_box_bottom">
+                        <div class="day_whitebutton" @click="isShowDelDialog = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="day_whitebutton" style="margin-left:8px;">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </transition>
+        <!-- confirm del box end -->
+
         <!-- new templage start -->
         <transition name="day-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -244,7 +274,9 @@ export default {
             tempArray: [],
             isShowChooseClientBox: false,
             confirmClientArray: [],
-            isShowLoadingAnimation: false
+            isShowLoadingAnimation: false,
+            isShowDelDialog: false,
+            delInfo: null
         }
     },
 
@@ -347,31 +379,34 @@ export default {
         },
 
         delTemplate(item){
-            axios
-                .post(config.server + '/template/del',{
-                    _id:item._id
-                })
-                .then(doc => {
-                    if(doc.data.code === 0){
-                        this.tipsShowColor = 'green'
-                        this.tipsInfo = '删除成功'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 2000);
-                        this.findAllTemplateMethod()
-                    }else{
-                        this.tipsShowColor = 'green'
-                        this.tipsInfo = '删除失败'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 2000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            console.log(item)
+            this.delInfo = item
+            this.isShowDelDialog = true
+            // axios
+            //     .post(config.server + '/template/del',{
+            //         _id:item._id
+            //     })
+            //     .then(doc => {
+            //         if(doc.data.code === 0){
+            //             this.tipsShowColor = 'green'
+            //             this.tipsInfo = '删除成功'
+            //             this.isShowTipsBox = true
+            //             setTimeout(() => {
+            //                 this.isShowTipsBox = false
+            //             }, 2000);
+            //             this.findAllTemplateMethod()
+            //         }else{
+            //             this.tipsShowColor = 'green'
+            //             this.tipsInfo = '删除失败'
+            //             this.isShowTipsBox = true
+            //             setTimeout(() => {
+            //                 this.isShowTipsBox = false
+            //             }, 2000);
+            //         }
+            //     })
+            //     .catch(err => {
+            //         console.log(err)
+            //     })
         },
 
         changeTemplateMethod(item){
@@ -706,6 +741,9 @@ export default {
     margin: 0 10px;
     border-radius: 10px;
     padding: 8px;
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .dayshift_driverbox_body_item{
@@ -756,6 +794,43 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     margin: 8px 0
+}
+
+.daytemplate_del_box{
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+
+.daytemplate_del_box_title{
+    background-color: #d74342;
+    color: #fff;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    font-size: 16px;
+}
+
+.daytemplate_del_box_body{
+    margin: 8px;
+    padding: 8px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    border: 1px solid #eee;
+    width: 208px;
+    height: 60px;
+    line-height: 44px;
+}
+
+.daytemplate_del_box_bottom{
+    display: flex;
+    display: -webkit-flex;
+    margin: 8px 0;
+    justify-content: center;
 }
 
 .tripcount_loading_back {

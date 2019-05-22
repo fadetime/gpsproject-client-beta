@@ -128,7 +128,7 @@
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>cancel</span>
                         </div>
-                        <div class="search-body-center-button" style="width: 80px;" @click="confirmIncreaseOrder">
+                        <div class="search-body-center-button" style="width: 80px;" @click="confirmIncreaseOrder()">
                             <span v-if="lang === 'ch'">确定</span>
                             <span v-else>confirm</span>
                         </div>
@@ -246,7 +246,6 @@ export default {
                     clientPostcode:this.clientShipping.clientbpostcode,
                     image:this.clientShipping.image,
                     isIncreaseOrder:this.isIncreaseOrder,
-                    driverName:this.driverName,
                     orderDate:orderDate
                 })
                 .then(doc => {
