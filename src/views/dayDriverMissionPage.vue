@@ -479,8 +479,9 @@
                  class="missiondetail">
                 <div class="missiondetail-title">
                     <div style="flex-basis:15%" @click="trunBackMethod()">
-                        <span v-if="lang === 'ch'" style="font-size:16px">《 返回</span>
-                        <span v-else style="font-size:16px">《 Back</span>
+                        <div>
+                            <img src="../../public/icons/left.png" alt="exit" style="width: 20px;">
+                        </div>
                     </div>
                     <div style="flex-basis:70%">
                         <span v-if="lang === 'ch'">任务详情</span>
@@ -490,11 +491,12 @@
                 </div>
                 <div style="height:40px"></div>
                 <div class="missiondetail-body">
-                    <div v-for="(item,index) in detailDate"
-                         :key="index"
-                         class="missiondetail-body-item">
+                    <div v-for="(item,index) in detailDate" :key="index" class="missiondetail-body-item">
                         <div class="missiondetail-body-item-title">
                             <span>{{item.clientName}}</span>
+                            <div v-if="item.image" class="missiondetail-body-item-title-img" @click="openBigImgMethod(item.image)">
+                                <img :src="item.image | imgurl">
+                            </div>
                         </div>
                         <div class="missiondetail-body-item-body">
                             <div class="missiondetail-body-item-body-left">
@@ -543,8 +545,7 @@
                             </div>
                         </div>
                         <div v-else>
-                            <div class="findcar-bottom"
-                                 style="padding-bottom: 10px;">
+                            <div class="ddmision_detail_bottom">
                                 <div class="removebox-body-center-button"
                                      style="width: 80px;"
                                      @click="finishClientMethod(item)">
@@ -624,6 +625,19 @@
         </transition>
         <input type="file" style="display:none" id="daydriver_upload_file" @change="fileChange($event)" accept="image/*">
         <!-- confirm and remove mission box end -->
+
+        <!-- show client big img start -->
+        <transition name="ddm-bigimg-transition-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowBigImg" class="ddm_big_back"></div>
+        </transition>
+        <transition name="ddm-bigimg-transition-front" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowBigImg" class="ddm_big_front" @click="isShowBigImg = false">
+                <div>
+                    <img :src="tempImg | imgurl">
+                </div>
+            </div>
+        </transition>
+        <!-- show client big img end -->
 
         <!-- loading animation start -->
         <transition name="remove-classes-transition"
@@ -718,10 +732,18 @@ export default {
             tipsShowColor:null,
             tipsInfo:null,
             isShowTipsBox:null,
+            isShowBigImg: false,
+            tempImg: null
         };
     },
 
     methods: {
+        openBigImgMethod(img){
+            console.log('123')
+            this.tempImg = img
+            this.isShowBigImg = true
+        },
+
         refresh() {
             let arrow = document.querySelector('#arrow')
             arrow.style.transform = 'rotate(360deg)'
@@ -1543,6 +1565,12 @@ export default {
     margin: 10px;
 }
 
+.ddmision_detail_bottom{
+    display: flex;
+    display: -webkit-flex;
+    padding-bottom: 8px;
+}
+
 .errinfo {
     position: fixed;
     z-index: 19;
@@ -1626,14 +1654,35 @@ export default {
     border-bottom: 1px solid #e6e6e6;
     margin-left: 10px;
     margin-right: 10px;
+    position: relative;
+}
+
+.missiondetail-body-item-title-img{
+    border-radius: 100%;
+    height: 60px;
+    width: 60px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border: 1px solid #eee;
+    overflow: hidden;
+    position: absolute;
+    top: 4px;
+    right: 0px;
+}
+
+.missiondetail-body-item-title-img img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
 
 .missiondetail-body-item-body {
     display: flex;
     display: -webkit-flex;
     justify-content: center;
-    font-size: 16px;
-    margin-top: 10px;
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .missiondetail-body-item-body-left {
@@ -1729,5 +1778,28 @@ export default {
 .spinner .rect5 {
     -webkit-animation-delay: -0.8s;
     animation-delay: -0.8s;
+}
+
+.ddm_big_back{
+    position: fixed;
+    z-index: 24;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.ddm_big_front{
+    position: fixed;
+    z-index: 24;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

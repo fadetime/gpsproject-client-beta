@@ -48,7 +48,7 @@
         <div style="height:106px"></div>
         <div class="daynew_bottom">
             <div :class="daynew_bottom_frame_data">
-                <div>
+                <div style="font-size:16px">
                     <span @click="openChooseLiseMethod()">已选择{{chooseClientList.length}}个客户</span>
                 </div>
                 <div class="daynew_bottom_content">

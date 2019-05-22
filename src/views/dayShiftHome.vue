@@ -3,9 +3,6 @@
         <div class="search-title">
             <span>{{drivername}}</span>
         </div>
-        <div style="height:40px">
-            <!-- 顶部占位符 -->
-        </div>
         <div class="dayhome_topbutton">
             <div :class="dayhome_topbutton_left" @click="changeShowMode('left')">
                 <span>未分配</span>
@@ -16,6 +13,9 @@
             <div :class="dayhome_topbutton_right" @click="changeShowMode('right')">
                 <span>已完成</span>
             </div>
+        </div>
+        <div style="height:78px">
+            <!-- 顶部占位符 -->
         </div>
         <div v-if="isShowLeftWindow">
             <div v-if="missionArray.length === 0" style="width: 50%;margin: 0 auto;padding-top: 17.5vh;">
@@ -888,8 +888,10 @@ export default {
                     pool_id:this.shippingDate.pool_id
                 })
                 .then(doc => {
+                    console.log(doc)
                     this.isShowLoadingAnimation = false
                     if(doc.data.code === 0){
+                        console.log('enter if')
                         this.isShowConfiguredRemoveBox = false
                         this.tipsShowColor = 'green'
                         this.tipsInfo = '删除成功'
@@ -898,7 +900,10 @@ export default {
                             this.isShowTipsBox = false
                         }, 2000);
                         this.getMissionPool()
+                        this.getShippingMissionPool()
+                        this.getFinishMissionPool()
                     }else{
+                        console.log('enter else')
                         this.tipsShowColor = 'yellow'
                         this.tipsInfo = '删除时发生错误'
                         this.isShowTipsBox = true
@@ -1272,6 +1277,14 @@ export default {
     justify-content: center;
     height: 38px;
     border-bottom: 1px solid #eee;
+    position: fixed;
+    background-color: #fff;
+    left: 0;
+    right: 0;
+    top: 40px;
+    z-index: 23;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
 .dayhome_topbutton div{
