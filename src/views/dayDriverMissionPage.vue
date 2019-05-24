@@ -526,12 +526,11 @@
                                 <span>{{item.clientPostcode}}</span>
                             </div>
                         </div>
-                        <div class="missiondetail-body-item-body"
-                             style="padding-bottom: 12px;">
+                        <div class="missiondetail-body-item-body" style="padding-bottom: 12px;height: unset;">
                             <div class="missiondetail-body-item-body-left">
                                 <span>客户地址</span>
                             </div>
-                            <div class="missiondetail-body-item-body-right">
+                            <div class="missiondetail-body-item-body-right" style="line-height:20px;padding-top:6px">
                                 <span>{{item.clientAddress}}</span>
                             </div>
                         </div>

@@ -438,7 +438,7 @@ export default {
             this.$router.push("/");
         },
         goDayHome() {
-            this.$router.push("/dayshifthome");
+            this.$router.push("/dayshifthome/pool");
         },
         goCountBox() {
             this.$router.push("/countbox");

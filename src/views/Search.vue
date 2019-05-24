@@ -114,6 +114,13 @@
                                     <span v-else :class="choiseRightText">Farther</span>
                                 </div>
                             </div>
+                            <div :class="choiseTransport" style="margin-right:4px" @click="choiseOrderModeMethod('transport')">
+                                <div :class="choiseTransportImg"></div>
+                                <div>
+                                    <span v-if="lang === 'ch'" :class="choiseTransportText">运输</span>
+                                    <span v-else :class="choiseTransportText">Transport</span>
+                                </div>
+                            </div>
                             <div :class="choiseOther" @click="choiseOrderModeMethod('other')">
                                 <div :class="choiseOtherImg"></div>
                                 <div>
@@ -189,25 +196,30 @@ export default {
             choiseLift:'increaseorder-box-body-center-item',
             choiseCenter:'increaseorder-box-body-center-item',
             choiseRight:'increaseorder-box-body-center-item',
+            choiseTransport: 'increaseorder-box-body-center-item',
             choiseOther:'increaseorder-box-body-center-item',
             isIncreaseOrder:null,
             choiseLeftImg:'increaseorderimg1',
             choiseCenterImg:'increaseorderimg3',
             choiseRightImg:'increaseorderimg2',
+            choiseTransportImg:'increaseorderimg5',
             choiseOtherImg:'increaseorderimg4',
             choiseLeftText:'textcolor',
             choiseCenterText:'textcolor',
             choiseRightText:'textcolor',
             choiseOtherText:'textcolor',
+            choiseTransportText:'textcolor',
             showError:false,
             errorInfo:'未知错误',
             driverName:null,
             isShowLoadingAnimation:false
         }
     },
+    
     mounted() {
         this.driverName = localStorage.getItem('drivername')
     },
+
     computed: {
         language() {
             return this.$store.getters.getLanguage
@@ -267,7 +279,7 @@ export default {
                         if(this.lang === 'ch'){
                             this.errorInfo = '添加出错，请联系管理员'
                         }else{
-                            this.errorInfo = 'something wrong'
+                            this.errorInfo = 'Something wrong'
                         }
                         setTimeout(() => {
                             this.showError = false
@@ -287,48 +299,75 @@ export default {
                 this.choiseLift = 'increaseorder-box-body-center-item-red'
                 this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseRight = 'increaseorder-box-body-center-item'
+                this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item'
                 this.choiseLeftImg = 'increaseorderimg1-red'
                 this.choiseCenterImg = 'increaseorderimg3'
                 this.choiseRightImg = 'increaseorderimg2'
+                this.choiseTransportImg = 'increaseorderimg5'
                 this.choiseOtherImg = 'increaseorderimg4'
                 this.choiseLeftText = 'textcolor-red'
                 this.choiseCenterText = 'textcolor'
                 this.choiseRightText = 'textcolor'
+                this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor'
             }else if(mode === 'center'){
                 this.isIncreaseOrder = 'return'
                 this.choiseRight = 'increaseorder-box-body-center-item'
                 this.choiseCenter = 'increaseorder-box-body-center-item-red'
                 this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item'
                 this.choiseRightImg = 'increaseorderimg2'
                 this.choiseCenterImg = 'increaseorderimg3-red'
                 this.choiseLeftImg = 'increaseorderimg1'
+                this.choiseTransportImg = 'increaseorderimg5'
                 this.choiseOtherImg = 'increaseorderimg4'
                 this.choiseRightText = 'textcolor'
                 this.choiseCenterText = 'textcolor-red'
                 this.choiseLeftText = 'textcolor'
+                this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor'
             }else if(mode === 'other'){
                 this.isIncreaseOrder = 'other'
                 this.choiseRight = 'increaseorder-box-body-center-item'
                 this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item-red'
                 this.choiseRightImg = 'increaseorderimg2'
                 this.choiseCenterImg = 'increaseorderimg3'
                 this.choiseLeftImg = 'increaseorderimg1'
+                this.choiseTransportImg = 'increaseorderimg5'
                 this.choiseOtherImg = 'increaseorderimg4-red'
                 this.choiseRightText = 'textcolor'
                 this.choiseCenterText = 'textcolor'
                 this.choiseLeftText = 'textcolor'
+                this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor-red'
+            }else if(mode === 'transport'){
+                this.isIncreaseOrder = 'delivery'
+                this.choiseRight = 'increaseorder-box-body-center-item'
+                this.choiseCenter = 'increaseorder-box-body-center-item'
+                this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseTransport ='increaseorder-box-body-center-item-red'
+                this.choiseOther = 'increaseorder-box-body-center-item'
+                this.choiseRightImg = 'increaseorderimg2'
+                this.choiseCenterImg = 'increaseorderimg3'
+                this.choiseLeftImg = 'increaseorderimg1'
+                this.choiseTransportImg = 'increaseorderimg5-red'
+                this.choiseOtherImg = 'increaseorderimg4'
+                this.choiseRightText = 'textcolor'
+                this.choiseCenterText = 'textcolor'
+                this.choiseLeftText = 'textcolor'
+                this.choiseTransportText = 'textcolor-red'
+                this.choiseOtherText = 'textcolor'
             }else{
                 this.isIncreaseOrder = 'false'
                 this.choiseRight = 'increaseorder-box-body-center-item-red'
                 this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item'
                 this.choiseRightImg = 'increaseorderimg2-red'
                 this.choiseCenterImg = 'increaseorderimg3'
@@ -337,6 +376,7 @@ export default {
                 this.choiseRightText = 'textcolor-red'
                 this.choiseCenterText = 'textcolor'
                 this.choiseLeftText = 'textcolor'
+                this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor'
             }
         },
@@ -661,6 +701,40 @@ export default {
     background: #d74342;
     mask-image: url(../../public/icons/icon_other.svg);
     -webkit-mask-image: url(../../public/icons/icon_other.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 6px;
+    transition: 0.2s;
+    mask-size: 38px 38px;
+    -webkit-mask-size: 38px 38px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.increaseorderimg5 {
+    background: #e0e0e0;
+    mask-image: url(../../public/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../public/icons/icon_transport.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 6px;
+    transition: 0.2s;
+    mask-size: 38px 38px;
+    -webkit-mask-size: 38px 38px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.increaseorderimg5-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../public/icons/icon_transport.svg);
     width: 32px;
     height: 32px;
     margin: 0 auto;

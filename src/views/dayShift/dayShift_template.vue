@@ -187,7 +187,7 @@
                     </div>
                     <div class="confirmstart-box-body">
                         <div class="dayshift_driverbox_body">
-                            <div class="dayshift_checkclientbox_body_item" v-for="(item,index) in tempArray" :key="index" @click="choiseDriverMethod(item)">
+                            <div class="dayshift_checkclientbox_body_item" v-for="(item,index) in tempArray" :key="index">
                                 <div class="dayshift_checkclientbox_body_item_left">
                                     <input :id="'checkclientbox' + index " type="checkbox" :value="item" v-model="confirmClientArray">
                                 </div>
@@ -383,12 +383,23 @@ export default {
         },
 
         confirmChoiseDriverMethod(){
-            this.isShowChoiseDriverBox = false
-            this.isShowChooseClientBox = true
-            this.confirmClientArray = this.tempArray
+            if(this.choiseDriver === null){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择司机'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }else{
+                console.log(this.choiseDriver)
+                this.isShowChoiseDriverBox = false
+                this.isShowChooseClientBox = true
+                this.confirmClientArray = this.tempArray
+            }
         },
 
         choiseDriverMethod(item){
+            console.log(item)
             this.choiseDriver = item.dirvername
             this.choiseDriver_id = item._id
         },

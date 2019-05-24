@@ -10,6 +10,8 @@ import HistoryDetail from './views/HistoryDetail.vue'
 import fixCar from './views/fixCar.vue'
 import search from './views/Search.vue'
 import dayShiftHome from './views/dayShiftHome.vue'
+import dayShiftMissionPool from './views/dayShift/dayShift_missionPool.vue'
+import dayShiftMissionTrips from './views/dayShift/dayShift_trips.vue'
 import billPage from './views/bill.vue'
 import checkPage from './views/checker.vue'
 import checkPage_day from './views/checker_dayShift.vue'
@@ -122,6 +124,17 @@ export default new Router({
       path: '/dayshifthome',
       name: 'dayShiftHome',
       component: dayShiftHome,
+      children:[
+        {
+          path: '/dayshifthome/pool',
+          name: 'dayShiftMissionPool',
+          component: dayShiftMissionPool,
+        },{
+          path: '/dayshifthome/trips',
+          name: 'dayShiftMissionTrips',
+          component: dayShiftMissionTrips,
+        }
+      ]
       // beforeEnter: dayShiftGuard
     },
     {
