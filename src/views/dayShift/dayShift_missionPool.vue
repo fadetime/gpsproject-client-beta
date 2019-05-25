@@ -942,7 +942,8 @@ export default {
 
         getMissionPool() {
             this.missionArray = []
-            let b = new Date().toISOString();
+            let b = new Date().toDateString()
+            b = new Date(b).toISOString();
             this.needDoNum = 0;
             this.$store.dispatch("setDoNum", this.needDoNum);
             axios
@@ -1023,7 +1024,8 @@ export default {
 
         getFinishMissionPool(){
             this.finishArray = []
-            let b = new Date().toISOString();
+            let b = new Date().toDateString()
+            b = new Date(b).toISOString();
             axios
                 .post(config.server + "/dayShiftmission/find", {
                     driverName: this.drivername,
