@@ -647,7 +647,7 @@ export default {
         }else if(localStorage.getItem('driverRole') === 'bill'){
             this.$router.push('/bill')
         }else if(localStorage.getItem('driverRole') === 'dayshiftLeader'){
-            this.$router.push('/dayshifthome')
+            this.$router.push('/dayshifthome/pool')
         }else if(localStorage.getItem('driverRole') === 'maintain'){
             this.$router.push('/fixcar')
         }else if(localStorage.getItem('driverRole') === 'dayShiftChecker'){
