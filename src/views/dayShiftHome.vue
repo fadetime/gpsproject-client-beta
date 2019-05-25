@@ -127,10 +127,12 @@ export default {
 
     methods: {
         changeShowWindowMethod(){
-            console.log('123')
-            if(this.isShowMissionPoolPage){
+            if(this.$route.path === '/dayshifthome/pool'){
                 this.isShowMissionPoolPage = false
                 this.$router.push("/dayshifthome/trips");
+            }else if(this.$route.path === '/dayshifthome/trips'){
+                this.isShowMissionPoolPage = true
+                this.$router.push("/dayshifthome/pool");
             }else{
                 this.isShowMissionPoolPage = true
                 this.$router.push("/dayshifthome/pool");

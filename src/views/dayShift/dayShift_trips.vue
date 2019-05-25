@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <div class="dst_content_bottom">
-                    <div class="dst_botton" style="background-color:rgb(255, 152, 0);color:#fff;border:unset">
+                    <div class="dst_botton" style="background-color:rgb(255, 152, 0);color:#fff;border:unset" @click="openDelBoxMethod(item)">
                         <span>删除</span>
                     </div>
                     <div class="dst_botton" @click="openEditMethod(item)">
@@ -155,7 +155,7 @@
                         </div>
                     </div>
                     <div class="dst_detail_box_bottom">
-                        <div class="dst_botton" @click="isShowDetail = false" style="width:80px">
+                        <div class="dst_botton" @click="isShowEdit = false" style="width:80px">
                             <span>取消</span>
                         </div>
                         <div class="dst_botton" @click="openNewClientMethod()" style="width:80px;margin-left:8px">
@@ -224,12 +224,71 @@
                             </div>
                         </div>
                         <div class="dst_add_box_body_type">
-                            <div class="dst_add_box_body_type_frame">
-                                <div class="icon_increase"></div>
-                                <div>
-                                    <span>加单</span>
+                            <div class="dst_add_box_body_type_item">
+                                <div v-if="chooseType === 'increase'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('increase')">
+                                    <div class="icon_increase_red"></div>
+                                    <div>
+                                        <span>加单</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('increase')">
+                                    <div class="icon_increase"></div>
+                                    <div>
+                                        <span style="color: gray">加单</span>
+                                    </div>
+                                </div>
+                                <div v-if="chooseType === 'return'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('return')">
+                                    <div class="icon_return_red"></div>
+                                    <div>
+                                        <span>补单</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('return')">
+                                    <div class="icon_return"></div>
+                                    <div>
+                                        <span style="color: gray">补单</span>
+                                    </div>
+                                </div>
+                                <div v-if="chooseType === 'back'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('back')">
+                                    <div class="icon_back_red"></div>
+                                    <div>
+                                        <span>退单</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('back')">
+                                    <div class="icon_back"></div>
+                                    <div>
+                                        <span style="color: gray">退单</span>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="dst_add_box_body_type_item" style="padding-top:4px;">
+                                <div v-if="chooseType === 'transport'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('transport')">
+                                    <div class="icon_transport_red"></div>
+                                    <div>
+                                        <span>运输</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('transport')">
+                                    <div class="icon_transport"></div>
+                                    <div>
+                                        <span style="color: gray">运输</span>
+                                    </div>
+                                </div>
+                                <div v-if="chooseType === 'other'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('other')">
+                                    <div class="icon_other_red"></div>
+                                    <div>
+                                        <span>其他</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('other')">
+                                    <div class="icon_other"></div>
+                                    <div>
+                                        <span style="color: gray">其他</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                     <div class="dst_detail_box_bottom">
@@ -274,6 +333,54 @@
             </div>
         </transition>
         <!-- add client error end -->
+
+        <!-- del dialog start -->
+        <transition name="dst-detail-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="showDelBox" class="dst_detail_back" style="z-index: 25"></div>
+        </transition>
+        <transition name="dst-detail-back" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="showDelBox" class="dst_detail_front" style="z-index: 26" @click.self.prevent="showDelBox = false">
+                <div class="dst_detail_box">
+                    <div class="dst_detail_box_title">
+                        <span>删除车次</span>
+                    </div>
+                    <div class="dst_add_box_body">
+                        <div class="dst_adderr_box_body_frame">
+                            <div>
+                                <span>是否删除该车次以及任务池中的客户？</span>
+                            </div>
+                            <div>
+                                <div class="dst_adderr_box_body_frame_bottom_item">
+                                    <div class="dst_adderr_box_body_frame_bottom_item_left">
+                                        <span>任务司机</span>
+                                    </div>
+                                    <div class="dst_adderr_box_body_frame_bottom_item_right">
+                                        <span>{{clientDetailDriver}}</span>
+                                    </div>
+                                </div>
+                                <div class="dst_adderr_box_body_frame_bottom_item" style="margin-top: 4px">
+                                    <div class="dst_adderr_box_body_frame_bottom_item_left">
+                                        <span>客户数量</span>
+                                    </div>
+                                    <div class="dst_adderr_box_body_frame_bottom_item_right">
+                                        <span>{{clientDetailArray.length}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dst_detail_box_bottom">
+                        <div class="dst_botton" @click="showDelBox = false" style="width:80px">
+                            <span>取消</span>
+                        </div>
+                        <div class="dst_botton" @click="delTripsMethod()" style="width:80px;margin-left:8px">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- del dialog end -->
 
         <!-- loading animation start -->
         <transition name="remove-classes-transition"
@@ -322,6 +429,7 @@ export default {
             isShowTipsBox: null,
             isShowDetail: false,
             clientDetailArray: [],
+            clientDetail_id: null,
             clientDetailDriver: null,
             isShowEdit: false,
             isShowAddNew: false,
@@ -330,7 +438,9 @@ export default {
             chooseClientInfo: null,
             showAddClientError: false,
             isShowLoadingAnimation: false,
-            addErrInfo: null
+            addErrInfo: null,
+            chooseType: null,
+            showDelBox: false
         }
     },
     mounted(){
@@ -338,58 +448,169 @@ export default {
     },
 
     methods:{
+        delTripsMethod(){
+            this.isShowLoadingAnimation = true
+            axios
+                .post(config.server + '/dsdriver/delTrips',{
+                    mission_id: this.clientDetail_id
+                })
+                .then(doc => {
+                    this.isShowLoadingAnimation = false
+                    if(doc.data.code === 0){
+                        this.isShowLoadingAnimation = false
+                        this.getTodayDayShiftMissionMethod()
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '删除成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '删除失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    this.isShowLoadingAnimation = false
+                    console.log(err)
+                })
+        },
+
+        openDelBoxMethod(item){
+            this.showDelBox = true
+            this.clientDetailDriver = item.driverName
+            this.clientDetailArray = item.clientArray
+            this.clientDetail_id = item._id
+        },
+
+        chooseTypeMethod(type){
+            this.chooseType = type
+        },
+
         secondAddNewClientMethod(){
+            this.isShowLoadingAnimation = true
             this.isShowLoadingAnimation = true
             let tempDate = new Date().toDateString()
             tempDate = new Date(tempDate).toISOString()
             let clientName = this.chooseClientInfo.clientbname
+            let clientNameEN = this.chooseClientInfo.clientbnameEN
             let client_id = this.chooseClientInfo._id
-            console.log(this.chooseClientInfo)
+            let clientAddress = this.chooseClientInfo.clientbaddress
+            let clientPhone = this.chooseClientInfo.clientbphone
+            let clientPostcode = this.chooseClientInfo.clientbpostcode
             axios
                 .post(config.server + '/dsdriver/secondAddClient',{
                     orderDate: tempDate,
                     clientName: clientName,
-                    client_id: client_id
+                    clientNameEN: clientNameEN,
+                    client_id: client_id,
+                    clientAddress: clientAddress,
+                    clientPhone: clientPhone,
+                    clientPostcode: clientPostcode,
+                    isIncreaseOrder: this.chooseType,
+                    orderDate: new Date().toISOString(),
+                    dayMission_id: this.clientDetail_id,//driver mission _id
+                    driverName: this.clientDetailDriver
                 })
                 .then(doc => {
-                    console.log(doc)
                     this.isShowLoadingAnimation = false
-                    if(doc.data.code === 1){
-                        this.isShowAddNew = false
-                        this.showAddClientError = true
-                        this.addErrInfo = doc.data.doc
+                    if(doc.data.code === 0){
+                        this.showAddClientError = false
+                        this.getTodayDayShiftMissionMethod()
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '添加成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '添加失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
                     }
                 })
                 .catch(err => {
+                    this.isShowLoadingAnimation = false
                     console.log(err)
                 })
         },
 
         confirmAddNewClientMethod(){
-            this.isShowLoadingAnimation = true
-            let tempDate = new Date().toDateString()
-            tempDate = new Date(tempDate).toISOString()
-            let clientName = this.chooseClientInfo.clientbname
-            let client_id = this.chooseClientInfo._id
-            console.log(this.chooseClientInfo)
-            axios
-                .post(config.server + '/dsdriver/addClient',{
-                    orderDate: tempDate,
-                    clientName: clientName,
-                    client_id: client_id
-                })
-                .then(doc => {
-                    console.log(doc)
-                    this.isShowLoadingAnimation = false
-                    if(doc.data.code === 1){
-                        this.isShowAddNew = false
-                        this.showAddClientError = true
-                        this.addErrInfo = doc.data.doc
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            if(this.chooseClientInfo && this.chooseType){
+                this.isShowLoadingAnimation = true
+                let tempDate = new Date().toDateString()
+                tempDate = new Date(tempDate).toISOString()
+                let clientName = this.chooseClientInfo.clientbname
+                let clientNameEN = this.chooseClientInfo.clientbnameEN
+                let client_id = this.chooseClientInfo._id
+                let clientAddress = this.chooseClientInfo.clientbaddress
+                let clientPhone = this.chooseClientInfo.clientbphone
+                let clientPostcode = this.chooseClientInfo.clientbpostcode
+                axios
+                    .post(config.server + '/dsdriver/addClient',{
+                        orderDate: tempDate,
+                        clientName: clientName,
+                        clientNameEN: clientNameEN,
+                        client_id: client_id,
+                        clientAddress: clientAddress,
+                        clientPhone: clientPhone,
+                        clientPostcode: clientPostcode,
+                        isIncreaseOrder: this.chooseType,
+                        orderDate: tempDate,
+                        newDate: new Date().toISOString(),
+                        dayMission_id: this.clientDetail_id,//driver mission _id
+                        driverName: this.clientDetailDriver
+                    })
+                    .then(doc => {
+                        this.isShowLoadingAnimation = false
+                        if(doc.data.code === 0 && !doc.data.msg){
+                            this.getTodayDayShiftMissionMethod()
+                            this.isShowAddNew = false
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = '添加成功'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }else if(doc.data.code === 0 && doc.data.msg){
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '添加失败'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 3000);
+                        }else if(doc.data.code === 1){
+                            this.isShowAddNew = false
+                            this.showAddClientError = true
+                            this.addErrInfo = doc.data.doc
+                        }
+                    })
+                    .catch(err => {
+                        this.isShowLoadingAnimation = false
+                        console.log(err)
+                    })
+            }else if(this.chooseType === null){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择任务类型'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }else{
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择客户'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }
         },
 
         chooseClientMethod(item){
@@ -441,6 +662,7 @@ export default {
         openEditMethod(item){
             this.clientDetailDriver = item.driverName
             this.clientDetailArray = item.clientArray
+            this.clientDetail_id = item._id
             this.isShowEdit = true
         },
 
@@ -460,7 +682,6 @@ export default {
                 .then(doc => {
                     if(doc.data.code === 0){
                         this.tripsArray = doc.data.doc
-                        console.log(doc.data.doc)
                     }else if(doc.data.code === 1){
                         this.tripsArray = []
                     }else{
@@ -767,15 +988,25 @@ export default {
     width: 200px;
 }
 
-.icon_increase {
-    background: #e0e0e0;
-    mask-image: url(../../../public/icons/increaseOrder2.svg);
-    -webkit-mask-image: url(../../../public/icons/increaseOrder2.svg);
-    width: 32px;
-    height: 32px;
-    margin: 0 auto;
-    margin-top: 6px;
-    transition: 0.2s;
+.dst_adderr_box_body_frame_bottom_item{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+}
+
+.dst_adderr_box_body_frame_bottom_item_left{
+    width: 68px;
+    text-align: right;
+    padding-right: 8px;
+}
+
+.dst_adderr_box_body_frame_bottom_item_right{
+    width: 100px;
+    text-align: left;
+    padding: 0 8px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
 }
 
 .tripcount_loading_back {
@@ -847,10 +1078,187 @@ export default {
 .dst_add_box_body_type{
     display: flex;
     display: -webkit-flex;
+    padding-top: 8px;
+    flex-direction: column;
 }
 
 .dst_add_box_body_type_frame{
     border: 1px solid #eee;
     border-radius: 10px;
+    font-size: 10px;
+    width: 50px;
+}
+
+.dst_add_box_body_type_frame_red{
+    border: 1px solid #d74342;
+    border-radius: 10px;
+    font-size: 10px;
+    width: 50px;
+}
+
+.dst_add_box_body_type_item{
+    display: flex;
+    display: -webkit-flex;
+    justify-content: space-around;
+}
+
+.icon_increase {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/increaseOrder1.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder1.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_increase_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/increaseOrder1.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder1.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_return {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/increaseOrder2.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder2.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_return_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/increaseOrder2.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder2.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_back {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    -webkit-mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_back_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    -webkit-mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_transport {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_transport.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 32px;
+    -webkit-mask-size: 32px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_transport_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_transport.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 32px;
+    -webkit-mask-size: 32px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_other {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_other.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_other.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_other_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_other.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_other.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
 }
 </style>
