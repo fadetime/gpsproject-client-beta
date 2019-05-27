@@ -93,39 +93,50 @@
                             <span v-else style="font-size:16px">{{clientShipping.clientbnameEN}}</span>
                         </div>
                         <div class="increaseorder-box-body-center">
-                            <div :class="choiseLift" style="margin-right:4px" @click="choiseOrderModeMethod('left')">
-                                <div :class="choiseLeftImg"></div>
-                                <div>
-                                    <span v-if="lang === 'ch'" :class="choiseLeftText">加单</span>
-                                    <span v-else :class="choiseLeftText">Increase</span>
+                            <div class="increaseorder-box-body-center_top">
+                                <div :class="choiseLift" style="margin-right:4px" @click="choiseOrderModeMethod('left')">
+                                    <div :class="choiseLeftImg"></div>
+                                    <div>
+                                        <span v-if="lang === 'ch'" :class="choiseLeftText">加单</span>
+                                        <span v-else :class="choiseLeftText">Increase</span>
+                                    </div>
+                                </div>
+                                <div :class="choiseCenter" style="margin-right:4px" @click="choiseOrderModeMethod('center')">
+                                    <div :class="choiseCenterImg"></div>
+                                    <div>
+                                        <span v-if="lang === 'ch'" :class="choiseCenterText">退菜</span>
+                                        <span v-else :class="choiseCenterText">Return</span>
+                                    </div>
+                                </div>
+                                <div :class="choiseRight" style="margin-right:4px" @click="choiseOrderModeMethod('right')">
+                                    <div :class="choiseRightImg"></div>
+                                    <div>
+                                        <span v-if="lang === 'ch'" :class="choiseRightText">补单</span>
+                                        <span v-else :class="choiseRightText">Farther</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div :class="choiseCenter" style="margin-right:4px" @click="choiseOrderModeMethod('center')">
-                                <div :class="choiseCenterImg"></div>
-                                <div>
-                                    <span v-if="lang === 'ch'" :class="choiseCenterText">退菜</span>
-                                    <span v-else :class="choiseCenterText">Return</span>
+                            <div class="increaseorder-box-body-center_bottom">
+                                <div :class="choiseChange" style="margin-right:4px" @click="choiseOrderModeMethod('change')">
+                                    <div :class="choiseChangeImg"></div>
+                                    <div>
+                                        <span v-if="lang === 'ch'" :class="choiseChangeText">换货</span>
+                                        <span v-else :class="choiseChangeText">Transport</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div :class="choiseRight" style="margin-right:4px" @click="choiseOrderModeMethod('right')">
-                                <div :class="choiseRightImg"></div>
-                                <div>
-                                    <span v-if="lang === 'ch'" :class="choiseRightText">补单</span>
-                                    <span v-else :class="choiseRightText">Farther</span>
+                                <div :class="choiseTransport" style="margin-right:4px" @click="choiseOrderModeMethod('transport')">
+                                    <div :class="choiseTransportImg"></div>
+                                    <div>
+                                        <span v-if="lang === 'ch'" :class="choiseTransportText">运输</span>
+                                        <span v-else :class="choiseTransportText">Transport</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div :class="choiseTransport" style="margin-right:4px" @click="choiseOrderModeMethod('transport')">
-                                <div :class="choiseTransportImg"></div>
-                                <div>
-                                    <span v-if="lang === 'ch'" :class="choiseTransportText">运输</span>
-                                    <span v-else :class="choiseTransportText">Transport</span>
-                                </div>
-                            </div>
-                            <div :class="choiseOther" @click="choiseOrderModeMethod('other')">
-                                <div :class="choiseOtherImg"></div>
-                                <div>
-                                    <span v-if="lang === 'ch'" :class="choiseOtherText">其他</span>
-                                    <span v-else :class="choiseOtherText">Farther</span>
+                                <div :class="choiseOther" @click="choiseOrderModeMethod('other')">
+                                    <div :class="choiseOtherImg"></div>
+                                    <div>
+                                        <span v-if="lang === 'ch'" :class="choiseOtherText">其他</span>
+                                        <span v-else :class="choiseOtherText">Farther</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -196,6 +207,7 @@ export default {
             choiseLift:'increaseorder-box-body-center-item',
             choiseCenter:'increaseorder-box-body-center-item',
             choiseRight:'increaseorder-box-body-center-item',
+            choiseChange: 'increaseorder-box-body-center-item',
             choiseTransport: 'increaseorder-box-body-center-item',
             choiseOther:'increaseorder-box-body-center-item',
             isIncreaseOrder:null,
@@ -203,12 +215,14 @@ export default {
             choiseCenterImg:'increaseorderimg3',
             choiseRightImg:'increaseorderimg2',
             choiseTransportImg:'increaseorderimg5',
+            choiseChangeImg:'increaseorderimg_change',
             choiseOtherImg:'increaseorderimg4',
             choiseLeftText:'textcolor',
             choiseCenterText:'textcolor',
             choiseRightText:'textcolor',
             choiseOtherText:'textcolor',
             choiseTransportText:'textcolor',
+            choiseChangeText:'textcolor',
             showError:false,
             errorInfo:'未知错误',
             driverName:null,
@@ -249,16 +263,16 @@ export default {
                 this.isShowLoadingAnimation = true
                 let orderDate = new Date().toISOString()
                 axios.post(config.server + '/dayshiftmission/create',{
-                    client_id:this.clientShipping._id,
-                    clientName:this.clientShipping.clientbname,
-                    clientNameEN:this.clientShipping.clientbnameEN,
-                    note:this.clientShipping.note,
-                    clientAddress:this.clientShipping.clientbaddress,
-                    clientPhone:this.clientShipping.clientbphone,
-                    clientPostcode:this.clientShipping.clientbpostcode,
-                    image:this.clientShipping.image,
-                    isIncreaseOrder:this.isIncreaseOrder,
-                    orderDate:orderDate
+                    client_id: this.clientShipping._id,
+                    clientName: this.clientShipping.clientbname,
+                    clientNameEN: this.clientShipping.clientbnameEN,
+                    note: this.clientShipping.note,
+                    clientAddress: this.clientShipping.clientbaddress,
+                    clientPhone: this.clientShipping.clientbphone,
+                    clientPostcode: this.clientShipping.clientbpostcode,
+                    image: this.clientShipping.image,
+                    isIncreaseOrder: this.isIncreaseOrder,
+                    orderDate: orderDate
                 })
                 .then(doc => {
                     this.isShowLoadingAnimation = false
@@ -299,6 +313,7 @@ export default {
                 this.choiseLift = 'increaseorder-box-body-center-item-red'
                 this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseRight = 'increaseorder-box-body-center-item'
+                this.choiseChange = 'increaseorder-box-body-center-item'
                 this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item'
                 this.choiseLeftImg = 'increaseorderimg1-red'
@@ -306,9 +321,11 @@ export default {
                 this.choiseRightImg = 'increaseorderimg2'
                 this.choiseTransportImg = 'increaseorderimg5'
                 this.choiseOtherImg = 'increaseorderimg4'
+                this.choiseChangeImg = 'increaseorderimg_change'
                 this.choiseLeftText = 'textcolor-red'
                 this.choiseCenterText = 'textcolor'
                 this.choiseRightText = 'textcolor'
+                this.choiseChangeText = 'textcolor'
                 this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor'
             }else if(mode === 'center'){
@@ -316,6 +333,7 @@ export default {
                 this.choiseRight = 'increaseorder-box-body-center-item'
                 this.choiseCenter = 'increaseorder-box-body-center-item-red'
                 this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseChange = 'increaseorder-box-body-center-item'
                 this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item'
                 this.choiseRightImg = 'increaseorderimg2'
@@ -323,9 +341,11 @@ export default {
                 this.choiseLeftImg = 'increaseorderimg1'
                 this.choiseTransportImg = 'increaseorderimg5'
                 this.choiseOtherImg = 'increaseorderimg4'
+                this.choiseChangeImg = 'increaseorderimg_change'
                 this.choiseRightText = 'textcolor'
                 this.choiseCenterText = 'textcolor-red'
                 this.choiseLeftText = 'textcolor'
+                this.choiseChangeText = 'textcolor'
                 this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor'
             }else if(mode === 'other'){
@@ -333,6 +353,7 @@ export default {
                 this.choiseRight = 'increaseorder-box-body-center-item'
                 this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseChange = 'increaseorder-box-body-center-item'
                 this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item-red'
                 this.choiseRightImg = 'increaseorderimg2'
@@ -340,9 +361,11 @@ export default {
                 this.choiseLeftImg = 'increaseorderimg1'
                 this.choiseTransportImg = 'increaseorderimg5'
                 this.choiseOtherImg = 'increaseorderimg4-red'
+                this.choiseChangeImg = 'increaseorderimg_change'
                 this.choiseRightText = 'textcolor'
                 this.choiseCenterText = 'textcolor'
                 this.choiseLeftText = 'textcolor'
+                this.choiseChangeText = 'textcolor'
                 this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor-red'
             }else if(mode === 'transport'){
@@ -350,6 +373,7 @@ export default {
                 this.choiseRight = 'increaseorder-box-body-center-item'
                 this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseChange = 'increaseorder-box-body-center-item'
                 this.choiseTransport ='increaseorder-box-body-center-item-red'
                 this.choiseOther = 'increaseorder-box-body-center-item'
                 this.choiseRightImg = 'increaseorderimg2'
@@ -357,16 +381,39 @@ export default {
                 this.choiseLeftImg = 'increaseorderimg1'
                 this.choiseTransportImg = 'increaseorderimg5-red'
                 this.choiseOtherImg = 'increaseorderimg4'
+                this.choiseChangeImg = 'increaseorderimg_change'
                 this.choiseRightText = 'textcolor'
                 this.choiseCenterText = 'textcolor'
                 this.choiseLeftText = 'textcolor'
+                this.choiseChangeText = 'textcolor'
                 this.choiseTransportText = 'textcolor-red'
+                this.choiseOtherText = 'textcolor'
+            }else if(mode === 'change'){
+                this.isIncreaseOrder = 'change'
+                this.choiseRight = 'increaseorder-box-body-center-item'
+                this.choiseCenter = 'increaseorder-box-body-center-item'
+                this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseChange = 'increaseorder-box-body-center-item-red'
+                this.choiseTransport ='increaseorder-box-body-center-item'
+                this.choiseOther = 'increaseorder-box-body-center-item'
+                this.choiseRightImg = 'increaseorderimg2'
+                this.choiseCenterImg = 'increaseorderimg3'
+                this.choiseLeftImg = 'increaseorderimg1'
+                this.choiseTransportImg = 'increaseorderimg5'
+                this.choiseOtherImg = 'increaseorderimg4'
+                this.choiseChangeImg = 'increaseorderimg_change-red'
+                this.choiseRightText = 'textcolor'
+                this.choiseCenterText = 'textcolor'
+                this.choiseLeftText = 'textcolor'
+                this.choiseChangeText = 'textcolor-red'
+                this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor'
             }else{
                 this.isIncreaseOrder = 'false'
                 this.choiseRight = 'increaseorder-box-body-center-item-red'
                 this.choiseCenter = 'increaseorder-box-body-center-item'
                 this.choiseLift = 'increaseorder-box-body-center-item'
+                this.choiseChange = 'increaseorder-box-body-center-item'
                 this.choiseTransport ='increaseorder-box-body-center-item'
                 this.choiseOther = 'increaseorder-box-body-center-item'
                 this.choiseRightImg = 'increaseorderimg2-red'
@@ -376,6 +423,7 @@ export default {
                 this.choiseRightText = 'textcolor-red'
                 this.choiseCenterText = 'textcolor'
                 this.choiseLeftText = 'textcolor'
+                this.choiseChangeText = 'textcolor'
                 this.choiseTransportText = 'textcolor'
                 this.choiseOtherText = 'textcolor'
             }
@@ -748,6 +796,40 @@ export default {
     -webkit-mask-position: center;
 }
 
+.increaseorderimg_change {
+    background: #e0e0e0;
+    mask-image: url(../../public/icons/icon_change.svg);
+    -webkit-mask-image: url(../../public/icons/icon_change.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 6px;
+    transition: 0.2s;
+    mask-size: 38px 38px;
+    -webkit-mask-size: 38px 38px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
+.increaseorderimg_change-red {
+    background: #d74342;
+    mask-image: url(../../public/icons/icon_change.svg);
+    -webkit-mask-image: url(../../public/icons/icon_change.svg);
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    margin-top: 6px;
+    transition: 0.2s;
+    mask-size: 38px 38px;
+    -webkit-mask-size: 38px 38px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
 .textcolor{
     color: #e0e0e0;
     transition: 0.2s;
@@ -767,11 +849,19 @@ export default {
 }
 
 .increaseorder-box-body-center{
-    display: flex;
-    display: -webkit-flex;
-    justify-content: center;
     margin: 0 10px;
     margin-top: 10px;
+}
+
+.increaseorder-box-body-center_top{
+    display: flex;
+    display: -webkit-flex;
+    padding-bottom: 8px;
+}
+
+.increaseorder-box-body-center_bottom{
+    display: flex;
+    display: -webkit-flex;
 }
 
 .increaseorder-box-body-center-item{

@@ -50,6 +50,7 @@
                             <div class="search-body-center-item-body-item-right">
                                 <span v-if="item.isIncreaseOrder === 'true'">加单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                                 <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                 <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                                 <span v-else>退单</span>
@@ -166,6 +167,7 @@
                             <div class="search-body-center-item-body-item-right">
                                 <span v-if="item.isIncreaseOrder === 'true'">加单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                                 <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                 <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                                 <span v-else>退单</span>
@@ -272,6 +274,7 @@
                             <div class="search-body-center-item-body-item-right">
                                 <span v-if="item.isIncreaseOrder === 'true'">加单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                                 <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                 <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                                 <span v-else>退单</span>
