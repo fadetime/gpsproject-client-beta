@@ -457,6 +457,7 @@ export default {
                 .then(doc => {
                     this.isShowLoadingAnimation = false
                     if(doc.data.code === 0){
+                        this.showDelBox = false
                         this.isShowLoadingAnimation = false
                         this.getTodayDayShiftMissionMethod()
                         this.tipsShowColor = 'green'
