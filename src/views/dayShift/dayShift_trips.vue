@@ -469,7 +469,9 @@ export default {
             addErrInfo: null,
             chooseType: null,
             showDelBox: false,
-            showDelClientBox: false
+            showDelClientBox: false,
+            tempClient_id: null,
+            tempIndex: null
         }
     },
     mounted(){
@@ -478,13 +480,37 @@ export default {
 
     methods:{
         showDelClientBoxMethod(item,index){
-            console.log(item)
-            console.log(index)
+            this.tempIndex = index
+            this.tempClient_id = item._id
             this.showDelClientBox = true
         },
 
         confirmDelClientInTrips(){
-            console.log('123')
+            this.isShowLoadingAnimation = true
+            axios
+                .post(config.server + '/dsdriver/delClientInTrips',{
+                    _id: this.clientDetail_id,
+                    client_id: this.tempClient_id
+                })
+                .then(doc => {
+                    this.isShowLoadingAnimation = true
+                    if(doc.data.code === 0){
+                        this.showDelClientBox = false
+                        this.getTodayDayShiftMissionMethod()
+                        this.clientDetailArray.splice(this.tempIndex,1)
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '删除时出现问题'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    this.isShowLoadingAnimation = true
+                    console.log(err)
+                })
         },
 
         delTripsMethod(){
@@ -700,6 +726,9 @@ export default {
         },
 
         openEditMethod(item){
+            console.log('########')
+            console.log(item)
+            console.log('########')
             this.clientDetailDriver = item.driverName
             this.clientDetailArray = item.clientArray
             this.clientDetail_id = item._id
