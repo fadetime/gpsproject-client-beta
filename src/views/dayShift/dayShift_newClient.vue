@@ -62,6 +62,16 @@
                             </div>
                         </div>
                         <span>{{item.clientbname}}</span>
+                        <div class="daynew_bottom_content_frame_missiontype" @click="openChooseMissionTypeBoxMethod(item,index)">
+                            
+                            <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'return'">退单</span>
+                            <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
+                            <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                            <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                            <span v-else style="color: green">类型</span>
+                        </div>
                         <div class="daynew_bottom_content_frame_x" @click="pullClientMethod(index)">
                             <span>x</span>
                         </div>
@@ -147,6 +157,116 @@
         </transition>
         <!-- add new client dialog end -->
 
+        <!-- show mission type box start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowMissionTypeBox" class="day_newclient_back"></div>
+        </transition>
+        <transition name="remove-client-transition"
+                    enter-active-class="animated zoomIn faster"
+                    leave-active-class="animated zoomOut faster">
+            <div v-if="isShowMissionTypeBox" class="day_newclient_front" @click.self.prevent="isShowMissionTypeBox = false">
+                <div class="day_newclient_box">
+                    <div class="day_newclient_box_title">
+                        <span>任务类型</span>
+                    </div>
+                    <div class="day_newclient_box_body">
+                        <div class="day_newclient_box_body_clientname">
+                            <span>{{tempClientName}}</span>
+                        </div>
+                        <div class="day_type_frame">
+                            <div v-if="chooseMissionType === 'true'" class="day_type_frame_border_red">
+                                <div class="icon_increaseorder_red"></div>
+                                <div>
+                                    <span>加单</span>
+                                </div>
+                            </div>
+                            <div v-else class="day_type_frame_border" @click="chooseMissionType = 'true'">
+                                <div class="icon_increaseorder"></div>
+                                <div>
+                                    <span style="color: #e0e0e0">加单</span>
+                                </div>
+                            </div>
+                            <div v-if="chooseMissionType === 'false'" class="day_type_frame_border_red">
+                                <div class="icon_return_red"></div>
+                                <div>
+                                    <span>补单</span>
+                                </div>
+                            </div>
+                            <div v-else class="day_type_frame_border" @click="chooseMissionType = 'false'">
+                                <div class="icon_return"></div>
+                                <div>
+                                    <span style="color: #e0e0e0">补单</span>
+                                </div>
+                            </div>
+                            <div v-if="chooseMissionType === 'return'" class="day_type_frame_border_red">
+                                <div class="icon_back_red"></div>
+                                <div>
+                                    <span>退单</span>
+                                </div>
+                            </div>
+                            <div v-else class="day_type_frame_border" @click="chooseMissionType = 'return'">
+                                <div class="icon_back"></div>
+                                <div>
+                                    <span style="color: #e0e0e0">退单</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="day_type_frame">
+                            <div v-if="chooseMissionType === 'change'" class="day_type_frame_border_red">
+                                <div class="icon_change_red"></div>
+                                <div>
+                                    <span>换货</span>
+                                </div>
+                            </div>
+                            <div v-else class="day_type_frame_border" @click="chooseMissionType = 'change'">
+                                <div class="icon_change"></div>
+                                <div>
+                                    <span style="color: #e0e0e0">换货</span>
+                                </div>
+                            </div>
+                            <div v-if="chooseMissionType === 'delivery'" class="day_type_frame_border_red">
+                                <div class="icon_transport_red"></div>
+                                <div>
+                                    <span>运输</span>
+                                </div>
+                            </div>
+                            <div v-else class="day_type_frame_border" @click="chooseMissionType = 'delivery'">
+                                <div class="icon_transport"></div>
+                                <div>
+                                    <span style="color: #e0e0e0">运输</span>
+                                </div>
+                            </div>
+                            <div v-if="chooseMissionType === 'other'" class="day_type_frame_border_red">
+                                <div class="icon_other_red"></div>
+                                <div>
+                                    <span>其他</span>
+                                </div>
+                            </div>
+                            <div v-else class="day_type_frame_border" @click="chooseMissionType = 'other'">
+                                <div class="icon_other"></div>
+                                <div>
+                                    <span style="color: #e0e0e0">其他</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="day_newclient_box_bottom">
+                            <div class="day_new_button" @click="isShowMissionTypeBox = false">
+                                <span>取消</span>
+                            </div>
+                            <div class="day_new_button" style="margin-left:8px;" @click="confirmChangeTypeMethod()">
+                                <span>确认</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- show mission type box end -->
+
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
@@ -185,11 +305,54 @@ export default {
             newClientNameEN: null,
             newClientAddress: null,
             newClientPhone: null,
-            newClientPostcode: null
+            newClientPostcode: null,
+            isShowMissionTypeBox: false,
+            tempClientName: null,
+            tempClient_id: null,
+            chooseMissionType: null,
+            tempNumInArray: null
         }
     },
 
     methods:{
+        confirmChangeTypeMethod(){
+            console.log('1')
+            if(this.chooseMissionType === null){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择任务类型'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 3000);
+            }else{
+                axios
+                    .post(config.server + '/template/changeMissionType',{
+                        _id: this.$route.query.id,
+                        client_id: this.tempClient_id,
+                        isIncreaseOrder: this.chooseMissionType
+                    })
+                    .then(doc => {
+                        console.log(doc)
+                        if(doc.data.code === 0){
+                            this.isShowMissionTypeBox = false
+                            //
+                            this.chooseClientList[this.tempNumInArray].isIncreaseOrder = this.chooseMissionType
+                            //
+                        }else{
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '更新失败'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 3000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }
+        },
+
         clearKeyWordMethod(){
             this.keyWord = null
             this.clientArray = []
@@ -234,6 +397,14 @@ export default {
             this.isShowNewClientBox = true
         },
 
+        openChooseMissionTypeBoxMethod(item,index){
+            console.log(item)
+            this.tempClientName = item.clientbname
+            this.tempClient_id = item._id
+            this.tempNumInArray = index
+            this.isShowMissionTypeBox = true
+        },
+
         pullClientMethod(index){
             this.chooseClientList.splice(index,1)
         },
@@ -251,7 +422,7 @@ export default {
         saveTemplate(){
             let shppingData = this.chooseClientList.map(item => {
                 return {
-                    client_id: item._id,//客户_id
+                    client_id: item.client_id,//客户_id
                     clientName: item.clientbname,//客户名称
                     clientNameEN: item.clientbnameEN,//英文名称
                     clientAddress: item.clientbaddress,//客户地址
@@ -312,12 +483,14 @@ export default {
                         this.templateName = doc.data.doc.templateName
                         this.chooseClientList = doc.data.doc.clientArray.map(item => {
                             return {
-                                _id : item.client_id,//客户_id
+                                client_id : item.client_id,//客户_id
                                 clientbname: item.clientName,//客户名称
                                 clientbnameEN: item.clientNameEN,//英文名称
                                 clientbaddress: item.clientAddress,//客户地址
                                 clientbphone: item.clientPhone,//客户电话
-                                clientbpostcode: item.clientPostcode//客户邮编
+                                clientbpostcode: item.clientPostcode,//客户邮编
+                                isIncreaseOrder: item.isIncreaseOrder,//任务类型
+                                _id: item._id//数组中的_id
                             }
                         })
                     }else{
@@ -549,6 +722,21 @@ export default {
     background-color: #fff;
 }
 
+.daynew_bottom_content_frame_missiontype{
+    position: absolute;
+    right: 36px;
+    top: 0;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    border: 1px solid #eee;
+    height: 28px;
+    line-height: 26px;
+    width: 44px;
+    margin-top: 1px;
+    font-size: 14px;
+}
+
 .daynew_bottom_content_frame_x{
     position: absolute;
     right: 4px;
@@ -613,6 +801,10 @@ export default {
     border: 1px solid #eee;
 }
 
+.day_newclient_box_body_clientname{
+    border-bottom: 1px solid #eee;
+}
+
 .day_newclient_box_body_item{
     display: flex;
     display: -webkit-flex;
@@ -656,5 +848,199 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     border-radius: 10px;
+}
+
+.day_type_frame{
+    display: flex;
+    display: -webkit-flex;
+    margin-top: 8px;
+}
+
+.day_type_frame_border{
+    border-radius: 10px;
+    border: 1px solid #eee;
+    width: 58px;
+    margin: 0 4px;
+}
+
+.day_type_frame_border_red{
+    border-radius: 10px;
+    border: 1px solid #d74342;
+    width: 58px;
+    margin: 0 4px;
+}
+
+.icon_increaseorder {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/increaseOrder1.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder1.svg);
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    transition: 0.2s;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+}
+
+.icon_increaseorder_red {
+    background: #d74342;
+    mask-image: url(../../../public/icons/increaseOrder1.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder1.svg);
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    transition: 0.2s;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+}
+
+.icon_return {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/increaseOrder2.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder2.svg);
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    transition: 0.2s;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+}
+
+.icon_return_red {
+    background: #d74342;
+    mask-image: url(../../../public/icons/increaseOrder2.svg);
+    -webkit-mask-image: url(../../../public/icons/increaseOrder2.svg);
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    transition: 0.2s;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+}
+
+.icon_back {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    -webkit-mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    transition: 0.2s;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+}
+
+.icon_back_red {
+    background: #d74342;
+    mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    -webkit-mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    width: 36px;
+    height: 36px;
+    margin: 0 auto;
+    transition: 0.2s;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+}
+
+.icon_change {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_change.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_change.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_change_red {
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_change.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_change.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_transport {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_transport.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 42px;
+    -webkit-mask-size: 42px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_transport_red {
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_transport.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_transport.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 42px;
+    -webkit-mask-size: 42px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_other {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_other.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_other.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 48px;
+    -webkit-mask-size: 48px;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+}
+
+.icon_other_red {
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_other.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_other.svg);
+    width: 36px;
+    height: 36px;
+    mask-size: 48px;
+    -webkit-mask-size: 48px;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
 }
 </style>
