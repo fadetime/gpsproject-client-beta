@@ -483,6 +483,7 @@ export default {
             this.tempIndex = index
             this.tempClient_id = item._id
             this.showDelClientBox = true
+            this.tempPool_id = item.pool_id
         },
 
         confirmDelClientInTrips(){
@@ -490,10 +491,11 @@ export default {
             axios
                 .post(config.server + '/dsdriver/delClientInTrips',{
                     _id: this.clientDetail_id,
-                    client_id: this.tempClient_id
+                    client_id: this.tempClient_id,
+                    pool_id: this.tempPool_id
                 })
                 .then(doc => {
-                    this.isShowLoadingAnimation = true
+                    this.isShowLoadingAnimation = false
                     if(doc.data.code === 0){
                         this.showDelClientBox = false
                         this.getTodayDayShiftMissionMethod()
@@ -508,7 +510,7 @@ export default {
                     }
                 })
                 .catch(err => {
-                    this.isShowLoadingAnimation = true
+                    this.isShowLoadingAnimation = false
                     console.log(err)
                 })
         },

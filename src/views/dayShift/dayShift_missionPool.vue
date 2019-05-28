@@ -226,8 +226,7 @@
                                     <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
                                         <span>删除任务</span>
                                     </div>
-                                    <div class="search-body-center-button"
-                                        @click="choiseMissionFromPool(item)">
+                                    <div class="search-body-center-button" @click="choiseMissionFromPool(item)">
                                         <span v-if="lang === 'ch'">选择任务</span>
                                         <span v-else>Choise</span>
                                     </div>
