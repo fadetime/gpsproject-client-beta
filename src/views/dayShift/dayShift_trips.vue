@@ -148,7 +148,7 @@
                                 <span>{{item.clientName}}</span>
                             </div>
                             <div class="dst_edit_box_body_frame_right">
-                                <div class="dst_circle_botton" @click="isShowDetail = false">
+                                <div class="dst_circle_botton" @click="showDelClientBoxMethod(item,index)">
                                     <span>x</span>
                                 </div>
                             </div>
@@ -334,7 +334,7 @@
         </transition>
         <!-- add client error end -->
 
-        <!-- del dialog start -->
+        <!-- del trips dialog start -->
         <transition name="dst-detail-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="showDelBox" class="dst_detail_back" style="z-index: 25"></div>
         </transition>
@@ -380,7 +380,35 @@
                 </div>
             </div>
         </transition>
-        <!-- del dialog end -->
+        <!-- del trips dialog end -->
+        
+        <!-- del client box start -->
+        <transition name="dst-detail-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="showDelClientBox" class="dst_detail_back" style="z-index: 25"></div>
+        </transition>
+        <transition name="dst-detail-back" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="showDelClientBox" class="dst_detail_front" style="z-index: 26" @click.self.prevent="showDelClientBox = false">
+                <div class="dst_detail_box">
+                    <div class="dst_detail_box_title">
+                        <span>删除客户</span>
+                    </div>
+                    <div class="dst_add_box_body">
+                        <div class="dst_adderr_box_body_frame" style="height: 92px;line-height: 74px">
+                            <span>是否确认删除该客户?</span>
+                        </div>
+                    </div>
+                    <div class="dst_detail_box_bottom">
+                        <div class="dst_botton" @click="showDelClientBox = false" style="width:80px">
+                            <span>取消</span>
+                        </div>
+                        <div class="dst_botton" @click="confirmDelClientInTrips()" style="width:80px;margin-left:8px">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- del client box end -->
 
         <!-- loading animation start -->
         <transition name="remove-classes-transition"
@@ -440,7 +468,8 @@ export default {
             isShowLoadingAnimation: false,
             addErrInfo: null,
             chooseType: null,
-            showDelBox: false
+            showDelBox: false,
+            showDelClientBox: false
         }
     },
     mounted(){
@@ -448,6 +477,16 @@ export default {
     },
 
     methods:{
+        showDelClientBoxMethod(item,index){
+            console.log(item)
+            console.log(index)
+            this.showDelClientBox = true
+        },
+
+        confirmDelClientInTrips(){
+            console.log('123')
+        },
+
         delTripsMethod(){
             this.isShowLoadingAnimation = true
             axios
@@ -879,8 +918,11 @@ export default {
 }
 
 .dst_edit_box_body_frame_left{
-    width: 140px;
+    width: 160px;
     text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .dst_edit_box_body_frame_right{
