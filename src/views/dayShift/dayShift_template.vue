@@ -194,6 +194,17 @@
                                 <label :for="'checkclientbox' + index" class="dayshift_checkclientbox_body_item_center">
                                     <span>{{item.clientName}}</span>
                                 </label>
+                                <label :for="'checkclientbox' + index" class="dayshift_checkclientbox_body_item_right">
+                                    <span v-if="item.isIncreaseOrder === 'order'">订单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'bun'">面食</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'return'">退单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                                    <span v-else style="color: #d74342">未选择</span>
+                                </label>
                             </div>
                         </div>
                     </div>

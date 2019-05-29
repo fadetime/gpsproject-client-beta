@@ -225,51 +225,90 @@
                         </div>
                         <div class="dst_add_box_body_type">
                             <div class="dst_add_box_body_type_item">
-                                <div v-if="chooseType === 'increase'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('increase')">
+                                <div v-if="chooseType === 'order'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('order')">
+                                    <div class="icon_bill_red"></div>
+                                    <div>
+                                        <span>订单</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('order')">
+                                    <div class="icon_bill"></div>
+                                    <div>
+                                        <span style="color: gray">订单</span>
+                                    </div>
+                                </div>
+                                <div v-if="chooseType === 'true'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('true')">
                                     <div class="icon_increase_red"></div>
                                     <div>
                                         <span>加单</span>
                                     </div>
                                 </div>
-                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('increase')">
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('true')">
                                     <div class="icon_increase"></div>
                                     <div>
                                         <span style="color: gray">加单</span>
                                     </div>
                                 </div>
-                                <div v-if="chooseType === 'return'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('return')">
+                                <div v-if="chooseType === 'false'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('false')">
                                     <div class="icon_return_red"></div>
                                     <div>
                                         <span>补单</span>
                                     </div>
                                 </div>
-                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('return')">
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('false')">
                                     <div class="icon_return"></div>
                                     <div>
                                         <span style="color: gray">补单</span>
                                     </div>
                                 </div>
-                                <div v-if="chooseType === 'back'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('back')">
+                                
+                            </div>
+                            <div class="dst_add_box_body_type_item" style="padding-top:4px;">
+                                <div v-if="chooseType === 'bun'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('bun')">
+                                    <div class="icon_bun_red"></div>
+                                    <div>
+                                        <span>面食</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('bun')">
+                                    <div class="icon_bun"></div>
+                                    <div>
+                                        <span style="color: gray">面食</span>
+                                    </div>
+                                </div>
+                                <div v-if="chooseType === 'return'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('return')">
                                     <div class="icon_back_red"></div>
                                     <div>
                                         <span>退单</span>
                                     </div>
                                 </div>
-                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('back')">
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('return')">
                                     <div class="icon_back"></div>
                                     <div>
                                         <span style="color: gray">退单</span>
                                     </div>
                                 </div>
+                                <div v-if="chooseType === 'change'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('change')">
+                                    <div class="icon_change_red"></div>
+                                    <div>
+                                        <span>换货</span>
+                                    </div>
+                                </div>
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('change')">
+                                    <div class="icon_change"></div>
+                                    <div>
+                                        <span style="color: gray">换货</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="dst_add_box_body_type_item" style="padding-top:4px;">
-                                <div v-if="chooseType === 'transport'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('transport')">
+                                <div v-if="chooseType === 'delivery'" class="dst_add_box_body_type_frame_red" @click="chooseTypeMethod('delivery')">
                                     <div class="icon_transport_red"></div>
                                     <div>
                                         <span>运输</span>
                                     </div>
                                 </div>
-                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('transport')">
+                                <div v-else class="dst_add_box_body_type_frame" @click="chooseTypeMethod('delivery')">
                                     <div class="icon_transport"></div>
                                     <div>
                                         <span style="color: gray">运输</span>
@@ -1011,6 +1050,7 @@ export default {
     top: 33px;
     left: 18px;
     overflow: hidden;
+    z-index: 24;
 }
 
 .dst_add_box_body_top_res_item{
@@ -1176,6 +1216,38 @@ export default {
     justify-content: space-around;
 }
 
+.icon_bill {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_bill.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_bill.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_bill_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_bill.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_bill.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
 .icon_increase {
     background: #e0e0e0;
     mask-image: url(../../../public/icons/increaseOrder1.svg);
@@ -1240,6 +1312,38 @@ export default {
     transition: 0.2s;
 }
 
+.icon_bun {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_bun.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_bun.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_bun_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_bun.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_bun.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
 .icon_back {
     background: #e0e0e0;
     mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
@@ -1260,6 +1364,38 @@ export default {
     background: #d74342;
     mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
     -webkit-mask-image: url(../../../public/icons/baseline-reply_all-24px.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_change {
+    background: #e0e0e0;
+    mask-image: url(../../../public/icons/icon_change.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_change.svg);
+    width: 28px;
+    height: 28px;
+    mask-size: 28px;
+    -webkit-mask-size: 28px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    margin: 0 auto;
+    transition: 0.2s;
+}
+
+.icon_change_red{
+    background: #d74342;
+    mask-image: url(../../../public/icons/icon_change.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_change.svg);
     width: 28px;
     height: 28px;
     mask-size: 28px;

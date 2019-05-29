@@ -31,15 +31,11 @@
                     </div>
                     <div class="search-body-center-item-body">
                         <div v-if="item.backTime">
-                            <div v-if="lang === 'en'"
-                                class="completediv">
-                                <img src="../../../public/img/missionComplete.png"
-                                    alt="complete">
+                            <div v-if="lang === 'en'" class="completediv">
+                                <img src="../../../public/img/missionComplete.png" alt="complete">
                             </div>
-                            <div v-else
-                                class="completediv">
-                                <img src="../../../public/img/missionCompleteCH.png"
-                                    alt="complete">
+                            <div v-else class="completediv">
+                                <img src="../../../public/img/missionCompleteCH.png" alt="complete">
                             </div>
                         </div>
                         <div class="search-body-center-item-body-item">
@@ -48,12 +44,15 @@
                                 <span v-else>Types:</span>
                             </div>
                             <div class="search-body-center-item-body-item-right">
-                                <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-if="item.isIncreaseOrder === 'order'">订单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'bun'">面食</span>
+                                <span v-else-if="item.isIncreaseOrder === 'return'">退单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                                 <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                 <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
-                                <span v-else>退单</span>
+                                <span v-else style="color: #d74342">未选择</span>
                             </div>
                         </div>
                         <div class="search-body-center-item-body-item">
@@ -165,12 +164,15 @@
                                 <span v-else>Types:</span>
                             </div>
                             <div class="search-body-center-item-body-item-right">
-                                <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-if="item.isIncreaseOrder === 'order'">订单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'bun'">面食</span>
+                                <span v-else-if="item.isIncreaseOrder === 'return'">退单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                                 <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                 <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
-                                <span v-else>退单</span>
+                                <span v-else style="color: #d74342">未选择</span>
                             </div>
                         </div>
                         <div class="search-body-center-item-body-item">
@@ -271,12 +273,15 @@
                                 <span v-else>Types:</span>
                             </div>
                             <div class="search-body-center-item-body-item-right">
-                                <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-if="item.isIncreaseOrder === 'order'">订单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'bun'">面食</span>
+                                <span v-else-if="item.isIncreaseOrder === 'return'">退单</span>
                                 <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                                 <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                 <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
-                                <span v-else>退单</span>
+                                <span v-else style="color: #d74342">未选择</span>
                             </div>
                         </div>
                         <div class="search-body-center-item-body-item">
@@ -470,12 +475,15 @@
                                     <span v-else>{{item.clientNameEN}}</span>
                                 </div>
                                 <div class="confirmstart-box-body-item-right">
-                                    <span v-if="item.isIncreaseOrder === 'true'">加单</span>
+                                    <span v-if="item.isIncreaseOrder === 'order'">订单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
                                     <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'bun'">面食</span>
+                                    <span v-else-if="item.isIncreaseOrder === 'return'">退单</span>
                                     <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
                                     <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                     <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
-                                    <span v-else>退单</span>
+                                    <span v-else style="color: #d74342">未选择</span>
                                 </div>
                             </div>
                         </div>
