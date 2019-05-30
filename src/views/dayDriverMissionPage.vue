@@ -452,6 +452,12 @@
                             </div>
                         </div>
                     </div>
+                    <div style="margin-top: 8px;">
+                        <div class="removebox-body-center-button" style="width: 80px;" @click="showTripsClientMethod()">
+                            <span v-if="lang === 'ch'">查看客户</span>
+                            <span v-else>Show Client</span>
+                        </div>
+                    </div>
                     <div class="findcar-bottom">
                         <div class="removebox-body-center-button"
                              style="width: 80px;margin-right:10px"
@@ -574,8 +580,7 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated zoomIn faster"
                     leave-active-class="animated zoomOut faster">
-            <div v-if="showCRbox"
-                 class="checkcar-front"
+            <div v-if="showCRbox" class="checkcar-front"
                  @click.self.prevent="showCRbox = false">
                 <div class="checkcar-body">
                     <div class="checkcar-body-top">
@@ -628,6 +633,50 @@
         </transition>
         <input type="file" style="display:none" id="daydriver_upload_file" @change="fileChange($event)" accept="image/*">
         <!-- confirm and remove mission box end -->
+
+        <!-- show client array before start mission -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowPreview" class="checkcar-back" style="z-index: 24;"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowPreview" class="checkcar-front" @click.self.prevent="isShowPreview = false">
+                <div class="checkcar-body" style="width:unset">
+                    <div class="checkcar-body-top">
+                        <span v-if="lang === 'ch'">客户预览</span>
+                    </div>
+                    <div class="ddm_preview_center">
+                        <div class="ddm_preview_item" v-for="(item,index) in tempClientArray" :key="index">
+                            <div class="ddm_preview_item_left">
+                                <span>{{index + 1}}</span>
+                            </div>
+                            <div class="ddm_preview_item_center">
+                                <span>{{item.clientName}}</span>
+                            </div>
+                            <div class="ddm_preview_item_right">
+                                <span v-if="item.isIncreaseOrder === 'order'">订单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'bun'">面食</span>
+                                <span v-else-if="item.isIncreaseOrder === 'return'">退单</span>
+                                <span v-else-if="item.isIncreaseOrder === 'change'">换货</span>
+                                <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
+                                <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
+                                <span v-else style="color: #d74342">未选择</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="removebox-body-center-button" style="width: 80px;margin-bottom:8px;" @click="isShowPreview = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>chancel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- show client array before start mission -->
 
         <!-- show client big img start -->
         <transition name="ddm-bigimg-transition-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
@@ -736,13 +785,18 @@ export default {
             tipsInfo:null,
             isShowTipsBox:null,
             isShowBigImg: false,
-            tempImg: null
+            tempImg: null,
+            tempClientArray: [],
+            isShowPreview: false
         };
     },
 
     methods: {
+        showTripsClientMethod(){
+            this.isShowPreview =  true
+        },
+        
         openBigImgMethod(img){
-            console.log('123')
             this.tempImg = img
             this.isShowBigImg = true
         },
@@ -1258,6 +1312,10 @@ export default {
         },
 
         startMission(missionInfo) {
+            console.log('#######')
+            console.log(missionInfo)
+            console.log('#######')
+            this.tempClientArray = missionInfo.clientArray
             this._id = missionInfo._id;
             if (!missionInfo.goTime) {
                 this.findAllCarPlate();
@@ -1804,5 +1862,36 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+}
+
+.ddm_preview_center{
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    margin: 8px;
+    padding: 8px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ddm_preview_item{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.ddm_preview_item_left{
+    width: 20px;
+}
+
+.ddm_preview_item_center{
+    width: 140px;
+    text-align: left;
+    padding-left: 8px;
+}
+
+.ddm_preview_item_right{
+    width: 42px;
+    text-align: left;
 }
 </style>
