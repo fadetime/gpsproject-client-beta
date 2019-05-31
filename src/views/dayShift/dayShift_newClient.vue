@@ -9,7 +9,9 @@
             <div>
                 <span>{{templateName}}</span>
             </div>
-            <div class="daynew_title_right"></div>
+            <div class="daynew_title_right" @click="openMatchBoxMethod()">
+                <div class="icon_match"></div>
+            </div>
         </div>
         <div class="daynew_search">
             <div class="daynew_search_frame">
@@ -28,11 +30,13 @@
         <div class="daynew_body">
             <div v-for="(item,index) in clientArray" :key="index" class="daynew_body_item">
                 <div class="daynew_body_item_left">
-                    <input type="checkbox" :value="item" v-model="chooseClientList">
+                    <input :id="'daynew_' + index" type="checkbox" :value="item" v-model="chooseClientList">
                 </div>
                 <div class="daynew_body_item_right">
                     <div class="daynew_body_item_right_top">
-                        <span>{{item.clientbname}}</span>
+                        <label :for="'daynew_' + index">
+                            <span>{{item.clientbname}}</span>
+                        </label>
                     </div>
                     <div class="daynew_body_item_right_bottom">   
                         <div>
@@ -159,14 +163,10 @@
         <!-- add new client dialog end -->
 
         <!-- show mission type box start -->
-        <transition name="remove-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="isShowMissionTypeBox" class="day_newclient_back"></div>
         </transition>
-        <transition name="remove-client-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
             <div v-if="isShowMissionTypeBox" class="day_newclient_front" @click.self.prevent="isShowMissionTypeBox = false">
                 <div class="day_newclient_box">
                     <div class="day_newclient_box_title">
@@ -296,6 +296,42 @@
         </transition>
         <!-- show mission type box end -->
 
+        <!-- match box start -->
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowMatchBox" class="day_newclient_back"></div>
+        </transition>
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowMatchBox" class="day_newclient_front" @click.self.prevent="isShowMatchBox = false">
+                <div class="day_newclient_box">
+                    <div class="day_newclient_box_title">
+                        <span>定义匹配</span>
+                    </div>
+                    <div class="day_match_box_body">
+                        <div class="day_match_box_body_item">
+                            <div class="day_match_box_body_left">
+                                <label for="day_match_bun">
+                                    <span v-if="matchBun" style="color: green">匹配面食数据</span>
+                                    <span v-else style="color: rgb(255, 152, 0)">匹配面食数据</span>
+                                </label>
+                            </div>
+                            <div class="day_match_box_body_right">
+                                <input id="day_match_bun" type="checkbox" v-model="matchBun">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day_newclient_box_bottom">
+                        <div class="day_new_button" @click="isShowMatchBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="day_new_button" style="margin-left:8px;" @click="confirmChangeMatch()">
+                            <span>确认</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- match box end -->
+
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
@@ -339,11 +375,49 @@ export default {
             tempClientName: null,
             tempClient_id: null,
             chooseMissionType: null,
-            tempNumInArray: null
+            tempNumInArray: null,
+            isShowMatchBox: false,
+            matchBun: false
         }
     },
 
     methods:{
+        confirmChangeMatch(){
+            console.log(this.matchBun)
+            axios
+                .post(config.server + '/template/changeMatch',{
+                    _id: this.$route.query.id,
+                    matchBun: this.matchBun
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.isShowMatchBox = false
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '更新匹配成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 1500);
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '更新匹配失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        openMatchBoxMethod(){
+            console.log('123')
+            this.isShowMatchBox = true
+        },
+
         confirmChangeTypeMethod(){
             if(this.chooseMissionType === null){
                 this.tipsShowColor = 'yellow'
@@ -504,7 +578,9 @@ export default {
                 })
                 .then(doc => {
                     if(doc.data.code === 0){
+                        console.log(doc)
                         this.templateName = doc.data.doc.templateName
+                        this.matchBun = doc.data.doc.matchBun
                         this.chooseClientList = doc.data.doc.clientArray.map(item => {
                             return {
                                 client_id : item.client_id,//客户_id
@@ -1034,6 +1110,21 @@ export default {
     -webkit-mask-size: 36px;
 }
 
+.icon_match{
+    background: #fff;
+    mask-image: url(../../../public/icons/icon_match.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_match.svg);
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 36px;
+    -webkit-mask-size: 36px;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
 .icon_change {
     background: #e0e0e0;
     mask-image: url(../../../public/icons/icon_change.svg);
@@ -1122,5 +1213,37 @@ export default {
     mask-position: center;
     -webkit-mask-position: center;
     margin: 0 auto;
+}
+
+.day_match_box_body{
+    border: 1px solid #eee;
+    margin: 8px;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    
+}
+
+.day_match_box_body_item{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+    display: -webkit-flex;
+}
+
+.day_match_box_body_left{
+    width: 116px;
+    text-align: left;
+}
+
+.day_match_box_body_right{
+    padding-top: 2px;
+    padding-left: 8px;
+}
+
+.day_match_box_body_right input{
+    width: 20px;
+    height: 20px;
 }
 </style>

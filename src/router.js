@@ -30,7 +30,6 @@ import report_bill from './views/report_detail/report_bill.vue'
 import report_day from './views/report_detail/report_day.vue'
 import search_template from './views/dayShift/dayShift_template.vue'
 import template_newclient from './views/dayShift/dayShift_newClient.vue'
-
 import carRule from './views/carRule.vue'
 
 import AuthGuard from './auth-guard'

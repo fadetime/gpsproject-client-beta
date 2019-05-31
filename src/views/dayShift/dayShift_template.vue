@@ -182,12 +182,27 @@
                  @click.self.prevent="isShowChooseClientBox = false">
                 <div class="confirmstart-box">
                     <div class="confirmstart-box-title">
-                        <span v-if="lang === 'ch'">已选任务确认</span>
-                        <span v-else>Confirm Client</span>
+                        <div v-if="showFrontPage">
+                            <span v-if="lang === 'ch'">已选任务确认</span>
+                            <span v-else>Confirm Client</span>
+                        </div>
+                        <div v-else>
+                            <span>客服数据</span>
+                        </div>
+                    </div>
+                    <div class="ds_change_pagearea">
+                        <div class="ds_change_pagearea_button">
+                            <div>
+                                <div class="icon_change"></div>
+                            </div>
+                            <div class="ds_change_pagearea_right" @click="changePageMethod()">
+                                <span>切换</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="confirmstart-box-body">
                         <div class="dayshift_driverbox_body">
-                            <div class="dayshift_checkclientbox_body_item" v-for="(item,index) in tempArray" :key="index">
+                            <div v-show="showFrontPage" class="dayshift_checkclientbox_body_item" v-for="(item,index) in tempArray" :key="index">
                                 <div class="dayshift_checkclientbox_body_item_left">
                                     <input :id="'checkclientbox' + index " type="checkbox" :value="item" v-model="confirmClientArray">
                                 </div>
@@ -205,6 +220,10 @@
                                     <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                                     <span v-else style="color: #d74342">未选择</span>
                                 </label>
+                            </div>
+                            <div v-show="!showFrontPage" class="dayshift_checkclientbox_body_item" v-for="(item,index) in customerClientNameArray" :key="'c' + index">
+                                <span v-if="item.matchErr" style="color: #d74342">{{item.name}}</span>
+                                <span v-else>{{item.name}}</span>
                             </div>
                         </div>
                     </div>
@@ -291,11 +310,17 @@ export default {
             confirmClientArray: [],
             isShowLoadingAnimation: false,
             isShowDelDialog: false,
-            delInfo: null
+            delInfo: null,
+            customerClientNameArray: [],
+            showFrontPage: true
         }
     },
 
     methods:{
+        changePageMethod(){
+            this.showFrontPage = !this.showFrontPage
+        },
+
         goBackMethod(){
             this.$router.push({path:'/search'})
         },
@@ -400,12 +425,45 @@ export default {
                 this.isShowTipsBox = true
                 setTimeout(() => {
                     this.isShowTipsBox = false
-                }, 3000);
+                }, 2000);
             }else{
-                console.log(this.choiseDriver)
                 this.isShowChoiseDriverBox = false
                 this.isShowChooseClientBox = true
-                this.confirmClientArray = this.tempArray
+                // this.confirmClientArray = this.tempArray
+                axios
+                    .post(config.customerServiceAddress + "/orders/ordersMs",{
+                        date: new Date().toDateString()
+                    })
+                    .then(doc => {
+                        if(doc.data.status === 0){
+                            this.customerClientNameArray = []
+                            if(doc.data.payload.length != 0){
+                                doc.data.payload.forEach(item => {
+                                    let matchErr = true
+                                    this.tempArray.forEach(templateInfo => {
+                                        if(templateInfo.clientName === item._customer._customerProfile.companyName){
+                                            matchErr = false
+                                            this.confirmClientArray.push(templateInfo)
+                                        }
+                                    });
+                                    this.customerClientNameArray.push({
+                                        name:item._customer._customerProfile.companyName,
+                                        matchErr: matchErr
+                                    })
+                                })
+                            }
+                        }else{
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '获取客服后台数据失败'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
             }
         },
 
@@ -805,6 +863,20 @@ export default {
     right: 0;
 }
 
+.icon_change{
+    mask-image: url(../../../public/icons/icon_change.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_change.svg);
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 30px;
+    height: 30px;
+    mask-size: 24px;
+    -webkit-mask-size: 24px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
 .dayshift_checkclientbox_body_item{
     display: flex;
     display: -webkit-flex;
@@ -934,5 +1006,28 @@ export default {
 .spinner .rect5 {
     -webkit-animation-delay: -0.8s;
     animation-delay: -0.8s;
+}
+
+.ds_change_pagearea{
+    display: flex;
+    display: -webkit-flex;
+    margin-top: 8px;
+    padding: 0 8px;
+    justify-content: flex-end
+}
+
+.ds_change_pagearea_button{
+    border: 1px solid #eee;
+    display: flex;
+    display: -webkit-flex;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    padding: 0 4px;
+}
+
+.ds_change_pagearea_right{
+    height: 30px;
+    line-height: 30px;
 }
 </style>
