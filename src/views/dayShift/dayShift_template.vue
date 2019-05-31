@@ -190,7 +190,7 @@
                             <span>客服数据</span>
                         </div>
                     </div>
-                    <div class="ds_change_pagearea">
+                    <div v-if="templateMatchMode" class="ds_change_pagearea">
                         <div class="ds_change_pagearea_button">
                             <div>
                                 <div class="icon_change"></div>
@@ -209,7 +209,7 @@
                                 <label :for="'checkclientbox' + index" class="dayshift_checkclientbox_body_item_center">
                                     <span>{{item.clientName}}</span>
                                 </label>
-                                <label :for="'checkclientbox' + index" class="dayshift_checkclientbox_body_item_right">
+                                <div class="dayshift_checkclientbox_body_item_right">
                                     <span v-if="item.isIncreaseOrder === 'order'">订单</span>
                                     <span v-else-if="item.isIncreaseOrder === 'true'">加单</span>
                                     <span v-else-if="item.isIncreaseOrder === 'false'">补单</span>
@@ -219,7 +219,7 @@
                                     <span v-else-if="item.isIncreaseOrder === 'delivery'">运输</span>
                                     <span v-else-if="item.isIncreaseOrder === 'other'">其他</span>
                                     <span v-else style="color: #d74342">未选择</span>
-                                </label>
+                                </div>
                             </div>
                             <div v-show="!showFrontPage" class="dayshift_checkclientbox_body_item" v-for="(item,index) in customerClientNameArray" :key="'c' + index">
                                 <span v-if="item.matchErr" style="color: #d74342">{{item.name}}</span>
@@ -312,7 +312,8 @@ export default {
             isShowDelDialog: false,
             delInfo: null,
             customerClientNameArray: [],
-            showFrontPage: true
+            showFrontPage: true,
+            templateMatchMode: null
         }
     },
 
@@ -429,41 +430,45 @@ export default {
             }else{
                 this.isShowChoiseDriverBox = false
                 this.isShowChooseClientBox = true
-                // this.confirmClientArray = this.tempArray
-                axios
-                    .post(config.customerServiceAddress + "/orders/ordersMs",{
-                        date: new Date().toDateString()
-                    })
-                    .then(doc => {
-                        if(doc.data.status === 0){
-                            this.customerClientNameArray = []
-                            if(doc.data.payload.length != 0){
-                                doc.data.payload.forEach(item => {
-                                    let matchErr = true
-                                    this.tempArray.forEach(templateInfo => {
-                                        if(templateInfo.clientName === item._customer._customerProfile.companyName){
-                                            matchErr = false
-                                            this.confirmClientArray.push(templateInfo)
-                                        }
-                                    });
-                                    this.customerClientNameArray.push({
-                                        name:item._customer._customerProfile.companyName,
-                                        matchErr: matchErr
+                if(this.templateMatchMode){
+                    axios
+                        .post(config.customerServiceAddress + "/orders/ordersMs",{
+                            date: new Date().toDateString()
+                        })
+                        .then(doc => {
+                            if(doc.data.status === 0){
+                                this.customerClientNameArray = []
+                                if(doc.data.payload.length != 0){
+                                    doc.data.payload.forEach(item => {
+                                        let matchErr = true
+                                        this.tempArray.forEach(templateInfo => {
+                                            if(templateInfo.clientName === item._customer._customerProfile.companyName){
+                                                matchErr = false
+                                                this.confirmClientArray.push(templateInfo)
+                                            }
+                                        });
+                                        this.customerClientNameArray.push({
+                                            name:item._customer._customerProfile.companyName,
+                                            matchErr: matchErr
+                                        })
                                     })
-                                })
+                                }
+                            }else{
+                                this.tipsShowColor = 'yellow'
+                                this.tipsInfo = '获取客服后台数据失败'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
+                                }, 2000);
                             }
-                        }else{
-                            this.tipsShowColor = 'yellow'
-                            this.tipsInfo = '获取客服后台数据失败'
-                            this.isShowTipsBox = true
-                            setTimeout(() => {
-                                this.isShowTipsBox = false
-                            }, 2000);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                }else{
+                    this.confirmClientArray = this.tempArray
+                }
+                
             }
         },
 
@@ -474,6 +479,8 @@ export default {
         },
 
         useTemplate(item){
+            console.log(item)
+            this.templateMatchMode = item.matchBun
             this.tempArray = item.clientArray
             axios
                 .post(config.server + "/dirver/findDayDriver")
@@ -520,7 +527,7 @@ export default {
                             this.isShowTipsBox = true
                             setTimeout(() => {
                                 this.isShowTipsBox = false
-                            }, 2000);
+                            }, 1500);
                         }
                     }else{
                         this.tipsShowColor = 'yellow'
@@ -528,7 +535,7 @@ export default {
                         this.isShowTipsBox = true
                         setTimeout(() => {
                             this.isShowTipsBox = false
-                        }, 3000);
+                        }, 2000);
                     }
                 })
                 .catch(err => {
@@ -896,6 +903,10 @@ export default {
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-left: 8px;
+}
+
+.dayshift_checkclientbox_body_item_right{
+    width: 32px;
 }
 
 .dayshift_driverbox_bottom{
