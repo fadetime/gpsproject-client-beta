@@ -190,12 +190,12 @@
                             <span>客服数据</span>
                         </div>
                     </div>
-                    <div v-if="templateMatchMode" class="ds_change_pagearea">
-                        <div class="ds_change_pagearea_button">
+                    <div v-if="templateMatchMode || templateMatch14 || templateMatch19" class="ds_change_pagearea">
+                        <div class="ds_change_pagearea_button" @click="changePageMethod()">
                             <div>
                                 <div class="icon_change"></div>
                             </div>
-                            <div class="ds_change_pagearea_right" @click="changePageMethod()">
+                            <div class="ds_change_pagearea_right">
                                 <span>切换</span>
                             </div>
                         </div>
@@ -313,7 +313,9 @@ export default {
             delInfo: null,
             customerClientNameArray: [],
             showFrontPage: true,
-            templateMatchMode: null
+            templateMatchMode: null,
+            templateMatch14: null,
+            templateMatch19: null
         }
     },
 
@@ -430,41 +432,126 @@ export default {
             }else{
                 this.isShowChoiseDriverBox = false
                 this.isShowChooseClientBox = true
-                if(this.templateMatchMode){
-                    axios
-                        .post(config.customerServiceAddress + "/orders/ordersMs",{
-                            date: new Date().toDateString()
-                        })
-                        .then(doc => {
-                            if(doc.data.status === 0){
-                                this.customerClientNameArray = []
-                                if(doc.data.payload.length != 0){
-                                    doc.data.payload.forEach(item => {
-                                        let matchErr = true
-                                        this.tempArray.forEach(templateInfo => {
-                                            if(templateInfo.clientName === item._customer._customerProfile.companyName){
-                                                matchErr = false
-                                                this.confirmClientArray.push(templateInfo)
-                                            }
-                                        });
-                                        this.customerClientNameArray.push({
-                                            name:item._customer._customerProfile.companyName,
-                                            matchErr: matchErr
+                if(this.templateMatchMode || this.templateMatch14 || this.templateMatch19){
+                    this.customerClientNameArray = []
+                    if(this.templateMatchMode){
+                        axios
+                            .post(config.customerServiceAddress + "/orders/ordersMs",{
+                                date: new Date().toDateString()
+                            })
+                            .then(doc => {
+                                if(doc.data.status === 0){
+                                    if(doc.data.payload.length != 0){
+                                        doc.data.payload.forEach(item => {
+                                            let matchErr = true
+                                            this.tempArray.forEach(templateInfo => {
+                                                if(templateInfo.clientName === item._customer._customerProfile.companyName){
+                                                    matchErr = false
+                                                    this.confirmClientArray.push(templateInfo)
+                                                }
+                                            });
+                                            this.customerClientNameArray.push({
+                                                name:item._customer._customerProfile.companyName,
+                                                matchErr: matchErr
+                                            })
                                         })
-                                    })
+                                    }
+                                }else{
+                                    this.tipsShowColor = 'yellow'
+                                    this.tipsInfo = '获取客服后台数据失败'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
+                                    }, 2000);
                                 }
-                            }else{
-                                this.tipsShowColor = 'yellow'
-                                this.tipsInfo = '获取客服后台数据失败'
-                                this.isShowTipsBox = true
-                                setTimeout(() => {
-                                    this.isShowTipsBox = false
-                                }, 2000);
-                            }
-                        })
-                        .catch(err => {
-                            console.log(err)
-                        })
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    }
+                    if(this.templateMatch14){
+                        //获取客服14车来单数据
+                        let endDate = new Date().getTime()
+                        endDate = new Date(endDate) + 86400000
+                        endDate = new Date(endDate).toDateString()
+                        axios
+                            .post(config.server + "/template/Match14",{
+                                startDate: new Date().toDateString(),
+                                endDate: endDate
+                            })
+                            .then(doc => {
+                                console.log(doc)
+                                if(doc.data.code === 0){
+                                    if(doc.data.doc.length != 0){
+                                        doc.data.doc.forEach(item => {
+                                            let matchErr = true
+                                            this.tempArray.forEach(templateInfo => {
+                                                if(templateInfo.clientName === item){
+                                                    matchErr = false
+                                                    this.confirmClientArray.push(templateInfo)
+                                                }
+                                            });
+                                            this.customerClientNameArray.push({
+                                                name:item,
+                                                matchErr: matchErr
+                                            })
+                                        })
+                                    }
+                                }else{
+                                    this.tipsShowColor = 'yellow'
+                                    this.tipsInfo = '获取客服后台数据失败'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
+                                    }, 2000);
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    }
+                    if(this.templateMatch19){
+                        //获取客服19车来单数据
+                        let endDate = new Date().getTime()
+                        endDate = new Date(endDate) + 86400000
+                        endDate = new Date(endDate).toDateString()
+                        axios
+                            .post(config.server + "/template/Match19",{
+                                startDate: new Date().toDateString(),
+                                endDate: endDate
+                            })
+                            .then(doc => {
+                                console.log(doc)
+                                if(doc.data.code === 0){
+                                    if(doc.data.doc.length != 0){
+                                        doc.data.doc.forEach(item => {
+                                            let matchErr = true
+                                            this.tempArray.forEach(templateInfo => {
+                                                if(templateInfo.clientName === item){
+                                                    matchErr = false
+                                                    this.confirmClientArray.push(templateInfo)
+                                                }
+                                            });
+                                            this.customerClientNameArray.push({
+                                                name:item,
+                                                matchErr: matchErr
+                                            })
+                                        })
+                                    }
+                                }else{
+                                    this.tipsShowColor = 'yellow'
+                                    this.tipsInfo = '获取客服后台数据失败'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
+                                    }, 2000);
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
+                    }
+                    
                 }else{
                     this.confirmClientArray = this.tempArray
                 }
@@ -481,6 +568,8 @@ export default {
         useTemplate(item){
             console.log(item)
             this.templateMatchMode = item.matchBun
+            this.templateMatch14 = item.match14
+            this.templateMatch19 = item.match19
             this.tempArray = item.clientArray
             axios
                 .post(config.server + "/dirver/findDayDriver")
@@ -906,7 +995,8 @@ export default {
 }
 
 .dayshift_checkclientbox_body_item_right{
-    width: 32px;
+    width: 46px;
+    text-align: left;
 }
 
 .dayshift_driverbox_bottom{

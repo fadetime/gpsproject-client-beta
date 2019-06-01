@@ -318,6 +318,28 @@
                                 <input id="day_match_bun" type="checkbox" v-model="matchBun">
                             </div>
                         </div>
+                        <div class="day_match_box_body_item">
+                            <div class="day_match_box_body_left">
+                                <label for="day_match_bun">
+                                    <span v-if="match14" style="color: green">匹配14车数据</span>
+                                    <span v-else style="color: rgb(255, 152, 0)">匹配14车数据</span>
+                                </label>
+                            </div>
+                            <div class="day_match_box_body_right">
+                                <input id="day_match_bun" type="checkbox" v-model="match14">
+                            </div>
+                        </div>
+                        <div class="day_match_box_body_item">
+                            <div class="day_match_box_body_left">
+                                <label for="day_match_bun">
+                                    <span v-if="match19" style="color: green">匹配20车数据</span>
+                                    <span v-else style="color: rgb(255, 152, 0)">匹配20车数据</span>
+                                </label>
+                            </div>
+                            <div class="day_match_box_body_right">
+                                <input id="day_match_bun" type="checkbox" v-model="match19">
+                            </div>
+                        </div>
                     </div>
                     <div class="day_newclient_box_bottom">
                         <div class="day_new_button" @click="isShowMatchBox = false">
@@ -377,17 +399,20 @@ export default {
             chooseMissionType: null,
             tempNumInArray: null,
             isShowMatchBox: false,
-            matchBun: false
+            matchBun: false,
+            match14: false,
+            match19: false
         }
     },
 
     methods:{
         confirmChangeMatch(){
-            console.log(this.matchBun)
             axios
                 .post(config.server + '/template/changeMatch',{
                     _id: this.$route.query.id,
-                    matchBun: this.matchBun
+                    matchBun: this.matchBun,
+                    match14: this.match14,
+                    match19: this.match19
                 })
                 .then(doc => {
                     console.log(doc)
@@ -581,6 +606,8 @@ export default {
                         console.log(doc)
                         this.templateName = doc.data.doc.templateName
                         this.matchBun = doc.data.doc.matchBun
+                        this.match14 = doc.data.doc.match14
+                        this.match19 = doc.data.doc.match19
                         this.chooseClientList = doc.data.doc.clientArray.map(item => {
                             return {
                                 client_id : item.client_id,//客户_id
