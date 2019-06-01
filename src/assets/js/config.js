@@ -5,6 +5,6 @@ let customerService_dev = '//13.250.234.103:4000'//客服系统测试
 let customerService_pro = '//3.1.39.240:4000'//客服系统正式
 
 export default {
-   server : pro,
+   server : dev,
    customerServiceAddress:customerService_pro
 }

@@ -6,8 +6,13 @@
                     <img src="../../../public/icons/left.png" alt="exit" style="width: 20px;">
                 </div>
             </div>
-            <div>
-                <span>{{templateName}}</span>
+            <div class="daynew_title_center">
+                <div>
+                    <span>{{templateName}}</span>
+                </div>
+                <div @click="showChangeNameBoxMethod()">
+                    <div class="icon_edit"></div>
+                </div>
             </div>
             <div class="daynew_title_right" @click="openMatchBoxMethod()">
                 <div class="icon_match"></div>
@@ -354,6 +359,49 @@
         </transition>
         <!-- match box end -->
 
+        <!-- change template name box start -->
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChangeNameBox" class="day_newclient_back"></div>
+        </transition>
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowChangeNameBox" class="day_newclient_front" @click.self.prevent="isShowChangeNameBox = false">
+                <div class="day_newclient_box">
+                    <div class="day_newclient_box_title">
+                        <span>修改模板名</span>
+                    </div>
+                    <div class="day_match_box_body">
+                        <div class="day_changename_item">
+                            <div class="day_changename_item_left">
+                                <span>原有模板名</span>
+                            </div>
+                            <div class="day_changename_item_right">
+                                <div>
+                                    <span>{{templateName}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="day_changename_item" style="margin-top: 8px;">
+                            <div class="day_changename_item_left">
+                                <span>修改模板名</span>
+                            </div>
+                            <div class="day_changename_item_right">
+                                <input type="text" v-model="newTemplateName" placeholder="请输入名称">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="day_newclient_box_bottom">
+                        <div class="day_new_button" @click="isShowChangeNameBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="day_new_button" style="margin-left:8px;" @click="changeTemplateNameMethod()">
+                            <span>确认</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- change template name box end -->
+
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
@@ -401,11 +449,48 @@ export default {
             isShowMatchBox: false,
             matchBun: false,
             match14: false,
-            match19: false
+            match19: false,
+            isShowChangeNameBox: false,
+            newTemplateName: null
         }
     },
 
     methods:{
+        changeTemplateNameMethod(){
+            axios
+                .post(config.server + '/template/changeName',{
+                    _id: this.$route.query.id,
+                    newTemplateName:this.newTemplateName
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.isShowChangeNameBox = false
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '修改成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 1500);
+                        this.getTemplateInfo()
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '修改失败'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        },
+
+        showChangeNameBoxMethod(){
+            this.isShowChangeNameBox = true
+        },
+
         confirmChangeMatch(){
             axios
                 .post(config.server + '/template/changeMatch',{
@@ -661,6 +746,11 @@ export default {
 
 .daynew_title_left{
     width: 80px;
+}
+
+.daynew_title_center{
+    display: flex;
+    display: -webkit-flex;
 }
 
 .daynew_title_right{
@@ -1137,6 +1227,21 @@ export default {
     -webkit-mask-size: 36px;
 }
 
+.icon_edit{
+    background: #fff;
+    mask-image: url(../../../public/icons/icon_edit.svg);
+    -webkit-mask-image: url(../../../public/icons/icon_edit.svg);
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 24px;
+    -webkit-mask-size: 24px;
+    mask-position: center;
+    -webkit-mask-position: center;
+}
+
 .icon_match{
     background: #fff;
     mask-image: url(../../../public/icons/icon_match.svg);
@@ -1272,5 +1377,35 @@ export default {
 .day_match_box_body_right input{
     width: 20px;
     height: 20px;
+}
+
+.day_changename_item{
+    display: flex;
+    display: -webkit-flex;
+}
+
+.day_changename_item_left{
+    width: 80px;
+    text-align: right;
+    padding-right: 8px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.day_changename_item_right div{
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.day_changename_item_right input{
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
 }
 </style>
