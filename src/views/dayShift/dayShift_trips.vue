@@ -111,8 +111,14 @@
                                 <span>{{item.clientName}}</span>
                             </div>
                             <div class="dst_detail_box_body_frame_right">
-                                <span v-if="item.finisDate" style="color:green">已完成</span>
-                                <span v-else style="color:rgb(255, 152, 0)">配送中</span>
+                                <div class="dst_detail_box_body_frame_right_state">
+                                    <span v-if="item.finisDate" style="color:green">已完成</span>
+                                    <span v-else style="color:rgb(255, 152, 0)">配送中</span>
+                                </div>
+                                <div class="dst_detail_box_body_frame_right_time">
+                                    <span v-if="item.finisDate" style="color:green">{{item.finisDate | timefilter}}</span>
+                                    <span v-else style="color:rgb(255, 152, 0)">暂无</span>
+                                </div>
                             </div>
                         </div>
                         
@@ -767,9 +773,6 @@ export default {
         },
 
         openEditMethod(item){
-            console.log('########')
-            console.log(item)
-            console.log('########')
             this.clientDetailDriver = item.driverName
             this.clientDetailArray = item.clientArray
             this.clientDetail_id = item._id
@@ -777,6 +780,7 @@ export default {
         },
 
         openDeatilMethod(item){
+            console.log(item)
             this.clientDetailDriver = item.driverName
             this.clientDetailArray = item.clientArray
             this.isShowDetail = true
@@ -936,8 +940,19 @@ export default {
 }
 
 .dst_detail_box_body_frame_right{
-    width: 60px;
+    display: flex;
+    display: -webkit-flex;
     text-align: right;
+}
+
+.dst_detail_box_body_frame_right_state{
+    margin-left: 4px;
+}
+
+.dst_detail_box_body_frame_right_time{
+    margin-left: 4px;
+    width: 84px;
+    text-align: left;
 }
 
 .dst_detail_box_info{
