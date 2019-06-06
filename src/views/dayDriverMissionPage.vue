@@ -584,13 +584,9 @@
                  @click.self.prevent="showCRbox = false">
                 <div class="checkcar-body">
                     <div class="checkcar-body-top">
-                        <div v-if="boxShowFace === 'finish'">
+                        <div>
                             <span v-if="lang === 'ch'">确认完成</span>
                             <span v-else>Confirm finish</span>
-                        </div>
-                        <div v-else>
-                            <span v-if="lang === 'ch'">确认删除</span>
-                            <span v-else>Confirm remove</span>
                         </div>
                     </div>
                     <div class="findcar-body" style="border: 1px solid #e6e6e6;">
@@ -611,18 +607,10 @@
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>chancel</span>
                         </div>
-                        <div v-if="boxShowFace === 'finish'">
+                        <div>
                             <div class="removebox-body-center-button"
                                  style="width: 80px;"
                                  @click="confirmFinishClientMethod()">
-                                <span v-if="lang === 'ch'">确定</span>
-                                <span v-else>confirm</span>
-                            </div>
-                        </div>
-                        <div v-else>
-                            <div class="removebox-body-center-button"
-                                 style="width: 80px;background:#d74342;border: none;color:#fff"
-                                 @click="confirmRemoveClientMethod()">
                                 <span v-if="lang === 'ch'">确定</span>
                                 <span v-else>confirm</span>
                             </div>
@@ -695,12 +683,12 @@
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
-            <div v-if="false" class="tripcount_loading_back"></div>
+            <div v-if="isShowLoadingAnimation" class="tripcount_loading_back"></div>
         </transition>
         <transition name="remove-client-transition"
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
-            <div v-if="false"
+            <div v-if="isShowLoadingAnimation"
                  class="tripcount_loading_front">
                 <div class="tripcount_loading_box">
                     <div class="spinner">
@@ -775,7 +763,6 @@ export default {
             detailDate: null,
             showCRbox: false,
             shippingClient: null,
-            boxShowFace: "finish",
             showCheckAgainBox: false,
             clean: true,
             otherErrorAgain: true,
@@ -787,7 +774,8 @@ export default {
             isShowBigImg: false,
             tempImg: null,
             tempClientArray: [],
-            isShowPreview: false
+            isShowPreview: false,
+            isShowLoadingAnimation: false
         };
     },
 
@@ -949,45 +937,8 @@ export default {
                 });
         },
 
-        confirmRemoveClientMethod() {
-            let tempDate = new Date().toISOString();
-            axios
-                .post(config.server + "/dsdriver/remove", {
-                    mission_id: this._id,
-                    clientName: this.shippingClient.clientName
-                })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.showCRbox = false;
-                        if (this.lang === "ch") {
-                            this.tipsInfo = "删除任务客户成功";
-                        } else {
-                            this.tipsInfo = "Remove client from mission success"
-                        }
-                        this.tipsShowColor = 'green'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 2000);
-                    } else {
-                        if (this.lang === "ch") {
-                            this.tipsInfo = "删除任务客户失败";
-                        } else {
-                            this.tipsInfo = "Remove client from mission fail";
-                        }
-                        this.tipsShowColor = 'yellow'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 3000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        },
-
         confirmFinishClientMethod() {
+            this.isShowLoadingAnimation = true
             if(this.updateImagePreview){
                 let payload = new FormData();
                 payload.append("mission_id", this._id);
@@ -996,57 +947,60 @@ export default {
                 payload.append("finisDate", tempDate);
                 payload.append("pool_id",this.shippingClient.pool_id)
                 let maxSize = 200 * 1024; //200KB
-                        lrz(this.updateImage, {
-                            quality: 0.5
-                        })
-                        .then(res => {
-                            if (this.updateImage.size > maxSize) {
-                                    this.updateImage = res.file;
+                lrz(this.updateImage, {
+                    quality: 0.5
+                })
+                .then(res => {
+                    if (this.updateImage.size > maxSize) {
+                            this.updateImage = res.file;
+                    }
+                    payload.append("image", this.updateImage);
+                    axios
+                        .post(config.server + "/dsdriver/finish",payload)
+                        .then(doc => {
+                            this.isShowLoadingAnimation = false
+                            if (doc.data.code === 0) {
+                                this.findMissionByID();
+                                this.showCRbox = false;
+                                if (this.lang === "ch") {
+                                    this.tipsInfo = "任务提交成功";
+                                } else {
+                                    this.tipsInfo = "Submit mission success";
+                                }
+                                this.tipsShowColor = 'green'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
+                                }, 2000);
+                            } else {
+                                if (this.lang === "ch") {
+                                    this.tipsInfo = "任务提交失败";
+                                } else {
+                                    this.tipsInfo = "submit mission fail";
+                                }
+                                this.tipsShowColor = 'yellow'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
+                                }, 2000);
                             }
-                            payload.append("image", this.updateImage);
-                            axios
-                                .post(config.server + "/dsdriver/finish",payload)
-                                .then(doc => {
-                                    if (doc.data.code === 0) {
-                                        this.findMissionByID();
-                                        this.showCRbox = false;
-                                        if (this.lang === "ch") {
-                                            this.tipsInfo = "任务提交成功";
-                                        } else {
-                                            this.tipsInfo = "Submit mission success";
-                                        }
-                                        this.tipsShowColor = 'green'
-                                        this.isShowTipsBox = true
-                                        setTimeout(() => {
-                                            this.isShowTipsBox = false
-                                        }, 2000);
-                                    } else {
-                                        if (this.lang === "ch") {
-                                            this.tipsInfo = "任务提交失败";
-                                        } else {
-                                            this.tipsInfo = "submit mission fail";
-                                        }
-                                        this.tipsShowColor = 'yellow'
-                                        this.isShowTipsBox = true
-                                        setTimeout(() => {
-                                            this.isShowTipsBox = false
-                                        }, 2000);
-                                    }
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
-
                         })
                         .catch(err => {
-                            console.log(err)
-                            this.tipsShowColor = 'yellow'
-                            this.tipsInfo = '压缩图片时发生错误'
-                            this.isShowTipsBox = true
-                            setTimeout(() => {
-                                this.isShowTipsBox = false
-                            }, 3000);
-                        })
+                            this.isShowLoadingAnimation = false
+                            console.log(err);
+                        });
+
+                })
+                .catch(err => {
+                    this.isShowLoadingAnimation = false
+                    console.log(err)
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '压缩图片时发生错误'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 3000);
+                })
             }else{
                 let payload = new FormData();
                 payload.append("mission_id", this._id);
@@ -1057,6 +1011,7 @@ export default {
                 axios
                     .post(config.server + "/dsdriver/finish",payload)
                     .then(doc => {
+                        this.isShowLoadingAnimation = false
                         if (doc.data.code === 0) {
                             this.findMissionByID();
                             this.showCRbox = false;
@@ -1082,17 +1037,17 @@ export default {
                                 this.isShowTipsBox = false
                             }, 2000);
                         }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                    })
+                    .catch(err => {
+                        this.isShowLoadingAnimation = false
+                        console.log(err);
+                    });
             }
         },
 
         finishClientMethod(clientInfo) {
             this.updateImagePreview = null
             this.shippingClient = clientInfo;
-            this.boxShowFace = "finish";
             this.showCRbox = true;
         },
 

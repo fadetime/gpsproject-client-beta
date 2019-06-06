@@ -457,34 +457,43 @@ export default {
 
     methods:{
         changeTemplateNameMethod(){
-            axios
-                .post(config.server + '/template/changeName',{
-                    _id: this.$route.query.id,
-                    newTemplateName:this.newTemplateName
-                })
-                .then(doc => {
-                    console.log(doc)
-                    if(doc.data.code === 0){
-                        this.isShowChangeNameBox = false
-                        this.tipsShowColor = 'green'
-                        this.tipsInfo = '修改成功'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 1500);
-                        this.getTemplateInfo()
-                    }else{
-                        this.tipsShowColor = 'yellow'
-                        this.tipsInfo = '修改失败'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 2000);
-                    }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+            if(this.newTemplateName){
+                axios
+                    .post(config.server + '/template/changeName',{
+                        _id: this.$route.query.id,
+                        newTemplateName:this.newTemplateName
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.isShowChangeNameBox = false
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = '修改成功'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 1500);
+                            this.getTemplateInfo()
+                        }else{
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '修改失败'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }else{
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '新名称不能为空'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 2000);
+            }
+            
         },
 
         showChangeNameBoxMethod(){
@@ -669,10 +678,24 @@ export default {
                     })
                 .then(doc => {
                     if(doc.data.code === 0){
-                        this.countNum = doc.data.count
-                        this.clientArray = doc.data.doc
+                        if(doc.data.count === 0){
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '未找到客户'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }else{
+                            this.countNum = doc.data.count
+                            this.clientArray = doc.data.doc
+                        }
                     }else{
-                        this.returnNull = true
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '未找到客户'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
                     }
                 })
                 .catch(err => {
@@ -940,6 +963,7 @@ export default {
 }
 
 .daynew_bottom_content_frame_missiontype{
+    background-color: #fff;
     position: absolute;
     right: 36px;
     top: 0;

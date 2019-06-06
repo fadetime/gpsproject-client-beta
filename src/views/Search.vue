@@ -556,7 +556,8 @@ export default {
             this.returnNull = false
             this.pageNow = 1
             this.clientArray = []
-            axios.post(config.server + '/clientb/find',{
+            axios
+                .post(config.server + '/clientb/find',{
                     pageSize:this.pageSize,
                     pageNow:this.pageNow,
                     word:this.keyWord
@@ -566,6 +567,7 @@ export default {
                 if(doc.data.code === 0){
                     this.countNum = doc.data.count
                     this.clientArray=this.clientArray.concat(doc.data.doc)
+                    console.log(this.clientArray)
                     // this.pageNow += 1
                 }else{
                     this.returnNull = true
