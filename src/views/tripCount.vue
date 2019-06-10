@@ -321,6 +321,50 @@
         </transition>
         <!-- staff list end -->
 
+        <!-- confirm more num start -->
+        <transition name="remove-client-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowConfirmMoreNum"
+                 class="tripcount_add_tips_back" @click.self.prevent="isShowConfirmMoreNum = false">
+                <div class="tripcount_add_tips_box">
+                    <div class="tripcount_add_tips_box_title">
+                        <span>Confirm info</span>
+                    </div>
+                    <div class="tripcount_confirm_num_body">
+                        <div class="tripcount_confirm_num_body_item">
+                            <span>Please confirm again the figure?</span>
+                        </div>
+                        <div class="tripcount_confirm_num_body_item">
+                            <div class="tripcount_confirm_num_body_item_left">
+                                <span>OUTKM</span>
+                            </div>
+                            <div class="tripcount_confirm_num_body_item_right">
+                                <span>{{shippingDate.outKm}}</span>
+                            </div>
+                        </div>
+                        <div class="tripcount_confirm_num_body_item">
+                            <div class="tripcount_confirm_num_body_item_left">
+                                <span>INKM</span>
+                            </div>
+                            <div class="tripcount_confirm_num_body_item_right">
+                                <span>{{shippingDate.inKm}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tripcount_add_tips_box_bottom">
+                        <div class="tripcount_box_footer_button" @click="isShowConfirmMoreNum = false">
+                            <span>Cancel</span>
+                        </div>
+                        <div class="tripcount_box_footer_button" style="margin-left:8px" @click="confirmEditMission_moreNum()">
+                            <span>Confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- confirm more num end -->
+
         <!-- confirm submit dialog start -->
         <transition name="remove-client-transition"
                     enter-active-class="animated fadeIn faster"
@@ -384,6 +428,7 @@ import axios from "axios";
 import config from "../assets/js/config";
 import secondConfirmDialog from "../components/secondConfirmDialog"
 import tipsBox from "../components/tipsBox"
+import { isNull } from 'util';
 
 export default {
     components:{
@@ -436,10 +481,51 @@ export default {
             tipsShowColor:null,
             tipsInfo:null,
             isShowTipsBox:false,
+            isShowConfirmMoreNum: false
         }
     },
 
     methods:{
+        confirmEditMission_moreNum(){
+            let tempDate = new Date().toISOString()
+                axios
+                    .post(config.server + '/tripCount/edit',{
+                        mission_id:this.mission_id,
+                        array_id:this.shippingDate._id,
+                        driver_id:this.shippingDate.driver_id,
+                        driverNameCh:this.shippingDate.driverNameCh,
+                        driverNameEn:this.shippingDate.driverNameEn,
+                        carNo:this.shippingDate.carNo,
+                        out:this.shippingDate.out,
+                        outKm:this.shippingDate.outKm,
+                        in:this.shippingDate.in,
+                        inKm:this.shippingDate.inKm,
+                        lastEditDate:tempDate
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.isShowEditDialog = false
+                            this.isShowConfirmMoreNum = false
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = 'Edit success'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        } else {
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = 'Edit failed'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+        },
+
         chooseDate(mode){
             if(mode === 'yesterday'){
                 this.whereShowCheck = 'yesterday'
@@ -501,42 +587,98 @@ export default {
         },
 
         confirmEditMission(){
-            let tempDate = new Date().toISOString()
-            axios
-                .post(config.server + '/tripCount/edit',{
-                    mission_id:this.mission_id,
-                    array_id:this.shippingDate._id,
-                    driver_id:this.shippingDate.driver_id,
-                    driverNameCh:this.shippingDate.driverNameCh,
-                    driverNameEn:this.shippingDate.driverNameEn,
-                    carNo:this.shippingDate.carNo,
-                    out:this.shippingDate.out,
-                    outKm:this.shippingDate.outKm,
-                    in:this.shippingDate.in,
-                    inKm:this.shippingDate.inKm,
-                    lastEditDate:tempDate
-                })
-                .then(doc => {
-                    if(doc.data.code === 0){
-                        this.isShowEditDialog = false
-                        this.tipsShowColor = 'green'
-                        this.tipsInfo = 'Edit success'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 2000);
-                    } else {
-                        this.tipsShowColor = 'yellow'
-                        this.tipsInfo = 'Edit failed'
-                        this.isShowTipsBox = true
-                        setTimeout(() => {
-                            this.isShowTipsBox = false
-                        }, 2000);
+            if(isNull(this.shippingDate.outKm) || isNull(this.shippingDate.inKm)){
+                let tempDate = new Date().toISOString()
+                axios
+                    .post(config.server + '/tripCount/edit',{
+                        mission_id:this.mission_id,
+                        array_id:this.shippingDate._id,
+                        driver_id:this.shippingDate.driver_id,
+                        driverNameCh:this.shippingDate.driverNameCh,
+                        driverNameEn:this.shippingDate.driverNameEn,
+                        carNo:this.shippingDate.carNo,
+                        out:this.shippingDate.out,
+                        outKm:this.shippingDate.outKm,
+                        in:this.shippingDate.in,
+                        inKm:this.shippingDate.inKm,
+                        lastEditDate:tempDate
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.isShowEditDialog = false
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = 'Edit success'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        } else {
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = 'Edit failed'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+            }else{
+                let tempBeforeNum = parseInt(this.shippingDate.outKm)
+                let tempAfterNum = parseInt(this.shippingDate.inKm)
+                if(tempBeforeNum >= tempAfterNum){
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = 'Num err,please check outKm or inKm'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 2500);
+                }else{
+                    console.log(this.shippingDate.outKm.length)
+                    console.log(this.shippingDate.inKm.length)
+                    if(this.shippingDate.outKm.length < this.shippingDate.inKm.length){
+                        this.isShowConfirmMoreNum = true
+                    }else{
+                        let tempDate = new Date().toISOString()
+                        axios
+                            .post(config.server + '/tripCount/edit',{
+                                mission_id:this.mission_id,
+                                array_id:this.shippingDate._id,
+                                driver_id:this.shippingDate.driver_id,
+                                driverNameCh:this.shippingDate.driverNameCh,
+                                driverNameEn:this.shippingDate.driverNameEn,
+                                carNo:this.shippingDate.carNo,
+                                out:this.shippingDate.out,
+                                outKm:this.shippingDate.outKm,
+                                in:this.shippingDate.in,
+                                inKm:this.shippingDate.inKm,
+                                lastEditDate:tempDate
+                            })
+                            .then(doc => {
+                                if(doc.data.code === 0){
+                                    this.isShowEditDialog = false
+                                    this.tipsShowColor = 'green'
+                                    this.tipsInfo = 'Edit success'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
+                                    }, 2000);
+                                } else {
+                                    this.tipsShowColor = 'yellow'
+                                    this.tipsInfo = 'Edit failed'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
+                                    }, 2000);
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err)
+                            })
                     }
-                })
-                .catch(err => {
-                    console.log(err)
-                })
+                }
+            }
         },
 
         confirmChoiseCar(){
@@ -1108,6 +1250,36 @@ export default {
 .spinner .rect5 {
     -webkit-animation-delay: -0.8s;
     animation-delay: -0.8s;
+}
+
+.tripcount_confirm_num_body{
+    border: 1px solid #eee;
+    margin: 8px;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.tripcount_confirm_num_body_item{
+    display: flex;
+    display: -webkit-flex;
+    height: 30px;
+    line-height: 30px;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.tripcount_confirm_num_body_item_left{
+    padding-right: 8px;
+    width: 60px;
+    text-align: right;
+}
+
+.tripcount_confirm_num_body_item_right{
+    border: 1px solid #eee;
+    width: 100px;
+    border-radius: 5px;
 }
 </style>
 

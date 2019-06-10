@@ -405,6 +405,9 @@ export default {
                     await delRepeatMethod()
                 }
                 waitDelRepeatMethod()
+                console.log('req data')
+                console.log(afterShippingDate)
+                console.log('req data')
                 axios
                     .post(config.server + '/template/createMission',{
                         clientArray: afterShippingDate,
