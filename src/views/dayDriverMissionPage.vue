@@ -898,43 +898,43 @@ export default {
 
         findMissionByID() {
             axios
-                .post(config.server + "/dsdriver/findById", {
-                    mission_id: this._id
-                })
-                .then(doc => {
-                    if (doc.data.code === 0) {
-                        this.detailDate = doc.data.doc.clientArray;
-                        //
-                        let count = 0;
-                        let notFinishMissionFlag = false;
-                        async.whilst(
-                            function() {
-                                return count < 1;
-                            },
-                            function(callback) {
-                                doc.data.doc.clientArray.some(element => {
-                                    count++;
-                                    if (!element.finisDate) {
-                                        notFinishMissionFlag = true;
-                                    }
-                                    return notFinishMissionFlag;
-                                });
-                                callback(null, notFinishMissionFlag);
-                            },
-                            (err, n) => {
-                                if (!n) {
-                                    this.changeMissionState();
+            .post(config.server + "/dsdriver/findById", {
+                mission_id: this._id
+            })
+            .then(doc => {
+                if (doc.data.code === 0) {
+                    this.detailDate = doc.data.doc.clientArray;
+                    //
+                    let count = 0;
+                    let notFinishMissionFlag = false;
+                    async.whilst(
+                        function() {
+                            return count < 1;
+                        },
+                        function(callback) {
+                            doc.data.doc.clientArray.some(element => {
+                                count++;
+                                if (!element.finisDate) {
+                                    notFinishMissionFlag = true;
                                 }
+                                return notFinishMissionFlag;
+                            });
+                            callback(null, notFinishMissionFlag);
+                        },
+                        (err, n) => {
+                            if (!n) {
+                                this.changeMissionState();
                             }
-                        );
-                        //
-                    } else {
-                        console.log(doc);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                        }
+                    );
+                    //
+                } else {
+                    console.log(doc);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            });
         },
 
         confirmFinishClientMethod() {
@@ -1212,53 +1212,53 @@ export default {
                         lrz(this.updateImage, {
                             quality: 0.5
                         })
-                            .then(res => {
-                                if (this.updateImage.size > maxSize) {
-                                    this.updateImage = res.file;
-                                }
-                                payload.append("image", this.updateImage);
-                                axios
-                                    .post(
-                                        config.server + "/fixcar/photo",
-                                        payload
-                                    )
-                                    .then(doc => {
-                                        console.log("fix car info with photo send done");
-                                        this.updateImage = "";
-                                        this.updateImagePreview = "";
-                                    })
-                                    .catch(err => {
-                                        console.log(err);
-                                    });
-                            })
-                            .catch(err => {
-                                console.log("lrz err");
-                                console.log(err);
-                            });
+                        .then(res => {
+                            if (this.updateImage.size > maxSize) {
+                                this.updateImage = res.file;
+                            }
+                            payload.append("image", this.updateImage);
+                            axios
+                                .post(
+                                    config.server + "/fixcar/photo",
+                                    payload
+                                )
+                                .then(doc => {
+                                    console.log("fix car info with photo send done");
+                                    this.updateImage = "";
+                                    this.updateImagePreview = "";
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                });
+                        })
+                        .catch(err => {
+                            console.log("lrz err");
+                            console.log(err);
+                        });
                     } else {
                         axios
-                            .post(config.server + "/fixcar/", errData)
-                            .then(doc => {
-                                console.log("fix car info send done");
-                            })
-                            .catch(err => {
-                                console.log(err);
-                            });
+                        .post(config.server + "/fixcar/", errData)
+                        .then(doc => {
+                            console.log("fix car info send done");
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
                     }
                 }
                 this.showCheckCarBox = false;
                 axios
-                    .post(config.server + "/checkcar/day", tempData)
-                    .then(doc => {
-                        if (doc.data.code === 0) {
-                            this.getDayShiftDriverMission();
-                        } else {
-                            console.log(doc);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                .post(config.server + "/checkcar/day", tempData)
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.getDayShiftDriverMission();
+                    } else {
+                        console.log(doc);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             }
         },
 
@@ -1267,9 +1267,6 @@ export default {
         },
 
         startMission(missionInfo) {
-            console.log('#######')
-            console.log(missionInfo)
-            console.log('#######')
             this.tempClientArray = missionInfo.clientArray
             this._id = missionInfo._id;
             if (!missionInfo.goTime) {

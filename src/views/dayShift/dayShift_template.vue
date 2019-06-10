@@ -273,6 +273,7 @@
 import axios from "axios";
 import config from "../../assets/js/config";
 import tipsBox from "../../components/tipsBox"
+import { async, Promise } from 'q';
 
 export default {
     components:{
@@ -381,9 +382,32 @@ export default {
                     await changeQueueMethod()
                 }
                 waitQueueMethod()
+                let afterShippingDate = []
+                async function delRepeatMethod(){
+                    return new Promise(() => {
+                        shippingDate.forEach(before => {
+                            let flag = true
+                            if(afterShippingDate.length === 0){
+                                afterShippingDate.some(after => {
+                                    if(before.clientName === after.clientName){
+                                        flag = false
+                                        return true
+                                    }
+                                })
+                            }
+                            if(flag){
+                                afterShippingDate.push(before)
+                            }
+                        });
+                    })
+                }
+                async function waitDelRepeatMethod(){
+                    await delRepeatMethod()
+                }
+                waitDelRepeatMethod()
                 axios
                     .post(config.server + '/template/createMission',{
-                        clientArray: shippingDate,
+                        clientArray: afterShippingDate,
                         driverName: this.choiseDriver,
                         driver_id: this.choiseDriver_id,
                         date: new Date().toISOString()
@@ -442,7 +466,32 @@ export default {
                             .then(doc => {
                                 if(doc.data.status === 0){
                                     if(doc.data.payload.length != 0){
-                                        doc.data.payload.forEach(item => {
+                                        //面食数据去重 start
+                                        let finalClientArray = []
+                                        async function delDuplicate(){
+                                            return new Promise (()=> {
+                                                let needPushFlag = true
+                                                doc.data.payload.map(item => {
+                                                    needPushFlag = true
+                                                    if(finalClientArray.length != 0){
+                                                        finalClientArray.some(element => {
+                                                            if(element._customer._customerProfile.companyName === item._customer._customerProfile.companyName){
+                                                                needPushFlag = false
+                                                            }
+                                                        });
+                                                    }
+                                                    if(needPushFlag){
+                                                        finalClientArray.push(item)
+                                                    }
+                                                })
+                                            })
+                                        }
+                                        async function waitDelDuplicate(){
+                                            await delDuplicate()
+                                        }
+                                        waitDelDuplicate()
+                                        //面食数据去重 end
+                                        finalClientArray.forEach(item => {
                                             let matchErr = true
                                             this.tempArray.forEach(templateInfo => {
                                                 if(templateInfo.clientName === item._customer._customerProfile.companyName){
@@ -455,6 +504,13 @@ export default {
                                                 matchErr: matchErr
                                             })
                                         })
+                                    }else{
+                                        this.tipsShowColor = 'yellow'
+                                        this.tipsInfo = '获取的客服数据异常'
+                                        this.isShowTipsBox = true
+                                        setTimeout(() => {
+                                            this.isShowTipsBox = false
+                                        }, 2000);
                                     }
                                 }else{
                                     this.tipsShowColor = 'yellow'
@@ -480,7 +536,6 @@ export default {
                                 endDate: endDate
                             })
                             .then(doc => {
-                                console.log(doc)
                                 if(doc.data.code === 0){
                                     if(doc.data.doc.length != 0){
                                         doc.data.doc.forEach(item => {
@@ -560,13 +615,11 @@ export default {
         },
 
         choiseDriverMethod(item){
-            console.log(item)
             this.choiseDriver = item.dirvername
             this.choiseDriver_id = item._id
         },
 
         useTemplate(item){
-            console.log(item)
             this.templateMatchMode = item.matchBun
             this.templateMatch14 = item.match14
             this.templateMatch19 = item.match19
@@ -595,7 +648,6 @@ export default {
         },
 
         delTemplate(item){
-            console.log(item)
             this.delInfo = item
             this.isShowDelDialog = true
         },
