@@ -326,8 +326,8 @@
                         <div class="day_match_box_body_item">
                             <div class="day_match_box_body_left">
                                 <label for="day_match_bun">
-                                    <span v-if="match14" style="color: green">匹配14车数据</span>
-                                    <span v-else style="color: rgb(255, 152, 0)">匹配14车数据</span>
+                                    <span v-if="match14" style="color: green">匹配15车数据</span>
+                                    <span v-else style="color: rgb(255, 152, 0)">匹配15车数据</span>
                                 </label>
                             </div>
                             <div class="day_match_box_body_right">
@@ -337,8 +337,8 @@
                         <div class="day_match_box_body_item">
                             <div class="day_match_box_body_left">
                                 <label for="day_match_bun">
-                                    <span v-if="match19" style="color: green">匹配20车数据</span>
-                                    <span v-else style="color: rgb(255, 152, 0)">匹配20车数据</span>
+                                    <span v-if="match19" style="color: green">匹配21车数据</span>
+                                    <span v-else style="color: rgb(255, 152, 0)">匹配21车数据</span>
                                 </label>
                             </div>
                             <div class="day_match_box_body_right">
