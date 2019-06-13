@@ -1,7 +1,9 @@
 <template>
     <div id="dayshifthome">
         <div class="dshome_title">
-            <div class="dshome_title_left"></div>
+            <div class="dshome_title_left" @click="goToSearchPage()">
+                <div class="icon_search"></div>
+            </div>
             <div class="dshome_title_center">   
                 <span v-if="isShowMissionPoolPage">任务池</span>
                 <span v-else>白班车次</span>
@@ -126,6 +128,10 @@ export default {
     },
 
     methods: {
+        goToSearchPage() {
+            this.$router.push("/search");
+        },
+
         changeShowWindowMethod(){
             if(this.$route.path === '/dayshifthome/pool'){
                 this.isShowMissionPoolPage = false
@@ -224,6 +230,9 @@ export default {
 
 .dshome_title_left{
     width: 80px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
 }
 
 .dshome_title_center{
@@ -250,6 +259,20 @@ export default {
     -webkit-mask-position: center;
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
+}
+
+.icon_search {
+    background: #fff;
+    mask-image: url(../../public/icons/baseline-search-36px.svg);
+    -webkit-mask-image: url(../../public/icons/baseline-search-36px.svg);
+    width: 40px;
+    height: 40px;
+    mask-size: 32px;
+    -webkit-mask-size: 32px;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
 }
 
 .first_notic_back{

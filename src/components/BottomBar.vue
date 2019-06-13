@@ -25,21 +25,11 @@
                         <span v-if="lang === 'ch'" class="md-bottom-bar-label">任务</span>
                         <span v-else class="md-bottom-bar-label">MISSION</span>
                     </md-bottom-bar-item>
-                    <!-- <md-bottom-bar-item v-if="driverRole === 'dayshiftLeader'"
-                                        id="bottom-bar-item-home"
-                                        @click="goDayMissionPool">
-                        <div class="md-bottom-bar-icon baseline_home"
+                    <md-bottom-bar-item id="bottom-bar-item-report" @click="goReport">
+                        <div class="md-bottom-bar-icon assessment_outline"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
-                        <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
-                        <i class="badge"
-                           v-if="newPosts"
-                           style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
-                    </md-bottom-bar-item> -->
-                    <md-bottom-bar-item id="bottom-bar-item-search"
-                                        @click="gosearch">
-                        <div class="md-bottom-bar-icon search_white"
-                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
-                        <span class="md-bottom-bar-label">{{language.bottomBar.search}}</span>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">报表</span>
+                        <span v-else class="md-bottom-bar-label">REPORT</span>
                     </md-bottom-bar-item>
                     <md-bottom-bar-item id="bottom-bar-item-engine-oil" @click="goNegineOil">
                         <div class="md-bottom-bar-icon icon_engine_oil"
@@ -47,12 +37,6 @@
                         <span v-if="lang === 'ch'" class="md-bottom-bar-label">机油</span>
                         <span v-else class="md-bottom-bar-label">OIL</span>
                     </md-bottom-bar-item>
-                    <!-- <md-bottom-bar-item id="bottom-bar-item-notice" @click="goNotice">
-                        <div class="md-bottom-bar-icon notification_outline"
-                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
-                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">通知</span>
-                        <span v-else class="md-bottom-bar-label">NOTICE</span>
-                    </md-bottom-bar-item> -->
                     <md-bottom-bar-item id="bottom-bar-item-favorites"
                                         @click="gosetup">
                         <div class="md-bottom-bar-icon settings_white"
@@ -63,20 +47,8 @@
                 <!-- 白班主管  -->
 
                 <!-- 白班 -->
-                <md-bottom-bar v-else-if="driverRole === 'dayshift'"
-                               class="md-accent"
-                               md-type="shift">
-                    <!-- <md-bottom-bar-item id="bottom-bar-item-home"
-                                        @click="goDayHome">
-                        <div class="md-bottom-bar-icon baseline_home"
-                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
-                        <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
-                        <i class="badge"
-                           v-if="newPosts"
-                           style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
-                    </md-bottom-bar-item> -->
-                    <md-bottom-bar-item id="bottom-bar-item-mission"
-                                        @click="goDayDriverMissionPage">
+                <md-bottom-bar v-else-if="driverRole === 'dayshift'" class="md-accent" md-type="shift">
+                    <md-bottom-bar-item id="bottom-bar-item-mission" @click="goDayDriverMissionPage">
                         <div class="md-bottom-bar-icon baseline_home"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span v-if="lang === 'ch'" class="md-bottom-bar-label">任务</span>
@@ -175,7 +147,7 @@
                         <div class="md-bottom-bar-icon assessment_outline"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span v-if="lang === 'ch'" class="md-bottom-bar-label">报表</span>
-                        <span v-else class="md-bottom-bar-label">NOTICE</span>
+                        <span v-else class="md-bottom-bar-label">REPORT</span>
                     </md-bottom-bar-item>
                     <md-bottom-bar-item id="bottom-bar-item-engine-oil" @click="goNegineOil">
                         <div class="md-bottom-bar-icon icon_engine_oil"
@@ -417,13 +389,6 @@
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.find}}</span>
                     </md-bottom-bar-item>
-                    <md-bottom-bar-item v-if="driverRole === 'dayshift'"
-                                        id="bottom-bar-item-search"
-                                        @click="gosearch">
-                        <div class="md-bottom-bar-icon search_white"
-                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
-                        <span class="md-bottom-bar-label">{{language.bottomBar.search}}</span>
-                    </md-bottom-bar-item>
                     
                     <md-bottom-bar-item v-if="driverRole === 'checker' || driverName === '钟兆雷'"
                                         id="bottom-bar-item-check"
@@ -501,9 +466,6 @@ export default {
         },
         gomission() {
             this.$router.push("/history");
-        },
-        gosearch() {
-            this.$router.push("/search");
         },
         goNegineOil() {
             this.$router.push("/engineoil");

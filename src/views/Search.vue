@@ -1,7 +1,9 @@
 <template>
     <div id="searchpage">
         <div class="search-title">
-            <div class="search-title-left"></div>
+            <div class="search-title-left" @click="goBackMethod()">
+                <img src="../../public/icons/left.png">
+            </div>
             <div class="search-title-center">
                 <span>{{language.searchPage.searchClient}}</span>
             </div>
@@ -266,6 +268,10 @@ export default {
     },
 
     methods:{
+        goBackMethod(){
+            this.$router.push("/dayshifthome/pool");
+        },
+
         goTemplateMetodh(){
             this.$router.push("/template");
         },
@@ -610,6 +616,16 @@ export default {
 
 .search-title-left{
     width: 80px;
+    height: 40px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-title-left img{
+    width: 28px;
+    height: 28px;
 }
 
 .search-title-center span{
