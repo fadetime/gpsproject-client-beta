@@ -160,6 +160,44 @@
                 </md-bottom-bar>
                 <!-- 损坏框申报 -->
 
+                <!-- 夜班主管 -->
+                <md-bottom-bar v-else-if="driverRole === 'nightShiftLeader'" class="md-accent" md-type="shift">
+                    <md-bottom-bar-item id="bottom-bar-item-home"
+                                        @click="gohome">
+                        <div class="md-bottom-bar-icon baseline_home"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.home}}</span>
+                        <i class="badge"
+                           v-if="newPosts"
+                           style="width:24px;height:24px;font-size:14px">{{ newPosts }}</i>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-report" @click="goReport">
+                        <div class="md-bottom-bar-icon assessment_outline"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">报表</span>
+                        <span v-else class="md-bottom-bar-label">NOTICE</span>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-engine-oil" @click="goNegineOil">
+                        <div class="md-bottom-bar-icon icon_engine_oil"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">机油</span>
+                        <span v-else class="md-bottom-bar-label">OIL</span>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-mission" @click="goNotice">
+                        <div class="md-bottom-bar-icon notification_outline"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">通知</span>
+                        <span v-else class="md-bottom-bar-label">NOTICE</span>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-favorites"
+                                        @click="gosetup">
+                        <div class="md-bottom-bar-icon settings_white"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.setup}}</span>
+                    </md-bottom-bar-item>
+                </md-bottom-bar>
+                <!-- 夜班主管 -->
+
                 <!-- leader -->
                 <md-bottom-bar v-else-if="driverRole === 'leader'"
                                class="md-accent"
