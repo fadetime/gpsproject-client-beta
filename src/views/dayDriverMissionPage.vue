@@ -1825,6 +1825,8 @@ export default {
     padding: 8px;
     overflow-x: hidden;
     overflow-y: auto;
+    height: 300px;
+
 }
 
 .ddm_preview_item{
@@ -1843,7 +1845,7 @@ export default {
 }
 
 .ddm_preview_item_right{
-    width: 42px;
+    width: 44px;
     text-align: left;
 }
 </style>
