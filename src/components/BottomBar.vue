@@ -287,12 +287,12 @@
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span class="md-bottom-bar-label">{{language.bottomBar.sms}}</span>
                     </md-bottom-bar-item>
-                    <!-- <md-bottom-bar-item id="bottom-bar-item-engine-oil" @click="goNegineOil">
+                    <md-bottom-bar-item id="bottom-bar-item-engine-oil" @click="goNegineOil">
                         <div class="md-bottom-bar-icon icon_engine_oil"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
                         <span v-if="lang === 'ch'" class="md-bottom-bar-label">机油</span>
                         <span v-else class="md-bottom-bar-label">OIL</span>
-                    </md-bottom-bar-item> -->
+                    </md-bottom-bar-item>
                     <md-bottom-bar-item id="bottom-bar-item-mission" @click="goNotice">
                         <div class="md-bottom-bar-icon notification_outline"
                              style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>

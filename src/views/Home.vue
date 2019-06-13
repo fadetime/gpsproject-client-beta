@@ -344,7 +344,7 @@
                                 <span>{{language.homePage.box}}</span>
                             </div>
                             <div class="checkcar-body-center-item-right">
-                                <input type="number" style="width:160%;margin-left:10px;" v-model="boxNumAgain">
+                                <input type="number" style="width:160%;margin-left:10px;text-align: center" v-model="boxNumAgain">
                             </div>
                         </div>
                         <div class="checkcar-body-center-item">
@@ -364,9 +364,9 @@
                         </div>
                     </div>
                     <div>
-                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="confirmCheckAgain">
-                            {{language.homePage.confirmCheck}}
-                        </md-button>
+                        <div class="driver_button_white" @click="confirmCheckAgain()">
+                            <span>{{language.homePage.confirmCheck}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -400,15 +400,14 @@
                                 <div class="previewclient-box-body-body-right">
                                     <span v-if="lang === 'en'">{{item.clientbnameEN}}</span>
                                     <span v-else>{{item.clientbname}}</span>
-                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <md-button class="md-raised" style="margin:0;width:100%;box-shadow: 0 -3px 1px -2px rgba(0,0,0,.2), 0 -2px 2px 0 rgba(0,0,0,.14), 0 -1px 5px 0 rgba(0,0,0,.12);" @click="closePreviewMethod">
-                            {{language.homePage.close}}
-                        </md-button>
+                        <div class="driver_button_white" @click="closePreviewMethod()">
+                            <span>{{language.homePage.close}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1289,10 +1288,7 @@ export default {
             this.carNum = item.missioncar
             if (!item.carCheckFirst) {
                 this.showCheckCarBox = true
-            } else if (
-                item.missionclient.length == this.finishNumber[index] &&
-                !item.carCheckFinish
-            ) {
+            } else if (item.missionclient.length == this.finishNumber[index] && !item.complete){
                 this.showCheckAgainBox = true
             } else {
                 this.$router.push('/detailpage')
@@ -1564,15 +1560,16 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
-    width: 80%;
+    overflow: hidden;
+    border-radius: 10px;
 }
 
 .checkcar-body-top {
     background: #d74342;
     color: #fff;
     font-size: 16px;
-    height: 40px;
-    line-height: 40px;
+    height: 30px;
+    line-height: 30px;
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
@@ -1664,8 +1661,12 @@ export default {
 }
 
 .previewclient-box-body{
-    margin: 0 10px;
-    margin-top: 10px;
+    margin: 8px;
+    padding: 8px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
 .previewclient-box-body-title{
@@ -1673,6 +1674,8 @@ export default {
     display: -webkit-flex;
     border-bottom: 1px solid #e0e0e0;
     font-size: 16px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .previewclient-box-body-title-left{
@@ -1687,7 +1690,8 @@ export default {
 }
 
 .previewclient-box-body-body{
-    height: 377px;
+    height: 360px;
+    overflow-x: hidden;
     overflow-y:scroll;
 }
 
@@ -2013,5 +2017,15 @@ export default {
     width: 100px;
     line-height: 30px;
     border-radius: 10px;
+}
+
+.driver_button_white{
+    border: 1px solid #eee;
+    border-radius: 10px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    margin: 0 8px 8px 8px;
 }
 </style>
