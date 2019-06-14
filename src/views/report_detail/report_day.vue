@@ -149,7 +149,7 @@
                     </div>
                 </div>
                 <div style="height:40px;"></div>
-                <div class="daydetail_back_body">
+                <div class="daydetail_back_body" :style="autoHeight">
                     <div class="daydetail_back_body_frame" v-for="(item,index) in tempDayDetail" :key="index">
                         <div class="daydetail_back_body_frame_top">
                             <span>{{item.clientName}}</span>
@@ -229,13 +229,17 @@ import axios from "axios";
 import config from "../../assets/js/config";
 import tipsBox from "../../components/tipsBox"
 import monthPicker from "../../components/monthPicker"
-import { async, Promise } from 'q';
-import { type } from 'os';
 
 export default {
     components:{
         monthPicker,
         tipsBox
+    },
+
+    mounted(){
+        let screenHeight = document.documentElement.clientHeight
+        let lindBoxHeight = screenHeight - 40 - 56 - 1
+        this.autoHeight = 'height:' + lindBoxHeight + 'px'
     },
 
     data(){
@@ -249,7 +253,8 @@ export default {
             thisMonthInfo: null,
             tempDayDetail: [],
             isShowDayDetail: false,
-            detailType: null
+            detailType: null,
+            autoHeight: ''
         }
     },
 
@@ -495,6 +500,11 @@ export default {
     display: flex;
     display: -webkit-flex;
     justify-content: center;
+}
+
+.daydetail_back_body{
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .daydetail_back_body_frame{
