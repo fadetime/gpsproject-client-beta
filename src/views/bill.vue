@@ -76,7 +76,7 @@
                     enter-active-class="animated fadeIn faster"
                     leave-active-class="animated fadeOut faster">
             <div v-if="isShowBillBox"
-                 class="billbox-back"></div>
+                 class="billboxbillbox-back"></div>
         </transition>
         <transition name="remove-client-transition"
                     enter-active-class="animated zoomIn faster"
@@ -731,6 +731,7 @@ export default {
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     padding: 10px 0;
     position: relative;
+    border-radius: 10px;
 }
 
 .billbox-box-body-top-title {
