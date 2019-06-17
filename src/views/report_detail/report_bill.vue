@@ -418,26 +418,31 @@
         </transition>
         <!-- mission finish box end -->
 
-        <!-- mission finish box start -->
+        <!-- check again box start -->
         <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
-            <div v-if="isShowConfirmBox" class="billbox_back"></div>
+            <div v-if="isShowStartConfirmBox" class="billbox_back" style="z-index: 27"></div>
         </transition>
         <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
-            <div v-if="isShowConfirmBox" class="billbox_front" @click.self.prevent="isShowConfirmBox = false">
+            <div v-if="isShowStartConfirmBox" class="billbox_front" style="z-index: 28" @click.self.prevent="isShowStartConfirmBox = false">
                 <div class="billbox-box">
                     <div class="billbox-box-title">
-                        <span v-if="lang === 'ch'">结束任务</span>
-                        <span v-else>Finish Mission</span>
+                        <span v-if="lang === 'ch'">账单数量确认</span>
+                        <span v-else>Number of bill confirm</span>
                     </div>
-                    <div class="billbox-box-body">
-                        123
+                    <div class="report_bill_box_body">
+                        <div class="report_bill_box_body_top">
+                            <span>请确认数字</span>
+                        </div>
+                        <div class="report_bill_box_body_bottom">
+                            <span>{{billNum}}</span>
+                        </div>
                     </div>
                     <div class="billbox-box-bottom">
-                        <div class="white_button" @click="isShowConfirmBox = false">
+                        <div class="white_button" @click="isShowStartConfirmBox = false">
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>chancel</span>
                         </div>
-                        <div class="white_button" style="margin-left: 8px">
+                        <div class="white_button" style="margin-left: 8px" @click="checkAgainStartMethod()">
                             <span v-if="lang === 'ch'">确定</span>
                             <span v-else>confirm</span>
                         </div>
@@ -445,6 +450,42 @@
                 </div>
             </div>
         </transition>
+        <!-- check again box end -->
+
+        <!-- check end box start -->
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowEndConfirmBox" class="billbox_back" style="z-index: 27"></div>
+        </transition>
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowEndConfirmBox" class="billbox_front" style="z-index: 28" @click.self.prevent="isShowEndConfirmBox = false">
+                <div class="billbox-box">
+                    <div class="billbox-box-title">
+                        <span v-if="lang === 'ch'">剩余数量确认</span>
+                        <span v-else>Number of bill confirm</span>
+                    </div>
+                    <div class="report_bill_box_body">
+                        <div class="report_bill_box_body_top">
+                            <span>请确认数字</span>
+                        </div>
+                        <div class="report_bill_box_body_bottom">
+                            <span>{{endNum}}</span>
+                        </div>
+                    </div>
+                    <div class="billbox-box-bottom">
+                        <div class="white_button" @click="isShowEndConfirmBox = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>chancel</span>
+                        </div>
+                        <div class="white_button" style="margin-left: 8px" @click="checkEndBillMethod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- check end box end -->
+
         <!-- loading animation start -->
         <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="isShowLoadingAnimation" class="tripcount_loading_back"></div>
@@ -511,12 +552,16 @@ export default {
             isShowLoadingAnimation: false,
             billCount: null,
             isShowBillFinishBox: false,
-            isShowConfirmBox: false
+            isShowConfirmBox: false,
+            endNum: null,
+            isShowStartConfirmBox: false,
+            isShowEndConfirmBox: false
         }
     },
 
     methods:{
-        billMissionFinishMtehod() {
+        checkEndBillMethod(){
+            console.log('1')
             this.isShowLoadingAnimation = true
             let date = new Date().toISOString();
             axios
@@ -528,7 +573,8 @@ export default {
                 })
                 .then(doc => {
                     this.isShowLoadingAnimation = false
-                    this.isShowBillFinishBox = false;
+                    this.isShowBillFinishBox = false
+                    this.isShowEndConfirmBox = false
                     if (doc.data.code === 0) {
                         this.showError = true;
                         this.errorInfo = "账单记录成功";
@@ -550,8 +596,64 @@ export default {
                 });
         },
 
+        checkAgainStartMethod(){
+            this.isShowLoadingAnimation = true
+            let tempDate = new Date().toISOString();
+            let tempStartNum
+            if(this.oldNum){
+                tempStartNum = parseInt(this.billNum) + parseInt(this.oldNum)
+            }else{
+                tempStartNum = this.billNum
+            }
+            axios
+                .post(config.server + "/bill/create", {
+                    date: tempDate,
+                    startNum: tempStartNum,
+                    driverName: this.driverName
+                })
+                .then(doc => {
+                    this.isShowLoadingAnimation = false
+                    if (doc.data.code === 0) {
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = '账单记录成功'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false;
+                        }, 1500);
+                        this.isShowBillBox = false;
+                        this.isShowStartConfirmBox = false
+                        this.findBillByUserMethod()
+                    } else {
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '账单记录时发生错误'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false;
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    this.isShowLoadingAnimation = false
+                    console.log(err);
+                });
+        },
+
+        billMissionFinishMtehod() {
+            if(this.endNum === null){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '数字不能为空'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 2000);
+            }else{
+                this.isShowEndConfirmBox = true
+            }
+        },
+
         openBillBoxMethod() {
             this.isShowBillFinishBox = true;
+            this.endNum = null
         },
 
         findBillByUserMethod() {
@@ -588,44 +690,7 @@ export default {
                     this.isShowTipsBox = false;
                 }, 2000);
             } else {
-                this.isShowLoadingAnimation = true
-                let tempDate = new Date().toISOString();
-                let tempStartNum
-                if(this.oldNum){
-                    tempStartNum = parseInt(this.billNum) + parseInt(this.oldNum)
-                }else{
-                    tempStartNum = this.billNum
-                }
-                axios
-                    .post(config.server + "/bill/create", {
-                        date: tempDate,
-                        startNum: tempStartNum,
-                        driverName: this.driverName
-                    })
-                    .then(doc => {
-                        this.isShowLoadingAnimation = false
-                        if (doc.data.code === 0) {
-                            this.tipsShowColor = 'green'
-                            this.tipsInfo = '账单记录成功'
-                            this.isShowTipsBox = true
-                            setTimeout(() => {
-                                this.isShowTipsBox = false;
-                            }, 1500);
-                            this.isShowBillBox = false;
-                            this.findBillByUserMethod()
-                        } else {
-                            this.tipsShowColor = 'yellow'
-                            this.tipsInfo = '账单记录时发生错误'
-                            this.isShowTipsBox = true
-                            setTimeout(() => {
-                                this.isShowTipsBox = false;
-                            }, 2000);
-                        }
-                    })
-                    .catch(err => {
-                        this.isShowLoadingAnimation = false
-                        console.log(err);
-                    });
+                this.isShowStartConfirmBox = true
             }
         },
 
@@ -1191,5 +1256,26 @@ export default {
     height: 30px;
     line-height: 30px;
     border-radius: 5px;
+}
+
+.report_bill_box_body{
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin: 8px;
+    padding: 12px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.report_bill_box_body_top{
+    border-bottom: 1px solid #eee;
+    height: 30px;
+    line-height: 30px;
+}
+
+.report_bill_box_body_bottom{
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
 }
 </style>
