@@ -196,6 +196,74 @@
         </transition>
         <!-- mission finish box end -->
 
+        <!-- check again box start -->
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowStartConfirmBox" class="billbox_back" style="z-index: 27"></div>
+        </transition>
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowStartConfirmBox" class="billbox_front" style="z-index: 28" @click.self.prevent="isShowStartConfirmBox = false">
+                <div class="billbox-box">
+                    <div class="billbox-box-title">
+                        <span v-if="lang === 'ch'">账单数量确认</span>
+                        <span v-else>Number of bill confirm</span>
+                    </div>
+                    <div class="report_bill_box_body">
+                        <div class="report_bill_box_body_top">
+                            <span>请确认数字</span>
+                        </div>
+                        <div class="report_bill_box_body_bottom">
+                            <span>{{billNum}}</span>
+                        </div>
+                    </div>
+                    <div class="billbox-box-bottom">
+                        <div class="white_button" @click="isShowStartConfirmBox = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>chancel</span>
+                        </div>
+                        <div class="white_button" style="margin-left: 8px" @click="checkAgainStartMethod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- check again box end -->
+
+        <!-- check end box start -->
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowEndConfirmBox" class="billbox_back" style="z-index: 27"></div>
+        </transition>
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowEndConfirmBox" class="billbox_front" style="z-index: 28" @click.self.prevent="isShowEndConfirmBox = false">
+                <div class="billbox-box">
+                    <div class="billbox-box-title">
+                        <span v-if="lang === 'ch'">剩余数量确认</span>
+                        <span v-else>Number of bill confirm</span>
+                    </div>
+                    <div class="report_bill_box_body">
+                        <div class="report_bill_box_body_top">
+                            <span>请确认数字</span>
+                        </div>
+                        <div class="report_bill_box_body_bottom">
+                            <span>{{endNum}}</span>
+                        </div>
+                    </div>
+                    <div class="billbox-box-bottom">
+                        <div class="white_button" @click="isShowEndConfirmBox = false">
+                            <span v-if="lang === 'ch'">取消</span>
+                            <span v-else>chancel</span>
+                        </div>
+                        <div class="white_button" style="margin-left: 8px" @click="checkEndBillMethod()">
+                            <span v-if="lang === 'ch'">确定</span>
+                            <span v-else>confirm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- check end box end -->
+
         <!-- mission remove box start -->
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -333,6 +401,7 @@
                 <span>{{errorInfo}}</span>
             </div>
         </transition>
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- 操作提示 -->
     </div>
 </template>
@@ -340,18 +409,25 @@
 <script>
 import axios from "axios";
 import config from "../assets/js/config";
+import tipsBox from "../components/tipsBox"
 
 export default {
+    components:{
+        tipsBox
+    },
+
     mounted() {
         this.driverName = localStorage.getItem("drivername");
         this.findBillByDriverMethod();
         this.findFirstPageNotice()
     },
+
     computed: {
         lang() {
             return this.$store.state.lang;
         }
     },
+
     data() {
         return {
             isShowBillBox: false,
@@ -372,7 +448,12 @@ export default {
             firstPageText:null,
             firstPageTextEN:null,
             firstPageImage: null,
-            firstPageImageEN: null
+            firstPageImageEN: null,
+            isShowEndConfirmBox: false,
+            tipsShowColor: null,
+            tipsInfo: null,
+            isShowTipsBox: null,
+            isShowStartConfirmBox: false
         };
     },
     methods: {
@@ -451,7 +532,7 @@ export default {
             }
         },
 
-        billMissionFinishMtehod() {
+        checkEndBillMethod(){
             let date = new Date().toISOString();
             axios
                 .post(config.server + "/bill/edit", {
@@ -463,6 +544,7 @@ export default {
                 .then(doc => {
                     this.isShowBillFinishBox = false;
                     if (doc.data.code === 0) {
+                        this.isShowEndConfirmBox = false
                         this.showError = true;
                         this.errorInfo = "账单记录成功";
                         setTimeout(() => {
@@ -480,6 +562,19 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
+        },
+
+        billMissionFinishMtehod() {
+            if(this.endNum === null){
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请输入剩余数量'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 2000);
+            }else{
+                this.isShowEndConfirmBox = true
+            }
         },
 
         openBillBoxMethod() {
@@ -513,6 +608,44 @@ export default {
                     console.log(err);
                 });
         },
+
+        checkAgainStartMethod(){
+            let tempDate = new Date().toISOString();
+            let tempStartNum
+            if(this.oldNum){
+                tempStartNum = parseInt(this.billNum) + parseInt(this.oldNum)
+            }else{
+                tempStartNum = this.billNum
+            }
+            axios
+                .post(config.server + "/bill/create", {
+                    date: tempDate,
+                    startNum: tempStartNum,
+                    driverName: this.driverName
+                })
+                .then(doc => {
+                    if (doc.data.code === 0) {
+                        this.isShowStartConfirmBox = false
+                        this.showError = true;
+                        this.errorInfo = "账单记录成功";
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                        this.isShowBillBox = false;
+                        this.findBillByDriverMethod();
+                    } else {
+                        this.showError = true;
+                        this.errorInfo = "出现错误，请联系管理员";
+                        setTimeout(() => {
+                            this.showError = false;
+                        }, 3000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
+
         billMissionMtehod() {
             if (this.billNum === null) {
                 this.showError = true;
@@ -521,39 +654,7 @@ export default {
                     this.showError = false;
                 }, 3000);
             } else {
-                let tempDate = new Date().toISOString();
-                let tempStartNum
-                if(this.oldNum){
-                    tempStartNum = parseInt(this.billNum) + parseInt(this.oldNum)
-                }else{
-                    tempStartNum = this.billNum
-                }
-                axios
-                    .post(config.server + "/bill/create", {
-                        date: tempDate,
-                        startNum: tempStartNum,
-                        driverName: this.driverName
-                    })
-                    .then(doc => {
-                        if (doc.data.code === 0) {
-                            this.showError = true;
-                            this.errorInfo = "账单记录成功";
-                            setTimeout(() => {
-                                this.showError = false;
-                            }, 3000);
-                            this.isShowBillBox = false;
-                            this.findBillByDriverMethod();
-                        } else {
-                            this.showError = true;
-                            this.errorInfo = "出现错误，请联系管理员";
-                            setTimeout(() => {
-                                this.showError = false;
-                            }, 3000);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+                this.isShowStartConfirmBox = true
             }
         },
         openBillBoxMetho() {
@@ -688,6 +789,8 @@ export default {
     box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
         0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     background: #fff;
+    overflow: hidden;
+    border-radius: 10px;
 }
 
 .billbody-box-item {
@@ -908,5 +1011,70 @@ export default {
     display: -webkit-flex;
     justify-content: center;
     align-items: center;
+}
+
+.billbox_back {
+    position: fixed;
+    z-index: 25;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.billbox_front {
+    position: fixed;
+    z-index: 26;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.billbox-box-title {
+    background: #d74342;
+    color: #fff;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.white_button{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #eee;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 80px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+.report_bill_box_body{
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin: 8px;
+    padding: 12px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.report_bill_box_body_top{
+    border-bottom: 1px solid #eee;
+    height: 30px;
+    line-height: 30px;
+}
+
+.report_bill_box_body_bottom{
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
 }
 </style>

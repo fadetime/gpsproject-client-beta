@@ -67,7 +67,6 @@
                     </div>
                 </div>
             </div>
-        <!-- 1 -->
             
             <div v-for="(item,index) in billInfoArray" :key="index" class="report_bill_body_item" @click="isShowBillDetailBoxMethod(item)">
                 <div class="report_bill_body_item_left">
