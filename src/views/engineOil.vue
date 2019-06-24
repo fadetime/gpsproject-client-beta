@@ -168,7 +168,31 @@
             </div>
         </transition>
         <!-- confirm box end -->
-
+        <!-- find error box start -->
+        <transition name="carwash-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowErrorBox" class="confirmbox_back" ></div>
+        </transition>
+        <transition name="carwash-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowErrorBox" class="confirmbox_front" @click.self.prevent="isShowErrorBox = false">
+                <div class="engine_error_box">
+                    <div class="engine_error_box_title">
+                        <span>信息确认</span>
+                    </div>
+                    <div class="engine_error_box_body">
+                        <span>输入的机油数比原有机油数多一位数字，是否确认？</span>
+                    </div>
+                    <div class="confirmbox_box_foot">
+                        <div class="confirmbox_box_foot_bottom" @click="closeErrorBoxMethod()">
+                            <span>取消</span>
+                        </div>
+                        <div class="confirmbox_box_foot_bottom" @click="isShowConfirmBox = true,isShowErrorBox= false">
+                            <span>确定</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- find error box end -->
         <!-- 操作提示 -->
         <transition name="tips-classes-transition" enter-active-class="animated bounceInDown" leave-active-class="animated bounceOutUp">
             <div class="errinfo" v-if="showError" @click="showError = false">
@@ -176,21 +200,27 @@
             </div>
         </transition>
         <!-- 操作提示 -->
+        <!-- tips dialog start -->
+        <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
+        <!-- tips dialog end -->
     </div>
 </template>
 
 <script>
 import axios from "axios";
 import config from "../assets/js/config";
+import tipsBox from "../components/tipsBox"
 
 export default {
+    components:{
+        tipsBox
+    },
     mounted(){
         this.screenHeight = document.documentElement.clientHeight
         let lindBoxHeight = this.screenHeight - 40 - 60 - 100
         this.$refs.engine_oil_body.style.height = lindBoxHeight + 'px'
         this.getSettingMethod()
     },
-
     data() {
         return {
             screenHeight:0,
@@ -206,11 +236,18 @@ export default {
             errorInfo:null,
             inputNumber:null,
             lockMode:false,
-            margin0_8:' margin0'
+            margin0_8:' margin0',
+            tipsShowColor: null,
+            tipsInfo: null,
+            isShowTipsBox: null,
+            isShowErrorBox: true
         }
     },
 
     methods:{
+        closeErrorBoxMethod(){
+            this.isShowErrorBox = false
+        },
         changeOilNumberMethod(){
             axios
                 .post(config.server + '/car/manChangeOil',{
@@ -218,7 +255,6 @@ export default {
                     lastOilKelometer:this.inputNumber
                 })
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.isShowConfirmBox = false
                         this.isShowCarDetailDialog = false
@@ -243,11 +279,27 @@ export default {
 
         openConfirmBoxMethod(){
             if(this.inputNumber === null){
-                this.errorInfo = '请输入数字'
-                this.showError = true
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请输入数字'
+                this.isShowTipsBox = true
                 setTimeout(() => {
-                    this.showError = false
+                    this.isShowTipsBox = false
                 }, 2000);
+            }else if(this.tempShipping.lastOilKelometer != null){
+                let oldString = this.tempShipping.lastOilKelometer.toString()
+                let newString = this.inputNumber.toString()
+                if(this.inputNumber < this.tempShipping.lastOilKelometer){
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '机油数小于原有数值'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 2000);
+                }else if(newString.length > oldString.length){
+                    this.isShowErrorBox = true
+                }else{
+                    this.isShowConfirmBox = true
+                }
             }else{
                 this.isShowConfirmBox = true
             }
@@ -293,7 +345,6 @@ export default {
             axios
                 .get(config.server + '/car/manFindCar')
                 .then(doc => {
-                    console.log(doc)
                     if(doc.data.code === 0){
                         this.problemArray = []
                         this.carArrary = doc.data.doc
@@ -306,7 +357,6 @@ export default {
                                 this.problemArray.push(item)
                             }
                         })
-                        console.log(this.problemArray)
                     }
                 })
                 .catch(err => {
@@ -519,7 +569,7 @@ export default {
 .cardetail_dialog_img img{
     height: 100%;
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .cardetail_top{
@@ -706,5 +756,29 @@ export default {
 
 .margin8{
     margin-bottom: 8px
+}
+.engine_error_box{
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+.engine_error_box_title{
+    height: 30px;
+    line-height: 30px;
+    background-color: #d74342;
+    color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+.engine_error_box_body{
+    border: 1px solid #eee;
+    padding: 12px;
+    margin: 12px;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 220px;
 }
 </style>
