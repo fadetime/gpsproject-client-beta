@@ -621,10 +621,12 @@ export default {
     },
     methods: {
         confirmSubmitMethod(){
+            console.log(this.tempArr)
             axios
             .post(config.server + "/mission/dt_submitMission",{
                 _id: this.tempArr._id,
-                finishDate: new Date()
+                finishDate: new Date(),
+                carCheck_id: this.tempArr.carCheck_id
             })
             .then(doc => {
                 if(doc.data.code === 0){
