@@ -651,8 +651,6 @@ export default {
             this.$router.push('/fixcar')
         }else if(localStorage.getItem('driverRole') === 'dayShiftChecker'){
             this.$router.push('/checkPage_day')
-        }else if(localStorage.getItem('driverRole') === 'dt-driver'){
-            this.$router.push('/dt')
         }
     },
 
@@ -1056,7 +1054,6 @@ export default {
                     })
                     .then(doc => {
                         if (doc.data.code === 0) {
-                            // this.$router.push('/detailpage')
                             let tempHours = new Date().getHours()
                             console.log(tempHours)
                             if(this.drivername === 'Vijay' || this.drivername === '钟兆雷' || this.drivername === 'Karan' || this.drivername === 'Velu'){
@@ -1230,7 +1227,7 @@ export default {
                     .post(config.server + '/checkcar/', tempData)
                     .then(doc => {
                         if (doc.data.code === 0) {
-                            this.$router.push('/detailpage')
+                            this.$router.push('/dt_detailpage')
                         } else {
                             console.log(doc)
                         }
@@ -1290,10 +1287,8 @@ export default {
             this.carNum = item.missioncar
             if (!item.carCheckFirst) {
                 this.showCheckCarBox = true
-            } else if (item.missionclient.length == this.finishNumber[index] && !item.complete){
-                this.showCheckAgainBox = true
-            } else {
-                this.$router.push('/detailpage')
+            }else {
+                this.$router.push('/dt_detailpage')
                 this.$store.dispatch('setShowButtom', false)
             }
             this.findCarOilWarning()

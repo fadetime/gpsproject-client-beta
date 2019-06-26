@@ -350,6 +350,29 @@
                 </md-bottom-bar>
                 <!-- day checker end -->
 
+                <!-- dt driver start -->
+                <md-bottom-bar v-else-if="driverRole === 'dt-driver'" class="md-accent" md-type="shift">
+                    <md-bottom-bar-item id="bottom-bar-item-mission" @click="goDtDriverPageMethod()">
+                        <div class="md-bottom-bar-icon baseline_home"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">任务</span>
+                        <span v-else class="md-bottom-bar-label">MISSION</span>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-notice" @click="goNotice">
+                        <div class="md-bottom-bar-icon notification_outline"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span v-if="lang === 'ch'" class="md-bottom-bar-label">通知</span>
+                        <span v-else class="md-bottom-bar-label">NOTICE</span>
+                    </md-bottom-bar-item>
+                    <md-bottom-bar-item id="bottom-bar-item-favorites"
+                                        @click="gosetup">
+                        <div class="md-bottom-bar-icon settings_white"
+                             style="-webkit-mask-size: 28px 28px;-webkit-mask-repeat: no-repeat;-webkit-mask-position: center;"></div>
+                        <span class="md-bottom-bar-label">{{language.bottomBar.setup}}</span>
+                    </md-bottom-bar-item>
+                </md-bottom-bar>
+                <!-- dt driver end -->
+
                 <md-bottom-bar v-else
                                class="md-accent"
                                md-type="shift">
@@ -496,6 +519,9 @@ export default {
         },
         goDayDriverMissionPage() {
             this.$router.push("/ddmpage");
+        },
+        goDtDriverPageMethod(){
+            this.$router.push("/dt");
         }
     }
 };

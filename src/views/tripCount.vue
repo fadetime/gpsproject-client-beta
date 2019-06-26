@@ -590,40 +590,40 @@ export default {
             if(isNull(this.shippingDate.outKm) || isNull(this.shippingDate.inKm)){
                 let tempDate = new Date().toISOString()
                 axios
-                    .post(config.server + '/tripCount/edit',{
-                        mission_id:this.mission_id,
-                        array_id:this.shippingDate._id,
-                        driver_id:this.shippingDate.driver_id,
-                        driverNameCh:this.shippingDate.driverNameCh,
-                        driverNameEn:this.shippingDate.driverNameEn,
-                        carNo:this.shippingDate.carNo,
-                        out:this.shippingDate.out,
-                        outKm:this.shippingDate.outKm,
-                        in:this.shippingDate.in,
-                        inKm:this.shippingDate.inKm,
-                        lastEditDate:tempDate
-                    })
-                    .then(doc => {
-                        if(doc.data.code === 0){
-                            this.isShowEditDialog = false
-                            this.tipsShowColor = 'green'
-                            this.tipsInfo = 'Edit success'
-                            this.isShowTipsBox = true
-                            setTimeout(() => {
-                                this.isShowTipsBox = false
-                            }, 2000);
-                        } else {
-                            this.tipsShowColor = 'yellow'
-                            this.tipsInfo = 'Edit failed'
-                            this.isShowTipsBox = true
-                            setTimeout(() => {
-                                this.isShowTipsBox = false
-                            }, 2000);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
+                .post(config.server + '/tripCount/edit',{
+                    mission_id:this.mission_id,
+                    array_id:this.shippingDate._id,
+                    driver_id:this.shippingDate.driver_id,
+                    driverNameCh:this.shippingDate.driverNameCh,
+                    driverNameEn:this.shippingDate.driverNameEn,
+                    carNo:this.shippingDate.carNo,
+                    out:this.shippingDate.out,
+                    outKm:this.shippingDate.outKm,
+                    in:this.shippingDate.in,
+                    inKm:this.shippingDate.inKm,
+                    lastEditDate:tempDate
+                })
+                .then(doc => {
+                    if(doc.data.code === 0){
+                        this.isShowEditDialog = false
+                        this.tipsShowColor = 'green'
+                        this.tipsInfo = 'Edit success'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    } else {
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = 'Edit failed'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
             }else{
                 let tempBeforeNum = parseInt(this.shippingDate.outKm)
                 let tempAfterNum = parseInt(this.shippingDate.inKm)

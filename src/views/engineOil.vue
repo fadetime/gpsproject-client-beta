@@ -240,7 +240,7 @@ export default {
             tipsShowColor: null,
             tipsInfo: null,
             isShowTipsBox: null,
-            isShowErrorBox: true
+            isShowErrorBox: false
         }
     },
 

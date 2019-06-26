@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HomePage from './views/Home.vue'
+import dt_driver from './views/dt_driver.vue'
 import HistoryPage from './views/History.vue'
 import Login from './views/Login.vue'
 import Setup from './views/Setup.vue'
 import DetailPage from './views/DetailPage.vue'
+import dt_detailpage from './views/dt_detailpage.vue'
 import Finish from './views/Finish.vue'
 import HistoryDetail from './views/HistoryDetail.vue'
 import fixCar from './views/fixCar.vue'
@@ -70,6 +72,11 @@ export default new Router({
       name: 'DetailPage',
       component: DetailPage,
       beforeEnter: AuthGuard
+    },
+    {
+      path: '/dt_detailpage',
+      name: 'dt_detailpage',
+      component: dt_detailpage
     },
     {
       path: '/finish',
@@ -211,6 +218,11 @@ export default new Router({
       path: '/report_day',
       name: 'report_day',
       component: report_day
+    },
+    {
+      path: '/dt',
+      name: 'dt_driver',
+      component: dt_driver
     }
   ]
 })

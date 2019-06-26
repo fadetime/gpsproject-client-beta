@@ -22,7 +22,6 @@ export default {
         }
     },
     created() {
-        
         document.getElementById('appLoading').className = 'animated fadeOut'
         setTimeout(() => {
             document.body.removeChild(document.getElementById('appLoading'))
