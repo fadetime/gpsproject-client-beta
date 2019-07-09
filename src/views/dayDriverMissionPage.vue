@@ -536,16 +536,18 @@
                                 <span>{{item.clientPostcode}}</span>
                             </div>
                         </div>
-                        <div class="missiondetail-body-item-body" style="padding-bottom: 12px;height: unset;">
+                        <div class="missiondetail-body-item-body" style="padding-bottom: 12px;height: unset;position: relative">
                             <div class="missiondetail-body-item-body-left">
                                 <span>客户地址</span>
                             </div>
                             <div class="missiondetail-body-item-body-right" style="line-height:20px;padding-top:6px">
                                 <span>{{item.clientAddress}}</span>
                             </div>
+                            <div class="icon_dollar_frame" v-if="item.receiptMission && !item.receiptFinishDate" @click="openReceiptBoxMethod(item)">
+                                <div class="icon_dollar"></div>
+                            </div>
                         </div>
-                        <div v-if="item.finisDate"
-                             style="position: absolute;transform:rotate(-30deg);top:30px">
+                        <div v-if="item.finisDate" style="position: absolute;transform:rotate(-30deg);top:30px">
                             <div v-if="lang === 'ch'">
                                 <img src="../../public/img/missionCompleteCH.png" style="height:100px">
                             </div>
@@ -679,6 +681,58 @@
         </transition>
         <!-- show client big img end -->
 
+        <!-- show receipt box start -->
+        <transition name="custom-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="isShowReceiptBox" class="checkcar-back" style="z-index: 24;"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowReceiptBox" class="checkcar-front" @click.self.prevent="isShowReceiptBox = false">
+                <div class="ddm_receitp_box">
+                    <div class="ddm_receitp_box_title">
+                        <span>收款信息</span>
+                    </div>
+                    <div class="ddm_receitp_box_body">
+                        <div class="ddm_receitp_box_body_top">
+                            <span>{{tempReceiptInfo.clientName}}</span>
+                        </div>
+                        <div class="ddm_receitp_box_body_bottom">
+                            <div v-if="tempReceiptInfo && tempReceiptInfo.receiptRemark" class="ddm_receitp_box_body_bottom_text">
+                                <span>{{tempReceiptInfo.receiptRemark}}</span>
+                            </div>
+                            <div v-if="tempReceiptInfo && tempReceiptInfo.receiptImage" class="ddm_receitp_box_body_bottom_img" style="margin-top: 8px;" @click="isShowReceiptBigImgMethod(tempReceiptInfo.receiptImage)">
+                                <img :src="'https://s3-ap-southeast-1.amazonaws.com/easybuy-products/' + tempReceiptInfo.receiptImage">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ddm_receitp_box_bottom">
+                        <div class="removebox-body-center-button" @click="noReceiptMethod()">
+                            <span>未收</span>
+                        </div>
+                        <div class="removebox-body-center-button" style="margin-left: 8px" @click="submitReceiptMethod()">
+                            <span>已收</span>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </transition>
+        <!-- show receipt box end -->
+
+        <!-- show receipt big img start -->
+        <transition name="ddm-bigimg-transition-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowReceiptBigImg" class="ddm_big_back"></div>
+        </transition>
+        <transition name="ddm-bigimg-transition-front" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowReceiptBigImg" class="ddm_big_front" @click="isShowReceiptBigImg = false">
+                <div>
+                    <img :src="'https://s3-ap-southeast-1.amazonaws.com/easybuy-products/' + tempReceiptImg">
+                </div>
+            </div>
+        </transition>
+        <!-- show receipt big img end -->
+
         <!-- loading animation start -->
         <transition name="remove-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -775,11 +829,98 @@ export default {
             tempImg: null,
             tempClientArray: [],
             isShowPreview: false,
-            isShowLoadingAnimation: false
+            isShowLoadingAnimation: false,
+            isShowReceiptBox: false,
+            tempReceiptInfo: null,
+            isShowReceiptBigImg: false,
+            tempReceiptImg: null
         };
     },
 
     methods: {
+        noReceiptMethod(){
+            axios
+            .post(config.customerServiceAddress + '/driverTasks/feedback/' + this.tempReceiptInfo.receipt_id, {
+                feedback: this.drivername + ',未取到.'
+            })
+            .then(doc => {
+                if(doc.data.status === 0){
+                    this.isShowReceiptBox = false
+                }else{
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '更新任务状态出错'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 2000);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+
+        isShowReceiptBigImgMethod(url){
+            this.tempReceiptImg = url
+            this.isShowReceiptBigImg = true
+        },
+
+        submitReceiptMethod(){
+            axios
+            .post(config.customerServiceAddress + '/driverTasks/update/' + this.tempReceiptInfo.receipt_id, {
+                finishDate: new Date(),
+                driver: this.drivername
+            })
+            .then(doc => {
+                if(doc.data.status === 0){
+                    axios
+                    .post(config.server + '/dsdriver/finishReceipt',{
+                        tripsArray_id: this.tempReceiptInfo._id,
+                        receiptFinishDate: new Date(),
+                        mission_id: this._id
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.getDayShiftDriverMission();
+                            this.isShowReceiptBox = false
+                            this.tipsShowColor = 'green'
+                            this.tipsInfo = '提交成功'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }else{
+                            this.tipsShowColor = 'yellow'
+                            this.tipsInfo = '更新任务状态出错'
+                            this.isShowTipsBox = true
+                            setTimeout(() => {
+                                this.isShowTipsBox = false
+                            }, 2000);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }else{
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '提交到客服后台失败'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 2000);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+
+        openReceiptBoxMethod(info){
+            console.log(info)
+            this.tempReceiptInfo = info
+            this.isShowReceiptBox = true
+        },
+
         showTripsClientMethod(){
             this.isShowPreview =  true
         },
@@ -1847,5 +1988,99 @@ export default {
 .ddm_preview_item_right{
     width: 44px;
     text-align: left;
+}
+
+.icon_dollar{
+    mask-image: url(../../public/icons/icon_money.svg);
+    background-color: green;
+    height: 42px;
+    width: 42px;
+    mask-size: 42px;
+    mask-position: center;
+    mask-repeat: no-repeat;
+}
+
+.icon_dollar_frame{
+    position: absolute;
+    left: 12px;
+    bottom: -32px;
+    border:1px solid #eee;
+    border-radius: 100%;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.ddm_receitp_box{
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.ddm_receitp_box_title{
+    height: 30px;
+    line-height: 30px;
+    background-color: #d74342;
+    color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.ddm_receitp_box_body{
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.ddm_receitp_box_body_top{
+    border-bottom: 1px solid #eee;
+    line-height: 30px;
+    height: 30px;
+}
+
+.ddm_receitp_box_body_bottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+}
+
+.ddm_receitp_box_body_bottom_img{
+    height: 100px;
+    width: 100px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    margin: 0 8px;   
+}
+
+.ddm_receitp_box_body_bottom_img img{
+    object-fit: contain;
+    height: 100%;
+    width: 100%;
+}
+
+.ddm_receitp_box_body_bottom_text{
+    height: 100px;
+    width: 180px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    padding: 8px;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+.ddm_receitp_box_bottom{
+    padding: 0 12px 12px 12px;
+    display: flex;
+    justify-content: center;
 }
 </style>

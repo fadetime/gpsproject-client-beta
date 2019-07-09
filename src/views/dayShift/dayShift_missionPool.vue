@@ -1,6 +1,9 @@
 <template>
     <div id="ds_pool">
         <div class="dayhome_topbutton">
+            <div :class="dayhome_topbutton_receipt" @click="showReceiptBoxMethod()">
+                <span>收款项</span>
+            </div>
             <div :class="dayhome_topbutton_left" @click="changeShowMode('left')">
                 <span>未分配</span>
             </div>
@@ -20,11 +23,8 @@
                 <br>
                 <span>~{{language.homePage.whenEmpty}}~</span>
             </div>
-            <div v-else
-                style="margin-top:10px">
-                <div class="search-body-center-item"
-                    v-for="(item,index) in missionArray"
-                    :key="index">
+            <div v-else style="margin-top:10px">
+                <div class="search-body-center-item" v-for="(item,index) in missionArray" :key="index">
                     <div class="search-body-center-item-title">
                         <span v-if="lang === 'ch'">{{item.clientName}}</span>
                         <span v-else>{{item.clientNameEN}}</span>
@@ -100,9 +100,7 @@
                             </div>
                         </div>
                         <div v-if="!item.dayMission_id">
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated slideInUp faster"
-                                        leave-active-class="animated slideOutDown faster">
+                            <transition name="custom-classes-transition" enter-active-class="animated slideInUp faster" leave-active-class="animated slideOutDown faster">
                                 <div v-if="!isShowChoiseConfirmBox"
                                     style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
                                     <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
@@ -115,9 +113,7 @@
                                     </div>
                                 </div>
                             </transition>
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated slideInRight faster"
-                                        leave-active-class="animated slideOutRight faster">
+                            <transition name="custom-classes-transition" enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
                                 <div v-if="isShowChoiseConfirmBox" class="daycheckbox">
                                     <!-- check box  -->
                                     <input type="checkbox" :value="item" v-model="choiseMissionArray" />
@@ -140,11 +136,8 @@
                 <br>
                 <span>~{{language.homePage.whenEmpty}}~</span>
             </div>
-            <div v-else
-                style="margin-top:10px">
-                <div class="search-body-center-item"
-                    v-for="(item,index) in shippingArray"
-                    :key="index">
+            <div v-else style="margin-top:10px">
+                <div class="search-body-center-item" v-for="(item,index) in shippingArray" :key="index">
                     <div class="search-body-center-item-title">
                         <span v-if="lang === 'ch'">{{item.clientName}}</span>
                         <span v-else>{{item.clientNameEN}}</span>
@@ -220,9 +213,7 @@
                             </div>
                         </div>
                         <div v-if="!item.dayMission_id">
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated slideInUp faster"
-                                        leave-active-class="animated slideOutDown faster">
+                            <transition name="custom-classes-transition" enter-active-class="animated slideInUp faster" leave-active-class="animated slideOutDown faster">
                                 <div v-if="!isShowChoiseConfirmBox"
                                     style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
                                     <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
@@ -234,11 +225,8 @@
                                     </div>
                                 </div>
                             </transition>
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated slideInRight faster"
-                                        leave-active-class="animated slideOutRight faster">
-                                <div v-if="isShowChoiseConfirmBox"
-                                    class="daycheckbox">
+                            <transition name="custom-classes-transition" enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
+                                <div v-if="isShowChoiseConfirmBox" class="daycheckbox">
                                     <!-- check box  -->
                                     <input type="checkbox" :value="item" v-model="choiseMissionArray" />
                                     <!-- check box  -->
@@ -327,26 +315,20 @@
                             </div>
                         </div>
                         <div v-if="!item.dayMission_id">
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated slideInUp faster"
-                                        leave-active-class="animated slideOutDown faster">
+                            <transition name="custom-classes-transition" enter-active-class="animated slideInUp faster" leave-active-class="animated slideOutDown faster">
                                 <div v-if="!isShowChoiseConfirmBox"
                                     style="margin-top: 5px;margin-bottom: 5px;display:flex;display:-webkit-flex">
                                     <div class="search-body-center-button" style="background-color: #d74342;color: #fff;border: unset;" @click="showDelBoxMethod(item)">
                                         <span>删除任务</span>
                                     </div>
-                                    <div class="search-body-center-button"
-                                        @click="choiseMissionFromPool(item)">
+                                    <div class="search-body-center-button" @click="choiseMissionFromPool(item)">
                                         <span v-if="lang === 'ch'">选择任务</span>
                                         <span v-else>Choise</span>
                                     </div>
                                 </div>
                             </transition>
-                            <transition name="custom-classes-transition"
-                                        enter-active-class="animated slideInRight faster"
-                                        leave-active-class="animated slideOutRight faster">
-                                <div v-if="isShowChoiseConfirmBox"
-                                    class="daycheckbox">
+                            <transition name="custom-classes-transition" enter-active-class="animated slideInRight faster" leave-active-class="animated slideOutRight faster">
+                                <div v-if="isShowChoiseConfirmBox" class="daycheckbox">
                                     <!-- check box  -->
                                     <input type="checkbox" :value="item" v-model="choiseMissionArray" />
                                     <!-- check box  -->
@@ -362,14 +344,11 @@
                 </div>
             </div>
         </div>
-        <div v-if="isShowChoiseConfirmBox"
-             style="height:60px">
+        <div v-if="isShowChoiseConfirmBox" style="height:60px">
             <!-- 额外的底部占位符 -->
         </div>
         <!-- choise confirm box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated slideInUp faster"
-                    leave-active-class="animated slideOutDown faster">
+        <transition name="custom-classes-transition" enter-active-class="animated slideInUp faster" leave-active-class="animated slideOutDown faster">
             <div v-if="isShowChoiseConfirmBox"
                  class="choiseconfirm-box">
                 <div class="choiseconfirm-box-left">
@@ -378,14 +357,11 @@
                     <span>个客户</span>
                 </div>
                 <div class="choiseconfirm-box-right">
-                    <div class="search-body-center-button"
-                         @click="cancelMethod()">
+                    <div class="search-body-center-button" @click="cancelMethod()">
                         <span v-if="lang === 'ch'">取消</span>
                         <span v-else>Cancel</span>
                     </div>
-                    <div class="search-body-center-button"
-                         style="margin-left:10px"
-                         @click="startDayShiftMission()">
+                    <div class="search-body-center-button" style="margin-left:10px" @click="startDayShiftMission()">
                         <span v-if="lang === 'ch'">分配</span>
                         <span v-else>Start</span>
                     </div>
@@ -395,19 +371,12 @@
         </transition>
         <!-- choise confirm box end -->
 
-                <!-- choise driver box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isShowChoiseDriverBox"
-                 class="confirmstart-back"></div>
+        <!-- choise driver box start -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoiseDriverBox" class="confirmstart-back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isShowChoiseDriverBox"
-                 class="confirmstart-front"
-                 @click.self.prevent="isShowChoiseDriverBox = false">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowChoiseDriverBox" class="confirmstart-front" @click.self.prevent="isShowChoiseDriverBox = false">
                 <div class="confirmstart-box">
                     <div class="confirmstart-box-title">
                         <span v-if="lang === 'ch'">司机选择</span>
@@ -435,18 +404,11 @@
         <!-- choise driver box end -->
 
         <!-- confirm start box start -->
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isShowConfirmStartBox"
-                 class="confirmstart-back"></div>
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowConfirmStartBox" class="confirmstart-back"></div>
         </transition>
-        <transition name="custom-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="isShowConfirmStartBox"
-                 class="confirmstart-front"
-                 @click.self.prevent="isShowConfirmStartBox = false">
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowConfirmStartBox" class="confirmstart-front" @click.self.prevent="isShowConfirmStartBox = false">
                 <div class="confirmstart-box">
                     <div class="confirmstart-box-title">
                         <span v-if="lang === 'ch'">确认信息</span>
@@ -489,14 +451,11 @@
                         </div>
                     </div>
                     <div class="confirmstart-box-bottom">
-                        <div class="search-body-center-button"
-                             @click="isShowConfirmStartBox = false">
+                        <div class="search-body-center-button" @click="isShowConfirmStartBox = false">
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>Cancel</span>
                         </div>
-                        <div class="search-body-center-button"
-                             style="margin-left:10px"
-                             @click="saveMission()">
+                        <div class="search-body-center-button" style="margin-left:10px" @click="saveMission()">
                             <span v-if="lang === 'ch'">确认</span>
                             <span v-else>Confirm</span>
                         </div>
@@ -507,17 +466,11 @@
         <!-- confirm start box end -->
 
         <!-- 配置司机后的删除确认框 start-->
-        <transition name="remove-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="isShowConfiguredRemoveBox" class="removebox-back"></div>
         </transition>
-        <transition name="remove-client-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-            <div v-if="isShowConfiguredRemoveBox"
-                 class="removebox-front"
-                 @click.self.prevent="isShowConfiguredRemoveBox = false">
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowConfiguredRemoveBox" class="removebox-front" @click.self.prevent="isShowConfiguredRemoveBox = false">
                 <div class="removebox-box">
                     <div class="removebox-box-top">
                         <span v-if="lang === 'ch'">删除已分配任务</span>
@@ -545,18 +498,11 @@
         <!-- 配置司机后的删除确认框 end-->
 
         <!-- 删除提示 start -->
-        <transition name="remove-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
-            <div v-if="showRemoveBox"
-                 class="removebox-back"></div>
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="showRemoveBox" class="removebox-back"></div>
         </transition>
-        <transition name="remove-client-transition"
-                    enter-active-class="animated zoomIn faster"
-                    leave-active-class="animated zoomOut faster">
-            <div v-if="showRemoveBox"
-                 class="removebox-front"
-                 @click.self.prevent="showRemoveBox = false">
+        <transition name="remove-client-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="showRemoveBox" class="removebox-front" @click.self.prevent="showRemoveBox = false">
                 <div class="removebox-box">
                     <div class="removebox-box-top">
                         <span v-if="lang === 'ch'">删除任务</span>
@@ -564,51 +510,34 @@
                     </div>
                     <div class="removebox-box-body">
                         <div class="removebox-box-body-title">
-                            <span v-if="lang === 'ch'"
-                                  style="font-size:16px">删除原因</span>
-                            <span v-else
-                                  style="font-size:16px">Choise Reason</span>
+                            <span v-if="lang === 'ch'" style="font-size:16px">删除原因</span>
+                            <span v-else style="font-size:16px">Choise Reason</span>
                         </div>
                         <div class="removebox-box-body-item">
                             <div>
-                                <input type="radio"
-                                       id="radio1"
-                                       value="添加错误"
-                                       v-model="radioPicked">
+                                <input type="radio" id="radio1" value="添加错误" v-model="radioPicked">
                             </div>
                             <div style="padding-left:10px">
-                                <label v-if="lang === 'ch'"
-                                       for="radio1">添加错误</label>
-                                <label v-else
-                                       for="radio1">Add error</label>
+                                <label v-if="lang === 'ch'" for="radio1">添加错误</label>
+                                <label v-else for="radio1">Add error</label>
                             </div>
                         </div>
                         <div class="removebox-box-body-item">
                             <div>
-                                <input type="radio"
-                                       id="radio2"
-                                       value="送货取消"
-                                       v-model="radioPicked">
+                                <input type="radio" id="radio2" value="送货取消" v-model="radioPicked">
                             </div>
                             <div style="padding-left:10px">
-                                <label v-if="lang === 'ch'"
-                                       for="radio2">送货取消</label>
-                                <label v-else
-                                       for="radio2">chancelled</label>
+                                <label v-if="lang === 'ch'" for="radio2">送货取消</label>
+                                <label v-else for="radio2">chancelled</label>
                             </div>
                         </div>
                         <div class="removebox-box-body-item">
                             <div>
-                                <input type="radio"
-                                       id="radio3"
-                                       value="other"
-                                       v-model="radioPicked">
+                                <input type="radio" id="radio3" value="other" v-model="radioPicked">
                             </div>
                             <div style="padding-left:10px">
-                                <label v-if="lang === 'ch'"
-                                       for="radio3">其他原因</label>
-                                <label v-else
-                                       for="radio3">other</label>
+                                <label v-if="lang === 'ch'" for="radio3">其他原因</label>
+                                <label v-else for="radio3">other</label>
                             </div>
                         </div>
                         <div class="removebox-box-body-item">
@@ -622,15 +551,11 @@
                         </div>
                     </div>
                     <div class="removebox-box-footer">
-                        <div class="removebox-body-center-button"
-                             style="width: 80px;margin-right:10px"
-                             @click="showRemoveBox = false">
+                        <div class="removebox-body-center-button" style="width: 80px;margin-right:10px" @click="showRemoveBox = false">
                             <span v-if="lang === 'ch'">取消</span>
                             <span v-else>chancel</span>
                         </div>
-                        <div class="removebox-body-center-button"
-                             style="width: 80px;"
-                             @click="removeMissionMtehod()">
+                        <div class="removebox-body-center-button" style="width: 80px;" @click="removeMissionMtehod()">
                             <span v-if="lang === 'ch'">确定</span>
                             <span v-else>confirm</span>
                         </div>
@@ -640,15 +565,84 @@
         </transition>
         <!-- 删除提示 end-->
         
+        <!-- receipt box start -->
+        <transition name="dayshift_receipt_transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowReceiptBox" class="removebox-back"></div>
+        </transition>
+        <transition name="dayshift_receipt_transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowReceiptBox" class="removebox-front" @click.self.prevent="isShowReceiptBox = false">
+                <div class="removebox-box">
+                    <div class="dayshift_receipt_box_title">
+                        <span>收款项</span>
+                    </div>
+                    <div class="dayshift_receipt_box_body">
+                        <div class="dayshift_receipt_box_body_item" v-for="(item,index) in receiptArray" :key="index">
+                            <div class="dayshift_receipt_box_body_item_left">
+                                <input :id="'dayshift_receipt_' + index" type="checkbox" :value="item" v-model="chooseReceiptArray">
+                            </div>
+                            <label :for="'dayshift_receipt_' + index" class="dayshift_receipt_box_body_item_right">
+                                <span>{{item.customer}}</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="dayshift_receipt_box_bottom">
+                        <div class="removebox-body-center-button" @click="isShowReceiptBox = false">
+                            <span>取消</span>
+                        </div>
+                        <div class="removebox-body-center-button" style="margin-left: 8px" @click="receiptChooseDriverMethod()">
+                            <span>确认</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- receipt box end -->
+
+        <!-- day trips for receipt start -->
+        <transition name="dayshift_receipt_transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowTripsForReceiptBox" class="removebox-back" style="z-index: 26"></div>
+        </transition>
+        <transition name="dayshift_receipt_transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowTripsForReceiptBox" class="removebox-front" style="z-index: 27" @click.self.prevent="isShowTripsForReceiptBox = false">
+                <div class="removebox-box">
+                    <div class="dayshift_receipt_box_title">
+                        <span>已分配任务</span>
+                    </div>
+                    <div class="dayshift_day_receipt_box_body">
+                        <div v-for="(item,index) in tripsArray" :key="index" class="dayshift_day_receipt_box_body_item">
+                            <div class="dayshift_day_receipt_box_body_item_top">
+                                <div style="font-weight: 600;">
+                                    <span>{{item.driverName}}</span>
+                                </div>
+                                <div style="padding-left: 12px">
+                                    <span>{{item.clientArray.length}}客户</span>
+                                </div>
+                            </div>
+                            <div class="dayshift_day_receipt_box_body_item_bottom">
+                                <div>
+                                    <span>{{new Date(item.orderDate).toLocaleTimeString()}}</span>
+                                </div>
+                                <div class="dayshift_day_receipt_box_body_item_bottom_right" @click="chooseDayTripsForReceiptMethod(item)">
+                                    <img src="../../../public/icons/baseline_arrow_forward_ios_white_24dp.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dayshift_day_receipt_box_bottom">
+                        <div class="removebox-body-center-button" @click="isShowTripsForReceiptBox = false,isShowReceiptBox = true">
+                            <span>返回</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- day trips for receipt end -->
+
         <!-- loading animation start -->
-        <transition name="remove-classes-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="remove-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="isShowLoadingAnimation" class="tripcount_loading_back"></div>
         </transition>
-        <transition name="remove-client-transition"
-                    enter-active-class="animated fadeIn faster"
-                    leave-active-class="animated fadeOut faster">
+        <transition name="remove-client-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
             <div v-if="isShowLoadingAnimation" class="tripcount_loading_front" @touchmove.prevent>
                 <div class="tripcount_loading_box">
                     <div class="spinner">
@@ -698,6 +692,7 @@ export default {
             dayhome_topbutton_left: 'dayhome_topbutton_redline',
             dayhome_topbutton_center: 'dayhome_topbutton_whiteline',
             dayhome_topbutton_right: 'dayhome_topbutton_whiteline',
+            dayhome_topbutton_receipt: 'dayhome_topbutton_whiteline',
             isShowLeftWindow: true,
             isShowCenterWindow: false,
             isShowRightWindow: false,
@@ -722,10 +717,230 @@ export default {
             missionInfo: null,
             needDoNum: 0,
             shippingDate:null,
+            isShowReceiptBox: false,
+            receiptArray: [],
+            isShowTripsForReceiptBox: false,
+            chooseReceiptArray: []
         }
     },
 
     methods:{
+        chooseDayTripsForReceiptMethod(chooseInfo){
+            let checkClient = new Promise((resolve,reject) => {
+                this.chooseReceiptArray.some(receiptInfo => {
+                    let tempFlag = false
+                    let tempArray_id = null
+                    console.log('this.tripsArray.clientArray')
+                    console.log(chooseInfo)
+                    chooseInfo.clientArray.some(clientInfo => {
+                        if(clientInfo.clientName === receiptInfo.customer){
+                            tempFlag = true
+                            tempArray_id = clientInfo._id
+                            return true
+                        }
+                    })
+                    if(!tempFlag){
+                        // change trips of client status
+                        // change receipt status
+                        axios
+                        .post(config.server + '/dsdriver/addClient',{
+                            orderDate: new Date(),
+                            clientName: receiptInfo.customer,
+                            clientNameEN: receiptInfo.customer,
+                            client_id: null,
+                            clientAddress: null,
+                            clientPhone: null,
+                            clientPostcode: null,
+                            isIncreaseOrder: 'other',
+                            orderDate: new Date(),
+                            newDate: new Date().toISOString(),
+                            dayMission_id: chooseInfo._id,//driver mission _id
+                            driverName: chooseInfo.driverName,
+                            receiptRemark: receiptInfo.remark,//收款留言
+                            receiptImage: receiptInfo.image,//收款照片-财务上传的
+                            receipt_id: receiptInfo._id,//收款后返回的id
+                            receiptMission: true //是否含有收款
+                        })
+                        .then(doc => {
+                            if(doc.data.code === 0){
+                                console.log('%ctry to change receipt status','color: red')
+                                axios
+                                .post(config.customerServiceAddress + '/driverTasks/update/' + receiptInfo._id,{
+                                    driver: chooseInfo.driverName,
+                                    status: "处理中"
+                                })
+                                .then(doc => {
+                                    console.log('doc')
+                                    console.log(doc)
+                                    if(doc.data.status === 0){
+                                        this.isShowTripsForReceiptBox = false
+                                        this.tipsShowColor = 'green'
+                                        this.tipsInfo = '添加成功'
+                                        this.isShowTipsBox = true
+                                        setTimeout(() => {
+                                            this.isShowTipsBox = false
+                                        }, 1800);
+                                    }else{
+                                        this.tipsShowColor = 'yellow'
+                                        this.tipsInfo = '添加时客服后台出现错误'
+                                        this.isShowTipsBox = true
+                                        setTimeout(() => {
+                                            this.isShowTipsBox = false
+                                        }, 2000);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                    this.tipsShowColor = 'yellow'
+                                    this.tipsInfo = '添加时客服后台出现错误'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
+                                    }, 2000);
+                                })
+                            }else{
+                                this.tipsShowColor = 'yellow'
+                                this.tipsInfo = '添加时客服后台出现错误'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
+                                }, 2000);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                    }else{
+                        axios
+                        .post(config.server + '/dsdriver/editReceipt',{
+                            trips_id: chooseInfo._id,
+                            clientName: receiptInfo.customer,
+                            receiptRemark: receiptInfo.remark,//收款留言
+                            receiptImage: receiptInfo.image,//收款照片-财务上传的
+                            receipt_id: receiptInfo._id,//收款后返回的id
+                            array_id: tempArray_id,
+                            receiptMission: true //是否含有收款
+                        })
+                        .then(doc => {
+                            if(doc.data.code === 0){
+                                axios
+                                .post(config.customerServiceAddress + '/driverTasks/update/' + receiptInfo._id,{
+                                    driver: chooseInfo.driverName,
+                                    status: "处理中"
+                                })
+                                .then(doc => {
+                                    if(doc.data.status === 0){
+                                        this.isShowTripsForReceiptBox = false
+                                        this.tipsShowColor = 'green'
+                                        this.tipsInfo = '添加成功'
+                                        this.isShowTipsBox = true
+                                        setTimeout(() => {
+                                            this.isShowTipsBox = false
+                                        }, 1800);
+                                    }else{
+                                        this.tipsShowColor = 'yellow'
+                                        this.tipsInfo = '添加时客服后台出现错误'
+                                        this.isShowTipsBox = true
+                                        setTimeout(() => {
+                                            this.isShowTipsBox = false
+                                        }, 2000);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                    this.tipsShowColor = 'yellow'
+                                    this.tipsInfo = '添加时客服后台出现错误'
+                                    this.isShowTipsBox = true
+                                    setTimeout(() => {
+                                        this.isShowTipsBox = false
+                                    }, 2000);
+                                })
+                            }else{
+                                this.tipsShowColor = 'yellow'
+                                this.tipsInfo = '添加失败'
+                                this.isShowTipsBox = true
+                                setTimeout(() => {
+                                    this.isShowTipsBox = false
+                                }, 2000);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                    }
+                })
+            })
+            
+            
+        },
+
+        receiptChooseDriverMethod(){
+            if(this.chooseReceiptArray.length === 0){
+                this.tripsArray = []
+                this.tipsShowColor = 'yellow'
+                this.tipsInfo = '请选择收款客户'
+                this.isShowTipsBox = true
+                setTimeout(() => {
+                    this.isShowTipsBox = false
+                }, 2000);
+            }else{
+                let tempToday = new Date().toDateString()
+                tempToday = new Date(tempToday).toISOString()
+                axios
+                .post(config.server + '/dsdriver/findByDate',{
+                    tripsDate: tempToday
+                })
+                .then(doc => {
+                    console.log(doc)
+                    if(doc.data.code === 0){
+                        this.tripsArray = doc.data.doc
+                        console.log(this.tripsArray)
+                        this.isShowTripsForReceiptBox = true
+                        this.isShowReceiptBox = false
+                    }else if(doc.data.code === 1){
+                        this.tripsArray = []
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '未找到已分配任务'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }else{
+                        this.tipsShowColor = 'yellow'
+                        this.tipsInfo = '查找任务时出现错误'
+                        this.isShowTipsBox = true
+                        setTimeout(() => {
+                            this.isShowTipsBox = false
+                        }, 2000);
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }
+            
+        },
+
+        showReceiptBoxMethod(){
+            console.log('1')
+            this.isShowReceiptBox = true
+            axios
+            .post(config.customerServiceAddress + '/driverTasks/getWaiting')
+            .then(doc =>{
+                console.log(doc)
+                if(doc.data.status === 0){
+                    console.log('api if')
+                    this.receiptArray = doc.data.payload
+                }else{
+                    this.receiptArray = []
+                    console.log('获取财务收款数据异常')
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+
         choiseDriverMethod(item){
             this.choiseDriver = item.dirvername
             this.choiseDriver_id = item._id
@@ -964,6 +1179,7 @@ export default {
                     mode:'mission'
                 })
                 .then(doc => {
+                    console.log(doc)
                     if (doc.data.code === 0) {
                         this.missionArray = doc.data.doc;
                         this.missionArray = _.orderBy(
@@ -1471,5 +1687,112 @@ export default {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.dayshift_receipt_box_title{
+    height: 30px;
+    line-height: 30px;
+    background-color: #d74342;
+    color: #fff;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.dayshift_receipt_box_body{
+    margin: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.dayshift_receipt_box_body_item{
+    height: 30px;
+    line-height: 30px;
+    display: flex;
+}
+
+.dayshift_receipt_box_body_item_left{
+    width: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dayshift_receipt_box_body_item_left input{
+    width: 20px;
+    height: 20px;
+}
+
+.dayshift_receipt_box_body_item_right{
+    width: 100%;
+    padding-left: 8px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.dayshift_receipt_box_bottom{
+    display: flex;
+    justify-content: center;
+    padding: 0 12px 12px 12px;
+}
+
+.dayshift_day_receipt_box_body{
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    width: 172px;
+}
+
+.dayshift_day_receipt_box_body_item{
+    border-bottom: 1px solid #eee;
+}
+
+.dayshift_day_receipt_box_body_item_top{
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+}
+
+.dayshift_day_receipt_box_body_item_bottom{
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 8px;
+}
+
+.dayshift_day_receipt_box_bottom{
+    display: flex;
+    padding: 0 12px 12px 12px;
+}
+
+.dayshift_day_receipt_box_body_item_bottom_right{
+    border: 1px solid #eee;
+    border-radius: 100%;
+    height: 30px;
+    width: 30px;
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2),
+        0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    position: relative;
+}
+
+.dayshift_day_receipt_box_body_item_bottom_right img{
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    left: -2px;
+    top: 1px;
 }
 </style>

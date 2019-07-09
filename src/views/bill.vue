@@ -391,6 +391,27 @@
         </transition>
         <!-- big image dialog end -->
 
+        <!-- loading animation start -->
+        <transition name="remove-classes-transition"
+                    enter-active-class="animated fadeIn faster"
+                    leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation" class="tripcount_loading_back"></div>
+        </transition>
+        <transition name="remove-client-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="loadingAnimation" class="tripcount_loading_front">
+                <div class="tripcount_loading_box">
+                    <div class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- loading animation end -->
+
         <!-- 操作提示 -->
         <transition name="tips-classes-transition"
                     enter-active-class="animated bounceInDown"
@@ -453,7 +474,8 @@ export default {
             tipsShowColor: null,
             tipsInfo: null,
             isShowTipsBox: null,
-            isShowStartConfirmBox: false
+            isShowStartConfirmBox: false,
+            loadingAnimation: false
         };
     },
     methods: {
@@ -534,6 +556,7 @@ export default {
 
         checkEndBillMethod(){
             let date = new Date().toISOString();
+            this.loadingAnimation = true
             axios
                 .post(config.server + "/bill/edit", {
                     _id: this.billCount._id,
@@ -542,6 +565,7 @@ export default {
                     endDate: date
                 })
                 .then(doc => {
+                    this.loadingAnimation = false
                     this.isShowBillFinishBox = false;
                     if (doc.data.code === 0) {
                         this.isShowEndConfirmBox = false
@@ -560,6 +584,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    this.loadingAnimation = false
                     console.log(err);
                 });
         },
@@ -612,6 +637,7 @@ export default {
         checkAgainStartMethod(){
             let tempDate = new Date().toISOString();
             let tempStartNum
+            this.loadingAnimation = true
             if(this.oldNum){
                 tempStartNum = parseInt(this.billNum) + parseInt(this.oldNum)
             }else{
@@ -624,6 +650,7 @@ export default {
                     driverName: this.driverName
                 })
                 .then(doc => {
+                    this.loadingAnimation = false
                     if (doc.data.code === 0) {
                         this.isShowStartConfirmBox = false
                         this.showError = true;
@@ -642,6 +669,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    this.loadingAnimation = false
                     console.log(err);
                 });
         },
@@ -1076,5 +1104,71 @@ export default {
     height: 30px;
     line-height: 30px;
     font-size: 18px;
+}
+
+.tripcount_loading_back {
+    position: fixed;
+    z-index: 101;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.tripcount_loading_front {
+    position: fixed;
+    z-index: 102;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tripcount_loading_box{
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100%;
+}
+
+.spinner {
+    margin: 32px auto;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 10px;
+}
+
+.spinner>div {
+    background-color: rgba(212, 50, 49, 1);
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+    margin-right: 4px;
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
 }
 </style>

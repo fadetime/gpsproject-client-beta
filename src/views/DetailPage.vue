@@ -158,28 +158,21 @@
                             </div>
                         </div>
                         
-                        <div class="card-text"
-                             style="padding:5px 20px 20px 20px"
-                             @click="upload(x)">
+                        <div class="card-text" style="padding:5px 20px 20px 20px" @click="upload(x)">
                             <div class="card-text-left">
                                 <span>{{language.detailPage.state}}: </span>
                             </div>
                             <div class="card-text-right">
-                                <span style="color:#f9cf97"
-                                      v-if="!x.finishdate">{{language.detailPage.shipping}}</span>
-                                <span style="color:#99cc33"
-                                      v-else>{{language.detailPage.finish}}</span>
+                                <span style="color:#f9cf97" v-if="!x.finishdate">{{language.detailPage.shipping}}</span>
+                                <span style="color:#99cc33" v-else>{{language.detailPage.finish}}</span>
                             </div>
                         </div>
-
-                        <div class="card-camera"
-                             @click.prevent.self="upload(x)">
-                            <div v-if="x.isNeedPic"
-                                 class="date_rangeicon"
-                                 @click="upload(x)"></div>
-                            <div v-else
-                                 class="date_done"
-                                 @click="openConfirmBoxMethod(x)"></div>
+                        <div v-if="x.receipt_id && !x.receipt_finish" class="detail_receipt">
+                            <div class="icon_money" @click="openReceiptMethod(x)"></div>
+                        </div>
+                        <div class="card-camera" @click.prevent.self="upload(x)">
+                            <div v-if="x.isNeedPic" class="date_rangeicon" @click="upload(x)"></div>
+                            <div v-else class="date_done" @click="openConfirmBoxMethod(x)"></div>
                         </div>
                     </div>
 
@@ -261,25 +254,16 @@
                     </div>
                 </div>
 
-                <input type="file"
-                       style="display:none"
-                       id="upload_file"
-                       @change="fileChange($event)"
-                       accept="image/*">
-
-                <div class="bottombutton"
-                     v-if="!missionImage">
-                    <div class="bottombutton-left"
-                         @click="cancel">
+                <input type="file" style="display:none" id="upload_file" @change="fileChange($event)" accept="image/*">
+                <div class="bottombutton" v-if="!missionImage">
+                    <div class="bottombutton-left" @click="cancel">
                         <span>x</span>
                     </div>
-                    <div class="bottombutton-right"
-                         @click="confirm">
+                    <div class="bottombutton-right" @click="confirm">
                         <span>o</span>
                     </div>
                 </div>
-                <div v-else
-                     class="bottombutton">
+                <div v-else class="bottombutton">
                     <div class="bottombutton-center">
                         <span style="font-size:20px">{{language.detailPage.finish}}</span>
                         <br>
@@ -311,13 +295,12 @@
         <transition name="custom-classes-transition"
                     enter-active-class="animated bounceInDown"
                     leave-active-class="animated bounceOutUp">
-            <div class="errinfo"
-                 v-if="showError"
-                 @click="closeErrorInfo">
+            <div class="errinfo" v-if="showError" @click="closeErrorInfo">
                 <span>{{errorInfo}}</span>
             </div>
         </transition>
         <!-- err info box -->
+
         <!-- confirm box  -->
         <transition name="custom-classes-transition"
                     enter-active-class="animated fadeIn faster"
@@ -565,6 +548,63 @@
                @change="changeReturnImg($event)"
                accept="image/*">
         <!-- return pic confirm box end -->
+
+        <!-- receipt box confirm box start -->
+        <transition name="custom-classes-transition" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowReceiptBox" class="detail_receipt_back"></div>
+        </transition>
+        <transition name="custom-classes-transition" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowReceiptBox" class="detail_receipt_front" @click.prevent.self="isShowReceiptBox = false">
+                <div class="detail_receipt_box">
+                    <div class="detail_receipt_box_title">
+                        <span v-if="lang === 'ch'">收帐信息</span>
+                        <span v-else>Info</span>
+                    </div>
+                    <div class="detail_receipt_box_body">
+                        <div style="font-weight: 600;">
+                            <span>{{tempReceiptInfo.clientbname}}</span>
+                        </div>
+                        <div class="detail_receipt_box_body_title">
+                            <span v-if="lang === 'ch'">是否已经收到账款？</span>
+                            <span v-else>Successfully collect the money?</span>
+                        </div>
+                        <div class="detail_receipt_box_body_content">
+                            <div v-if="tempReceiptInfo && tempReceiptInfo.receipt_remark" class="detail_receipt_box_body_content_item" style="padding: 4px;width: 180px">
+                                <span style="padding: 4px">{{tempReceiptInfo.receipt_remark}}</span>
+                            </div>
+                            <div v-if="tempReceiptInfo && tempReceiptInfo.receipt_image" class="detail_receipt_box_body_content_item" style="margin-top: 8px" @click="isShowReceiptBigImgMethod(tempReceiptInfo.receipt_image)">
+                                <img :src="'https://s3-ap-southeast-1.amazonaws.com/easybuy-products/' + tempReceiptInfo.receipt_image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail_receipt_box_bottom">
+                        <div class="detail_receipt_box_bottom_button" @click="noReceiptMethod()">
+                            <span v-if="lang === 'ch'">未收</span>
+                            <span v-else>NO</span>
+                        </div>
+                        <div class="detail_receipt_box_bottom_button" style="margin-left: 8px" @click="yesReceiptMethod()">
+                            <span v-if="lang === 'ch'">已收</span>
+                            <span v-else>YES</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
+        <!-- receipt box confirm box end -->
+
+        <!-- show receipt big img start -->
+        <transition name="ddm-bigimg-transition-back" enter-active-class="animated fadeIn faster" leave-active-class="animated fadeOut faster">
+            <div v-if="isShowReceiptBigImg" class="ddm_big_back"></div>
+        </transition>
+        <transition name="ddm-bigimg-transition-front" enter-active-class="animated zoomIn faster" leave-active-class="animated zoomOut faster">
+            <div v-if="isShowReceiptBigImg" class="ddm_big_front" @click="isShowReceiptBigImg = false">
+                <div>
+                    <img :src="'https://s3-ap-southeast-1.amazonaws.com/easybuy-products/' + tempReceiptImg">
+                </div>
+            </div>
+        </transition>
+        <!-- show receipt big img end -->
+
         <!-- tips box start -->
         <tipsBox :showColor="tipsShowColor" :msg="tipsInfo" :isOpenTipBox="isShowTipsBox"></tipsBox>
         <!-- tips box end -->
@@ -621,7 +661,10 @@ export default {
             backFailedReason_text: null,
             tipsShowColor: null,
             tipsInfo:null,
-            isShowTipsBox:null
+            isShowTipsBox:null,
+            isShowReceiptBox: false,
+            tempReceiptInfo: null,
+            isShowReceiptBigImg: false
         };
     },
     computed: {
@@ -636,6 +679,88 @@ export default {
         }
     },
     methods: {
+        isShowReceiptBigImgMethod(url){
+            this.tempReceiptImg = url
+            this.isShowReceiptBigImg = true
+        },
+
+        yesReceiptMethod(){
+            axios
+            .post(config.customerServiceAddress + '/driverTasks/update/' + this.tempReceiptInfo.receipt_id, {
+                finishDate: new Date(),
+                driver: this.drivername
+            })
+            .then(doc => {
+                this.isShowReceiptBox = false
+                if(doc.data.status === 0){
+                    
+                    this.tipsShowColor = 'green'
+                    this.tipsInfo = '提交成功'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 1500);
+                    axios
+                    .post(config.server + "/client-driver/update_receipt",{
+                        mission_id: this.tempArr._id,
+                        clientArray_id: this.tempReceiptInfo._id,
+                        finishDate: new Date()
+                    })
+                    .then(doc => {
+                        if(doc.data.code === 0){
+                            this.missionGetOne();
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                }else{
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '提交失败'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 1500);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+
+        noReceiptMethod(){
+            axios
+            .post(config.customerServiceAddress + '/driverTasks/feedback/' + this.tempReceiptInfo.receipt_id, {
+                feedback: this.drivername + ',未取到.'
+            })
+            .then(doc => {
+                this.isShowReceiptBox = false
+                if(doc.data.status === 0){
+                    this.tipsShowColor = 'green'
+                    this.tipsInfo = '提交成功'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 1500);
+                }else{
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '提交失败'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 1500);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
+
+        openReceiptMethod(clientInfo){
+            this.tempReceiptInfo = clientInfo
+            this.isShowReceiptBox = true
+        },
+
         uploadReturnImgAndFinishMethod() {
             //
             if (!this.updateImagePreview) {
@@ -1322,6 +1447,19 @@ export default {
     font-size: 16px;
 }
 
+.detail_receipt{
+    text-align: right;
+    position: absolute;
+    bottom: 10px;
+    left: 13px;
+    border-radius: 100%;
+    height: 48px;
+    width: 48px;
+    border: 1px solid #eee;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    cursor: pointer;
+}
 .card-camera {
     text-align: right;
     position: absolute;
@@ -1464,6 +1602,16 @@ export default {
 .imageDialog div {
     position: relative;
     top: 15%;
+}
+
+.icon_money{
+    mask-image: url(../../public/icons/icon_money.svg);
+    background-color: green;
+    width: 48px;
+    height: 48px;
+    mask-size: 48px;
+    mask-repeat: no-repeat;
+    mask-position: center;
 }
 
 .date_rangeicon {
@@ -1686,5 +1834,119 @@ export default {
     height: 30px;
     line-height: 30px;
     text-align: left;
+}
+
+.detail_receipt_back{
+    background-color: rgba(0, 0, 0, 0.12);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 24;
+}
+
+.detail_receipt_front{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 25;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detail_receipt_box{
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    overflow: hidden;
+}
+
+.detail_receipt_box_title{
+    height: 30px;
+    line-height: 30px;
+    background-color: #d74342;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.detail_receipt_box_body{
+    padding: 12px;
+}
+
+.detail_receipt_box_body_title{
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+}
+
+.detail_receipt_box_body_content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+}
+
+.detail_receipt_box_body_content_item{
+    width: 100px;
+    height: 100px;
+    border: 1px solid #eee;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+    border-radius: 10px;
+    overflow: hidden;
+    word-break: break-all;
+    text-align: left;
+}
+
+.detail_receipt_box_body_content_item img{
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+.detail_receipt_box_bottom{
+    display: flex;
+    padding-bottom: 12px;
+    justify-content: center;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.detail_receipt_box_bottom_button{
+    height: 30px;
+    line-height: 30px;
+    width: 80px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+        rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+}
+
+.ddm_big_back{
+    position: fixed;
+    z-index: 29;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.ddm_big_front{
+    position: fixed;
+    z-index: 29;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>
