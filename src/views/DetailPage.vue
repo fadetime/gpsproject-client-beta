@@ -577,14 +577,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="detail_receipt_box_bottom">
-                        <div class="detail_receipt_box_bottom_button" @click="noReceiptMethod()">
-                            <span v-if="lang === 'ch'">未收</span>
-                            <span v-else>NO</span>
+                    <div class="detail_receipt_box_bottom" style="display: flex;flex-direction: column">
+                        <div style="display: flex;">
+                            <div class="detail_receipt_box_bottom_button" @click="noReceiptMethod()">
+                                <span v-if="lang === 'ch'">未收</span>
+                                <span v-else>NO</span>
+                            </div>
+                            <div class="detail_receipt_box_bottom_button" style="margin-left: 8px" @click="yesReceiptMethod()">
+                                <span v-if="lang === 'ch'">已收</span>
+                                <span v-else>YES</span>
+                            </div>
                         </div>
-                        <div class="detail_receipt_box_bottom_button" style="margin-left: 8px" @click="yesReceiptMethod()">
-                            <span v-if="lang === 'ch'">已收</span>
-                            <span v-else>YES</span>
+                        <div style="padding-top: 10px;">
+                            <div class="detail_receipt_box_bottom_button" style="width: 168px" @click="waitReceiptMethod()">
+                                <span v-if="lang === 'ch'">等下处理</span>
+                                <span v-else>Do it later</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -688,12 +696,12 @@ export default {
             axios
             .post(config.customerServiceAddress + '/driverTasks/update/' + this.tempReceiptInfo.receipt_id, {
                 finishDate: new Date(),
-                driver: this.drivername
+                driver: this.drivername,
+                status: '已完成'
             })
             .then(doc => {
                 this.isShowReceiptBox = false
                 if(doc.data.status === 0){
-                    
                     this.tipsShowColor = 'green'
                     this.tipsInfo = '提交成功'
                     this.isShowTipsBox = true
@@ -727,7 +735,33 @@ export default {
                 console.log(err)
             })
         },
-
+        waitReceiptMethod(){
+            axios
+            .post(config.customerServiceAddress + '/driverTasks/feedback/' + this.tempReceiptInfo.receipt_id, {
+                feedback: this.drivername + ',等下处理.'
+            })
+            .then(doc => {
+                this.isShowReceiptBox = false
+                if(doc.data.status === 0){
+                    this.tipsShowColor = 'green'
+                    this.tipsInfo = '提交成功'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 1500);
+                }else{
+                    this.tipsShowColor = 'yellow'
+                    this.tipsInfo = '提交失败'
+                    this.isShowTipsBox = true
+                    setTimeout(() => {
+                        this.isShowTipsBox = false
+                    }, 1500);
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        },
         noReceiptMethod(){
             axios
             .post(config.customerServiceAddress + '/driverTasks/feedback/' + this.tempReceiptInfo.receipt_id, {
@@ -1126,13 +1160,17 @@ export default {
         },
 
         openConfirmBoxMethod(x) {
+            if(x.receipt_id && !x.receipt_finish){
+                this.tempReceiptInfo = x
+                this.isShowReceiptBox = true
+                return
+            }
             this.isReturnItem = x.isReturn;
             this.inBasket = null;
             this.outBasket = null;
             this.confirmBox = true;
             this.clientName = x.clientbname;
             this.returnPool_id = x.returnPool_id
-            console.log(x)
             if (this.lang === "ch") {
                 this.tempShiping = x.clientbname;
             } else {
